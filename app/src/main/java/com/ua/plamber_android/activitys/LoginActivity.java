@@ -1,4 +1,4 @@
-package com.ua.plamber_android;
+package com.ua.plamber_android.activitys;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.ua.plamber_android.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,8 +23,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mLoginButton = (Button) findViewById(R.id.btn_login);
-        mSignButton = (Button) findViewById(R.id.btn_signup);
-        mEmailLoginEdit = (EditText) findViewById(R.id.et_email_login);
+        mSignButton = (Button) findViewById(R.id.btn_login_signup);
+        mEmailLoginEdit = (EditText) findViewById(R.id.et_login_email);
 
         initBackgroundImage();
 

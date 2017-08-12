@@ -3,85 +3,95 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal">
+    android:gravity="center_vertical">
 
-    <ImageView
-        android:id="@+id/iv_logo"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_margin"
-        android:layout_margin="@dimen/logo_margin"
-        android:src="@drawable/logo"
-        android:layout_gravity="center"/>
-
-    <android.support.design.widget.TextInputLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/logo_margin"
-        android:layout_marginRight="@dimen/logo_margin">
-        <EditText
-            android:id="@+id/et_email_login"
+        android:isScrollContainer="false" >
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:textSize="20sp"
-            android:inputType="textEmailAddress"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/logo_margin"
+            android:layout_marginRight="@dimen/logo_margin">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginLeft="@dimen/logo_margin"
-        android:layout_marginRight="@dimen/logo_margin">
-        <EditText
-            android:id="@+id/et_password_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            android:textSize="20sp"/>
-    </android.support.design.widget.TextInputLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_margin"
+                android:layout_marginBottom="@dimen/logo_margin"
+                android:layout_marginTop="@dimen/logo_margin"
+                android:src="@drawable/logo"
+                android:layout_gravity="center_horizontal"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginLeft="@dimen/logo_margin"
-        android:layout_marginRight="@dimen/logo_margin">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/et_login_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:textSize="20sp"
+                    android:inputType="textEmailAddress"/>
+            </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sign_up"
-            android:textAllCaps="false"
-            android:textSize="20sp"
-            android:paddingTop="@dimen/top_margin"
-            android:paddingBottom="@dimen/top_margin"/>
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/login"
-            android:textAllCaps="false"
-            android:textSize="20sp"
-            android:paddingTop="@dimen/top_margin"
-            android:paddingBottom="@dimen/top_margin"
-            android:backgroundTint="@color/colorAccent"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/top_margin">
+                <EditText
+                    android:id="@+id/et_login_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="@string/password"
+                    android:textSize="20sp"/>
+            </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/top_margin">
 
-    <TextView
-        android:layout_margin="@dimen/forgot_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+                <Button
+                    android:id="@+id/btn_login_signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/sign_up"
+                    android:textAllCaps="false"
+                    android:textSize="20sp"
+                    android:paddingTop="@dimen/top_margin"
+                    android:paddingBottom="@dimen/top_margin"/>
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/login"
+                    android:textAllCaps="false"
+                    android:textSize="20sp"
+                    android:paddingTop="@dimen/top_margin"
+                    android:paddingBottom="@dimen/top_margin"
+                    android:backgroundTint="@color/colorAccent"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="@dimen/forgot_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/forgot_password"
+                android:gravity="center_horizontal"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
 
 </LinearLayout>

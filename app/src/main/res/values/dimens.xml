@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="logo_margin">30dp</dimen>
+    <dimen name="logo_margin">25dp</dimen>
     <dimen name="top_margin">15dp</dimen>
     <dimen name="forgot_margin">50dp</dimen>
     <dimen name="height_margin">75dp</dimen>

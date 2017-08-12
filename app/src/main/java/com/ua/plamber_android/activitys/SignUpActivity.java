@@ -1,4 +1,4 @@
-package com.ua.plamber_android;
+package com.ua.plamber_android.activitys;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.ua.plamber_android.R;
 
 public class SignUpActivity extends AppCompatActivity {
 
