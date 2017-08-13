@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_margin"
                 android:layout_marginBottom="@dimen/logo_margin"
-                android:layout_marginTop="@dimen/top_margin"
+                android:layout_marginTop="@dimen/logo_margin"
                 android:gravity="center_horizontal"
                 android:src="@drawable/logo"/>
 
@@ -78,7 +78,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_sing_up_connected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/connected"
@@ -89,6 +89,7 @@
                 android:layout_marginTop="@dimen/top_margin"/>
 
             <TextView
+                android:id="@+id/tv_sing_up_back_login"
                 android:layout_marginTop="@dimen/forgot_margin"
                 android:layout_marginBottom="@dimen/logo_margin"
                 android:layout_width="match_parent"
@@ -99,8 +100,6 @@
                 android:gravity="center_horizontal"/>
 
         </LinearLayout>
-
-
 
     </ScrollView>
 

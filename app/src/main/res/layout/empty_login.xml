@@ -8,7 +8,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:isScrollContainer="false" >
+        android:isScrollContainer="false">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,7 +32,7 @@
                     android:id="@+id/et_login_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
+                    android:hint="@string/user_name"
                     android:textSize="20sp"
                     android:inputType="textEmailAddress"/>
             </android.support.design.widget.TextInputLayout>
@@ -57,30 +58,32 @@
 
                 <Button
                     android:id="@+id/btn_login_signup"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/sign_up"
                     android:textAllCaps="false"
                     android:textSize="20sp"
-                    android:paddingTop="@dimen/top_margin"
-                    android:paddingBottom="@dimen/top_margin"/>
+                    android:padding="@dimen/top_margin"
+                    android:layout_marginRight="@dimen/margin_button"/>
+
                 <Button
                     android:id="@+id/btn_login"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/login"
                     android:textAllCaps="false"
                     android:textSize="20sp"
-                    android:paddingTop="@dimen/top_margin"
-                    android:paddingBottom="@dimen/top_margin"
+                    android:padding="@dimen/top_margin"
+                    android:layout_marginLeft="@dimen/margin_button"
                     android:backgroundTint="@color/colorAccent"/>
 
             </LinearLayout>
 
             <TextView
                 android:layout_marginTop="@dimen/forgot_margin"
+                android:layout_marginBottom="@dimen/logo_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/forgot_password"
@@ -91,7 +94,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-
 
 </LinearLayout>

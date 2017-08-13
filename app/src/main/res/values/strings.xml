@@ -9,4 +9,9 @@
     <string name="user_name">User name</string>
     <string name="password_agian">Password agian</string>
     <string name="already_a_member_login">Already a member? Login</string>
+    <string name="validate_email">Please enter valid email address</string>
+    <string name="validate_username">Between 2 and 30 alphanumeric characters</string>
+    <string name="validate_password">Between 6 and 16 alphanumeric characters</string>
+    <string name="validate_password_same">Passwords must be the same</string>
+    <string name="press_once_to_exit">Press once again to exit</string>
 </resources>

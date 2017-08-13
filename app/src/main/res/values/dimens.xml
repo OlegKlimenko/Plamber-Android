@@ -4,4 +4,5 @@
     <dimen name="top_margin">15dp</dimen>
     <dimen name="forgot_margin">50dp</dimen>
     <dimen name="height_margin">75dp</dimen>
+    <dimen name="margin_button">10dp</dimen>
 </resources>
