@@ -14,6 +14,8 @@
     <string name="validate_password">Between 6 and 16 alphanumeric characters</string>
     <string name="validate_password_same">Passwords must be the same</string>
     <string name="press_once_to_exit">Press once again to exit</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
 
 </resources>
