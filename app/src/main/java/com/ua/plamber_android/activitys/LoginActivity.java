@@ -46,13 +46,16 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void loginButton() {
-        mLoginButton.setEnabled(false);
 
-        Validate valid = new Validate(this);
+//        ***Disable validate***
+//        mLoginButton.setEnabled(false);
+//        Validate valid = new Validate(this);
+//        if (!valid.userNameValidate(mEmailLoginEdit) | !valid.passwordValidate(mPasswordLoginEdit)) {
+//            mLoginButton.setEnabled(true);
+//        }
+        Intent intent = LibraryActivity.startLibraryActivity(this);
+        startActivity(intent);
 
-        if (!valid.userNameValidate(mEmailLoginEdit) | !valid.passwordValidate(mPasswordLoginEdit)) {
-            mLoginButton.setEnabled(true);
-        }
     }
 
     @OnClick(R.id.btn_login_signup)

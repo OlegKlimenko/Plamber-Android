@@ -28,53 +28,53 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.EditText">
                 <EditText
                     android:id="@+id/et_sing_up_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name"
-                    android:textSize="19sp"
                     android:inputType="textPersonName"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/top_margin">
+                android:layout_marginTop="@dimen/top_margin"
+                android:theme="@style/AppTheme.EditText">
                 <EditText
                     android:id="@+id/et_sing_up_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:hint="@string/email"
-                    android:textSize="19sp"/>
+                    android:hint="@string/email" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/top_margin">
+                android:layout_marginTop="@dimen/top_margin"
+                android:theme="@style/AppTheme.EditText">
                 <EditText
                     android:id="@+id/et_sing_up_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="@string/password"
-                    android:textSize="19sp"/>
+                    android:hint="@string/password" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/top_margin">
+                android:layout_marginTop="@dimen/top_margin"
+                android:theme="@style/AppTheme.EditText">
                 <EditText
                     android:id="@+id/et_sing_up_password_again"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="@string/password_agian"
-                    android:textSize="19sp"/>
+                    android:hint="@string/password_agian" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -83,10 +83,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/connected"
                 android:textAllCaps="false"
-                android:textSize="19sp"
                 android:padding="@dimen/top_margin"
-                android:backgroundTint="@color/colorAccent"
-                android:layout_marginTop="@dimen/top_margin"/>
+                android:layout_marginTop="@dimen/top_margin"
+                android:theme="@style/AppTheme.GreenButton"/>
 
             <TextView
                 android:id="@+id/tv_sing_up_back_login"
@@ -95,9 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/already_a_member_login"
-                android:textSize="19sp"
                 android:textColor="@android:color/white"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal"
+                android:textSize="19sp"/>
 
         </LinearLayout>
 

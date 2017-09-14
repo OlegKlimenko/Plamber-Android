@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical">
@@ -27,27 +26,29 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.EditText">
                 <EditText
                     android:id="@+id/et_login_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name"
-                    android:textSize="19sp"
                     android:inputType="textEmailAddress"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/top_margin">
+                android:layout_marginTop="@dimen/top_margin"
+                android:theme="@style/AppTheme.EditText">
+
                 <EditText
                     android:id="@+id/et_login_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="@string/password"
-                    android:textSize="19sp"/>
+                    android:hint="@string/password" />
+
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
@@ -63,9 +64,9 @@
                     android:layout_weight="1"
                     android:text="@string/sign_up"
                     android:textAllCaps="false"
-                    android:textSize="19sp"
                     android:padding="@dimen/top_margin"
-                    android:layout_marginRight="@dimen/margin_button"/>
+                    android:layout_marginRight="@dimen/margin_button"
+                    android:theme="@style/AppTheme.GreyButton"/>
 
                 <Button
                     android:id="@+id/btn_login"
@@ -74,11 +75,9 @@
                     android:layout_weight="1"
                     android:text="@string/login"
                     android:textAllCaps="false"
-                    android:textSize="20sp"
                     android:padding="@dimen/top_margin"
                     android:layout_marginLeft="@dimen/margin_button"
-                    android:backgroundTint="@color/colorAccent"/>
-
+                    android:theme="@style/AppTheme.GreenButton"/>
             </LinearLayout>
 
             <TextView

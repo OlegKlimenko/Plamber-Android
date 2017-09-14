@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>i
+    <!--this file create for hide bug "Couldn't resolve resource @id/visible"-->
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
+</resources>
