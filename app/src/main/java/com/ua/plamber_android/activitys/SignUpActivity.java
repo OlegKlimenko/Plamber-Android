@@ -1,16 +1,15 @@
 package com.ua.plamber_android.activitys;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
 
 import butterknife.BindView;
@@ -24,6 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.et_sing_up_password) EditText mPasswordSingUpEdit;
     @BindView(R.id.et_sing_up_password_again) EditText mPasswordAgainSingUpEdit;
     @BindView(R.id.btn_sing_up_connected) Button mConnectedSingUpButton;
+    @BindView(R.id.iv_singup_background) ImageView backgroundSing;
 
     private static long timeExit;
 
@@ -33,7 +33,8 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
 
-        initBackgroundImage(SignUpActivity.this);
+        Utils utils = new Utils(this);
+        utils.initBackgroundImage(backgroundSing);
     }
 
     @Override
@@ -63,10 +64,5 @@ public class SignUpActivity extends AppCompatActivity {
         finish();
         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    private void initBackgroundImage(Context context) {
-        ImageView background = (ImageView) findViewById(R.id.iv_singup_background);
-        Glide.with(context).load(R.drawable.main_background).centerCrop().into(background);
     }
 }

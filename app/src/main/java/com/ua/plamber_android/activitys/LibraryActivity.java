@@ -2,25 +2,26 @@ package com.ua.plamber_android.activitys;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
 import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UserBookFragment;
+import com.ua.plamber_android.utils.TokenUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +33,8 @@ public class LibraryActivity extends AppCompatActivity {
     @BindView(R.id.tabLayout) TabLayout mTabLayout;
     @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.drawerLayout) DrawerLayout mDrawerLayout;
+
+    public static final String TAG = "LibraryActivity";
 
 
 
@@ -66,11 +69,15 @@ public class LibraryActivity extends AppCompatActivity {
     public void setupNavigationDrawer() {
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
                 switch (id) {
-                    case R.id.nav_library:
-                       // mDrawerLayout.closeDrawers();
+                    case R.id.nav_logout:
+                        TokenUtils tokenUtils = new TokenUtils(getApplicationContext());
+                        tokenUtils.removeToken();
+                        finish();
+                        Intent intent = LoginActivity.startLoginActivity(getApplicationContext());
+                        startActivity(intent);
                 }
                 return true;
             }

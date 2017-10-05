@@ -17,6 +17,7 @@ public class Validate {
     public boolean emailValidate(EditText editText) {
         boolean isValid = true;
         String email = editText.getText().toString();
+
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             isValid = false;
             editText.setError(context.getString(R.string.validate_email));
@@ -28,6 +29,7 @@ public class Validate {
     public boolean passwordValidate(EditText editText) {
         boolean isValid = true;
         String password = editText.getText().toString();
+
         if (password.isEmpty() || password.length() < 6 || password.length() > 16) {
             isValid = false;
             editText.setError(context.getString(R.string.validate_password));
@@ -39,6 +41,7 @@ public class Validate {
     public boolean userNameValidate(EditText editText) {
         boolean isValid = true;
         String user = editText.getText().toString();
+
         if (user.isEmpty() || user.length() < 2 || user.length() > 30) {
             isValid = false;
             editText.setError(context.getString(R.string.validate_username));
