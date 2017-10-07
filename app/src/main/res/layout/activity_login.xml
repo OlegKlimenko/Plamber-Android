@@ -13,4 +13,20 @@
 
     <include layout="@layout/empty_login"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/login_progress_bar"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/screenLock"
+        android:clickable="true">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
 </RelativeLayout>

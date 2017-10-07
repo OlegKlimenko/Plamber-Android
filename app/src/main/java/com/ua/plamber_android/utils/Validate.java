@@ -28,9 +28,10 @@ public class Validate {
 
     public boolean passwordValidate(EditText editText) {
         boolean isValid = true;
+        String regex = "\\w{6,16}\\b";
         String password = editText.getText().toString();
 
-        if (password.isEmpty() || password.length() < 6 || password.length() > 16) {
+        if (!password.matches(regex)) {
             isValid = false;
             editText.setError(context.getString(R.string.validate_password));
         }
@@ -40,9 +41,10 @@ public class Validate {
 
     public boolean userNameValidate(EditText editText) {
         boolean isValid = true;
+        String regex = "[A-Za-z0-9_]{2,30}";
         String user = editText.getText().toString();
 
-        if (user.isEmpty() || user.length() < 2 || user.length() > 30) {
+        if (!user.matches(regex)) {
             isValid = false;
             editText.setError(context.getString(R.string.validate_username));
         }
@@ -55,13 +57,11 @@ public class Validate {
         String passFirst = editTextFirst.getText().toString();
         String passSecond = editTextSecond.getText().toString();
 
-        if (!userNameValidate(editTextFirst) | !userNameValidate(editTextSecond)) {
+        if (!passwordValidate(editTextFirst)) {
             isValid = false;
             editTextFirst.setError(context.getString(R.string.validate_password));
-            editTextSecond.setError(context.getString(R.string.validate_password));
         } else if (!passFirst.equals(passSecond)) {
             isValid = false;
-            editTextFirst.setError(context.getString(R.string.validate_password_same));
             editTextSecond.setError(context.getString(R.string.validate_password_same));
         }
 

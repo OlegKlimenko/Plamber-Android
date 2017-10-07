@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.ua.plamber_android.activitys.LoginActivity;
-
 public class TokenUtils {
 
-    public final static String TOKEN = "Token";
+    private final static String TOKEN = "Token";
 
-    Context context;
+    private Context context;
 
     public TokenUtils(Context context) {
         this.context = context;
@@ -27,7 +25,7 @@ public class TokenUtils {
                 PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(TOKEN, token);
-        editor.commit();
+        editor.apply();
     }
 
     public void removeToken() {
@@ -35,12 +33,12 @@ public class TokenUtils {
                 PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     public String readToken() {
         SharedPreferences sharedPref =
                 PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString(LoginActivity.TOKEN, "default");
+        return sharedPref.getString(TOKEN, "default");
     }
 }

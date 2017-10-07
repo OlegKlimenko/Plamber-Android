@@ -5,4 +5,5 @@
     <color name="colorAccent">#31A445 </color>
     <color name="colorDark">#717171</color>
     <color name="TrasperentWhite">#c8ffffff</color>
+    <color name="screenLock">#B0000000</color>
 </resources>

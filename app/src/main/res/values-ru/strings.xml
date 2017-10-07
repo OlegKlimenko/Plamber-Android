@@ -11,7 +11,8 @@
         <string name="password_agian">Повторите пароль</string>
         <string name="already_a_member_login">Уже зарегистрированы? Войти</string>
         <string name="validate_email">Пожалуйста введите действительный email</string>
-        <string name="validate_username">Имя пользователя от 2 до 30 символов</string>
+        <string name="validate_username">Имя пользователя должно быть от 2 до 30 символов, содержать
+            только латинские символы, цифры или знак подчеркивания</string>
         <string name="validate_password">Пароль от 6 до 16 символов</string>
         <string name="validate_password_same">Пароли должны быть одинаковыми</string>
         <string name="press_once_to_exit">Нажмите дважды для выхода</string>

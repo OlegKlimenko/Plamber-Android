@@ -2,14 +2,13 @@ package com.ua.plamber_android.activitys;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
@@ -17,6 +16,7 @@ import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
+import com.ua.plamber_android.utils.Validate;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,17 +28,22 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private final static String TAG = "LoginActivity";
-    public final static String TOKEN = "Token";
-    public final static String TOKENSTATUS = "TokenStatus";
 
-    @BindView(R.id.et_login_email) EditText mEmailLoginEdit;
-    @BindView(R.id.et_login_password) EditText mPasswordLoginEdit;
-    @BindView(R.id.btn_login) Button mLoginButton;
-    @BindView(R.id.iv_login_background) ImageView backgroundLogin;
+    @BindView(R.id.et_login_email)
+    EditText mUsername;
+    @BindView(R.id.et_login_password)
+    EditText mPasswordLoginEdit;
+    @BindView(R.id.btn_login)
+    Button mLoginButton;
+    @BindView(R.id.iv_login_background)
+    ImageView backgroundLogin;
+    @BindView(R.id.login_progress_bar)
+    LinearLayout mLoginProgressBar;
 
     private static long timeExit;
 
     TokenUtils tokenUtils;
+    APIUtils apiUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +53,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Utils utils = new Utils(getApplicationContext());
         tokenUtils = new TokenUtils(getApplicationContext());
+        apiUtils = new APIUtils(getApplicationContext());
 
         utils.initBackgroundImage(backgroundLogin);
-
 
         if (tokenUtils.checkUserToken()) {
             Intent intent = LibraryActivity.startLibraryActivity(this);
@@ -71,75 +76,13 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void loginButton() {
-
-//        ***Disable validate***
-//        mLoginButton.setEnabled(false);
-//        Validate valid = new Validate(this);
-//        if (!valid.userNameValidate(mEmailLoginEdit) | !valid.passwordValidate(mPasswordLoginEdit)) {
-//            mLoginButton.setEnabled(true);
-//        }
-//        Intent intent = LibraryActivity.startLibraryActivity(this);
-//        startActivity(intent);
-
-
-        final APIUtils apiUtils = new APIUtils();
-
-        if (apiUtils.isOnline(getApplicationContext())) {
-            User.UserRequest userRequest =
-                    new User.UserRequest(mEmailLoginEdit.getText().toString().trim(),
-                            mPasswordLoginEdit.getText().toString().trim());
-            Call<User.UserRespond> request = apiUtils.initializePlamberAPI().login(userRequest);
-            request.enqueue(new Callback<User.UserRespond>() {
-                @Override
-                public void onResponse(Call<User.UserRespond> call, Response<User.UserRespond> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body().getStatus() == 200) {
-                            tokenUtils.writeToken(response.body().getData().getToken());
-                            Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getBaseContext(), "Incorrect!!!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User.UserRespond> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(),
-                            t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            Toast.makeText(this, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+        if (apiUtils.isOnline()) {
+            Validate valid = new Validate(getApplicationContext());
+            if (valid.userNameValidate(mUsername) & valid.passwordValidate(mPasswordLoginEdit)) {
+                userLoginInSystem();
+            }
         }
-
-
-
-
-
-//        final List<Book.BookData> books = new ArrayList<>();
-//
-//        APIUtils apiUtils = new APIUtils();
-//        final Book.BookRequest book = new Book.BookRequest(TOKEN);
-//        Call<Book.BookRespond> request = apiUtils.initializePlamberAPI().getUserBook(book);
-//        request.enqueue(new Callback<Book.BookRespond>() {
-//            @Override
-//            public void onResponse(Call<Book.BookRespond> call, Response<Book.BookRespond> response) {
-//                Log.i(TAG, "Status " + response.body().getStatus());
-//                books.addAll(response.body().getBookData());
-//                for (Book.BookData bookData : books) {
-//                    Log.i(TAG, bookData.getBookName());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Book.BookRespond> call, Throwable t) {
-//
-//            }
-//        });
-//
     }
-
 
     @OnClick(R.id.btn_login_signup)
     public void signUpButton() {
@@ -149,9 +92,47 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public static Intent startLoginActivity(Context context) {
-        Intent intent = new Intent(context, LoginActivity.class);
-        return intent;
+        return new Intent(context, LoginActivity.class);
     }
 
+    private void userLoginInSystem() {
+        User.UserRequest userRequest =
+                new User.UserRequest(mUsername.getText().toString().trim(),
+                        mPasswordLoginEdit.getText().toString().trim());
+
+        visibleProgressBar(true);
+        Call<User.UserRespond> request = apiUtils.initializePlamberAPI().login(userRequest);
+        request.enqueue(new Callback<User.UserRespond>() {
+            @Override
+            public void onResponse(Call<User.UserRespond> call, Response<User.UserRespond> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus() == 200) {
+                        tokenUtils.writeToken(response.body().getData().getToken());
+                        visibleProgressBar(false);
+                        Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getBaseContext(), "Incorrect!!!", Toast.LENGTH_SHORT).show();
+                        visibleProgressBar(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User.UserRespond> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),
+                        t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                visibleProgressBar(false);
+            }
+        });
+    }
+
+    private void visibleProgressBar(boolean status) {
+        if (status) {
+            mLoginProgressBar.setVisibility(LinearLayout.VISIBLE);
+        } else {
+            mLoginProgressBar.setVisibility(LinearLayout.INVISIBLE);
+        }
+    }
 }
 

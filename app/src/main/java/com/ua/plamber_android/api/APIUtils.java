@@ -3,11 +3,20 @@ package com.ua.plamber_android.api;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import com.ua.plamber_android.api.interfaces.PlamberAPI;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIUtils {
+
+    private Context context;
+
+    public APIUtils(Context context) {
+        this.context = context;
+    }
 
     public PlamberAPI initializePlamberAPI() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -19,13 +28,14 @@ public class APIUtils {
         return plamberAPI;
     }
 
-    public boolean isOnline(Context context) {
+    public boolean isOnline() {
         ConnectivityManager manager = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = manager.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         } else {
+            Toast.makeText(context, "Please check yor interner connection", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
