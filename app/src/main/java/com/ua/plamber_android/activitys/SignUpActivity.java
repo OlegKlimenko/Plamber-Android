@@ -15,10 +15,14 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.interfaces.AccountCallback;
 import com.ua.plamber_android.model.Account;
+import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,14 +41,10 @@ public class SignUpActivity extends AppCompatActivity {
     EditText mPasswordSingUpEdit;
     @BindView(R.id.et_sing_up_password_again)
     EditText mPasswordAgainSingUpEdit;
-    @BindView(R.id.btn_sing_up_connected)
-    Button mConnectedSingUpButton;
     @BindView(R.id.iv_singup_background)
     ImageView backgroundSing;
     @BindView(R.id.singup_progress_bar)
     LinearLayout mSingUpProgressBar;
-
-    private static long timeExit;
 
     private final static String TAG = "SignUpActivity";
     APIUtils apiUtils;
@@ -62,17 +62,6 @@ public class SignUpActivity extends AppCompatActivity {
         utils.initBackgroundImage(backgroundSing);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (timeExit + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed();
-        } else {
-            String mess = getString(R.string.press_once_to_exit);
-            Toast.makeText(this, mess, Toast.LENGTH_SHORT).show();
-        }
-        timeExit = System.currentTimeMillis();
-    }
-
     @OnClick(R.id.btn_sing_up_connected)
     public void connectedButton() {
 
@@ -88,7 +77,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(@NonNull boolean isCreate) {
                                     if (!isCreate) {
-                                        Log.i(TAG, "User most create");
                                         registerUser();
                                     } else {
                                         mEmailSingUpEdit.setError("Email already use");
@@ -125,55 +113,50 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void checkUserName(final AccountCallback callback) {
-        Account.LoginRequest userLogin =
-                new Account.LoginRequest(mUserNameSingUpEdit.getText().toString().trim());
-        visibleProgressBar(true);
-        Call<Account.LoginRespond> loginRequest = apiUtils.initializePlamberAPI().checkLogin(userLogin);
-        loginRequest.enqueue(new Callback<Account.LoginRespond>() {
-            @Override
-            public void onResponse(Call<Account.LoginRespond> call, Response<Account.LoginRespond> response) {
-                boolean isCreated = true;
-                if (response.isSuccessful()) {
-                    isCreated = response.body().getData().isLoginStatus();
-                }
-                if (callback != null) {
+        if (callback != null) {
+            Account.LoginRequest userLogin =
+                    new Account.LoginRequest(mUserNameSingUpEdit.getText().toString().trim());
+            visibleProgressBar(true);
+            Call<Account.LoginRespond> loginRequest = apiUtils.initializePlamberAPI().checkLogin(userLogin);
+            loginRequest.enqueue(new Callback<Account.LoginRespond>() {
+                @Override
+                public void onResponse(Call<Account.LoginRespond> call, Response<Account.LoginRespond> response) {
+                    boolean isCreated = true;
+                    if (response.isSuccessful()) {
+                        isCreated = response.body().getData().isLoginStatus();
+                    }
                     callback.onSuccess(isCreated);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Account.LoginRespond> call, Throwable t) {
-                if (callback != null) {
+                @Override
+                public void onFailure(Call<Account.LoginRespond> call, Throwable t) {
                     callback.onError(t);
                 }
-            }
-        });
+            });
+        }
     }
 
     private void checkUserEmail(final AccountCallback callback) {
-        Account.EmailRequest userEmail =
-                new Account.EmailRequest(mEmailSingUpEdit.getText().toString().trim());
-        visibleProgressBar(true);
-        Call<Account.EmailRespond> emailRequest = apiUtils.initializePlamberAPI().checkEmail(userEmail);
-        emailRequest.enqueue(new Callback<Account.EmailRespond>() {
-            @Override
-            public void onResponse(Call<Account.EmailRespond> call, Response<Account.EmailRespond> response) {
-                boolean isCreate = true;
-                if (response.isSuccessful()) {
-                    isCreate = response.body().getData().isEmailStatus();
-                }
-                if (callback != null) {
+        if (callback != null) {
+            Account.EmailRequest userEmail =
+                    new Account.EmailRequest(mEmailSingUpEdit.getText().toString().trim());
+            Call<Account.EmailRespond> emailRequest = apiUtils.initializePlamberAPI().checkEmail(userEmail);
+            emailRequest.enqueue(new Callback<Account.EmailRespond>() {
+                @Override
+                public void onResponse(Call<Account.EmailRespond> call, Response<Account.EmailRespond> response) {
+                    boolean isCreate = true;
+                    if (response.isSuccessful()) {
+                        isCreate = response.body().getData().isEmailStatus();
+                    }
                     callback.onSuccess(isCreate);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Account.EmailRespond> call, Throwable t) {
-                if (callback != null) {
+                @Override
+                public void onFailure(Call<Account.EmailRespond> call, Throwable t) {
                     callback.onError(t);
                 }
-            }
-        });
+            });
+        }
     }
 
     private void registerUser() {
@@ -182,7 +165,6 @@ public class SignUpActivity extends AppCompatActivity {
         String password = mPasswordAgainSingUpEdit.getText().toString().trim();
         Account.RegisterRequest registerUser =
                 new Account.RegisterRequest(name, email, password);
-        visibleProgressBar(true);
         Call<User.UserRespond> request = apiUtils.initializePlamberAPI().registerUser(registerUser);
         request.enqueue(new Callback<User.UserRespond>() {
             @Override

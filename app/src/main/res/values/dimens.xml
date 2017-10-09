@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="logo_margin">25dp</dimen>
+    <dimen name="logo_margin">22dp</dimen>
     <dimen name="top_margin">15dp</dimen>
     <dimen name="forgot_margin">50dp</dimen>
     <dimen name="height_margin">75dp</dimen>
@@ -8,7 +8,7 @@
     <dimen name="margin_nav_header">16dp</dimen>
     <dimen name="margin_nav_header_height">192dp</dimen>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design-->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>

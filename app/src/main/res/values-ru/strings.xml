@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <resources>
-        <string name="app_name">Plamber</string>
-        <string name="email">Email</string>
-        <string name="password">Пароль</string>
-        <string name="forgot_password">Забыли пароль?</string>
-        <string name="login">Войти</string>
-        <string name="sign_up">Регистрация</string>
-        <string name="connected">Присоединиться</string>
-        <string name="user_name">Имя пользователя</string>
-        <string name="password_agian">Повторите пароль</string>
-        <string name="already_a_member_login">Уже зарегистрированы? Войти</string>
-        <string name="validate_email">Пожалуйста введите действительный email</string>
-        <string name="validate_username">Имя пользователя должно быть от 2 до 30 символов, содержать
+<resources>
+    <string name="app_name">Plamber</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="login">Войти</string>
+    <string name="sign_up">Регистрация</string>
+    <string name="connected">Присоединиться</string>
+    <string name="user_name">Имя пользователя</string>
+    <string name="password_agian">Повторите пароль</string>
+    <string name="already_a_member_login">Уже зарегистрированы? Войти</string>
+    <string name="validate_email">Пожалуйста введите действительный email</string>
+    <string name="validate_username">Имя пользователя должно быть от 2 до 30 символов, содержать
             только латинские символы, цифры или знак подчеркивания</string>
-        <string name="validate_password">Пароль от 6 до 16 символов</string>
-        <string name="validate_password_same">Пароли должны быть одинаковыми</string>
-        <string name="press_once_to_exit">Нажмите дважды для выхода</string>
-    </resources>
+    <string name="validate_password">Пароль от 6 до 16 символов</string>
+    <string name="validate_password_same">Пароли должны быть одинаковыми</string>
+    <string name="press_once_to_exit">Нажмите дважды для выхода</string>
+    <string name="back_to_login_page">Вернуться к странице входа?</string>
+    <string name="restore_account">Восстановить аккаунт</string>
+</resources>

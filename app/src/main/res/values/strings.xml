@@ -16,6 +16,12 @@
     <string name="press_once_to_exit">Press once again to exit</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="restore_title">Restore account</string>
+    <string name="restore_send">Send</string>
+    <string name="restore_cancel">Cancel</string>
+    <string name="back_to_login_page">Back to login page?</string>
+    <string name="restore_account">Restore account</string>
+    <string name="error_recycler">Please pull to update</string>
 
 
 </resources>

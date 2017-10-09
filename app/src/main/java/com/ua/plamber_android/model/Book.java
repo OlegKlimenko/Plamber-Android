@@ -109,5 +109,48 @@ public class Book {
         public boolean isprivatBeook() {
             return isprivatBeook;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BookData bookData = (BookData) o;
+
+            if (isprivatBeook != bookData.isprivatBeook) return false;
+            if (bookName != null ? !bookName.equals(bookData.bookName) : bookData.bookName != null)
+                return false;
+            if (idAuthor != null ? !idAuthor.equals(bookData.idAuthor) : bookData.idAuthor != null)
+                return false;
+            if (idCategory != null ? !idCategory.equals(bookData.idCategory) : bookData.idCategory != null)
+                return false;
+            if (description != null ? !description.equals(bookData.description) : bookData.description != null)
+                return false;
+            if (language != null ? !language.equals(bookData.language) : bookData.language != null)
+                return false;
+            if (photo != null ? !photo.equals(bookData.photo) : bookData.photo != null)
+                return false;
+            if (bookFile != null ? !bookFile.equals(bookData.bookFile) : bookData.bookFile != null)
+                return false;
+            if (whoAdded != null ? !whoAdded.equals(bookData.whoAdded) : bookData.whoAdded != null)
+                return false;
+            return uploadDate != null ? uploadDate.equals(bookData.uploadDate) : bookData.uploadDate == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = bookName != null ? bookName.hashCode() : 0;
+            result = 31 * result + (idAuthor != null ? idAuthor.hashCode() : 0);
+            result = 31 * result + (idCategory != null ? idCategory.hashCode() : 0);
+            result = 31 * result + (description != null ? description.hashCode() : 0);
+            result = 31 * result + (language != null ? language.hashCode() : 0);
+            result = 31 * result + (photo != null ? photo.hashCode() : 0);
+            result = 31 * result + (bookFile != null ? bookFile.hashCode() : 0);
+            result = 31 * result + (whoAdded != null ? whoAdded.hashCode() : 0);
+            result = 31 * result + (uploadDate != null ? uploadDate.hashCode() : 0);
+            result = 31 * result + (isprivatBeook ? 1 : 0);
+            return result;
+        }
     }
 }

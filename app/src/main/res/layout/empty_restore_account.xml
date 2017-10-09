@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:isScrollContainer="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/logo_margin"
+            android:layout_marginRight="@dimen/logo_margin"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_margin"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/logo_margin"
+                android:layout_marginTop="@dimen/logo_margin"
+                android:src="@drawable/logo" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/top_margin"
+                android:theme="@style/AppTheme.EditText">
+
+                <EditText
+                    android:id="@+id/et_email_restore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_restore_account"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/top_margin"
+                android:layout_weight="1"
+                android:padding="@dimen/top_margin"
+                android:text="@string/restore_account"
+                android:textAllCaps="false"
+                android:theme="@style/AppTheme.GreenButton" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/logo_margin"
+                android:layout_marginTop="@dimen/forgot_margin">
+
+
+                <TextView
+                    android:id="@+id/tv_restore_back_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/back_to_login_page"
+                    android:textColor="@android:color/white"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/forgot_margin" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

@@ -32,4 +32,8 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/sign-in/")
     Call<User.UserRespond> registerUser(@Body Account.RegisterRequest registerRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/send-mail/")
+    Call<Account.EmailRespond> restoreAccount(@Body Account.EmailRequest registerRequest);
 }

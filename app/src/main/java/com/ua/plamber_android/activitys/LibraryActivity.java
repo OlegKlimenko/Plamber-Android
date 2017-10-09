@@ -58,8 +58,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     public void setupPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new LibraryFragment(), "Library");
         adapter.addFragment(new UserBookFragment(), "My books");
+        adapter.addFragment(new LibraryFragment(), "Library");
         adapter.addFragment(new RecommendedFragmnet(), "Recommended");
 
         mViewPager.setAdapter(adapter);

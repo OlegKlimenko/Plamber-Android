@@ -3,9 +3,8 @@ package com.ua.plamber_android.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
@@ -33,14 +33,13 @@ public class LoginActivity extends AppCompatActivity {
     EditText mUsername;
     @BindView(R.id.et_login_password)
     EditText mPasswordLoginEdit;
-    @BindView(R.id.btn_login)
-    Button mLoginButton;
     @BindView(R.id.iv_login_background)
-    ImageView backgroundLogin;
+    ImageView mBackgroundLogin;
     @BindView(R.id.login_progress_bar)
     LinearLayout mLoginProgressBar;
 
     private static long timeExit;
+
 
     TokenUtils tokenUtils;
     APIUtils apiUtils;
@@ -55,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         tokenUtils = new TokenUtils(getApplicationContext());
         apiUtils = new APIUtils(getApplicationContext());
 
-        utils.initBackgroundImage(backgroundLogin);
+        utils.initBackgroundImage(mBackgroundLogin);
 
         if (tokenUtils.checkUserToken()) {
             Intent intent = LibraryActivity.startLibraryActivity(this);
@@ -86,8 +85,13 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login_signup)
     public void signUpButton() {
-        finish();
         Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.tv_restore_account)
+    public void restoreAccountButton() {
+        Intent intent = RestoreAccountActivity.startRestoreActivity(getApplicationContext());
         startActivity(intent);
     }
 

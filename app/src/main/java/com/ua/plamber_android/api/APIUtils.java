@@ -7,6 +7,9 @@ import android.widget.Toast;
 
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -19,8 +22,15 @@ public class APIUtils {
     }
 
     public PlamberAPI initializePlamberAPI() {
+        final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(PlamberAPI.ENDPOINT)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PlamberAPI plamberAPI = retrofit.create(PlamberAPI.class);

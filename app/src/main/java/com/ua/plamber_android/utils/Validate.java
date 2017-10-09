@@ -28,7 +28,8 @@ public class Validate {
 
     public boolean passwordValidate(EditText editText) {
         boolean isValid = true;
-        String regex = "\\w{6,16}\\b";
+        //*** Change min length to 6***
+        String regex = "\\w{5,16}\\b";
         String password = editText.getText().toString();
 
         if (!password.matches(regex)) {
