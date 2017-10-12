@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;

@@ -39,11 +39,11 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
 
         public ViewHolder(View v) {
             super(v);
-            view = v;
-            img = (ImageView) v.findViewById(R.id.book_item_image);
-            nameBook = (TextView) v.findViewById(R.id.book_item_name);
-            authorBook= (TextView) v.findViewById(R.id.book_item_author);
-            userProgressImage = (ProgressBar) v.findViewById(R.id.pb_user_book_download);
+            this.view = v;
+            this.img = (ImageView) v.findViewById(R.id.book_item_image);
+            this.nameBook = (TextView) v.findViewById(R.id.book_item_name);
+            this.authorBook= (TextView) v.findViewById(R.id.book_item_author);
+            this.userProgressImage = (ProgressBar) v.findViewById(R.id.pb_user_book_download);
         }
     }
 

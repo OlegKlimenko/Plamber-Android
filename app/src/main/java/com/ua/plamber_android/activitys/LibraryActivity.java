@@ -36,8 +36,6 @@ public class LibraryActivity extends AppCompatActivity {
 
     public static final String TAG = "LibraryActivity";
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +43,7 @@ public class LibraryActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-
         setupPager();
-
         setupNavigationDrawer();
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
@@ -58,11 +54,12 @@ public class LibraryActivity extends AppCompatActivity {
 
     public void setupPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new UserBookFragment(), "My books");
         adapter.addFragment(new LibraryFragment(), "Library");
+        adapter.addFragment(new UserBookFragment(), "My books");
         adapter.addFragment(new RecommendedFragmnet(), "Recommended");
 
         mViewPager.setAdapter(adapter);
+        mViewPager.setCurrentItem(1); //set mybooks satrt page
         mTabLayout.setupWithViewPager(mViewPager);
     }
 

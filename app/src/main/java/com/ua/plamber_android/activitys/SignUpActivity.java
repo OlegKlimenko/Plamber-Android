@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,14 +14,10 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.interfaces.AccountCallback;
 import com.ua.plamber_android.model.Account;
-import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
             Validate valid = new Validate(getApplicationContext());
             if (valid.userNameValidate(mUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit)
                     & valid.passwordAgainValidate(mPasswordSingUpEdit, mPasswordAgainSingUpEdit)) {
+                visibleProgressBar(true);
                 checkUserName(new AccountCallback() {
                     @Override
                     public void onSuccess(@NonNull boolean isCreate) {
@@ -78,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 public void onSuccess(@NonNull boolean isCreate) {
                                     if (!isCreate) {
                                         registerUser();
+                                        visibleProgressBar(false);
                                     } else {
                                         mEmailSingUpEdit.setError("Email already use");
                                         visibleProgressBar(false);
@@ -116,7 +113,6 @@ public class SignUpActivity extends AppCompatActivity {
         if (callback != null) {
             Account.LoginRequest userLogin =
                     new Account.LoginRequest(mUserNameSingUpEdit.getText().toString().trim());
-            visibleProgressBar(true);
             Call<Account.LoginRespond> loginRequest = apiUtils.initializePlamberAPI().checkLogin(userLogin);
             loginRequest.enqueue(new Callback<Account.LoginRespond>() {
                 @Override
@@ -172,8 +168,6 @@ public class SignUpActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     tokenUtils.removeToken();
                     tokenUtils.writeToken(response.body().getData().getToken());
-                    visibleProgressBar(false);
-                    Log.i(TAG, response.body().getData().getToken());
                     Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
                     startActivity(intent);
                 }
@@ -182,7 +176,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<User.UserRespond> call, Throwable t) {
                 errorMessage(t);
-                visibleProgressBar(true);
             }
         });
     }

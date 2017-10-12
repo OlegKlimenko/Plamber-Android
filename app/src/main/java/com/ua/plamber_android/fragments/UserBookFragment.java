@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.interfaces.BooksCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.TokenUtils;
@@ -31,22 +31,19 @@ import retrofit2.Response;
 public class UserBookFragment extends Fragment {
 
     private final static String TAG = "UserBookFragment";
+    private final static String HOMEBOOKAPI = "api/v1/home/";
 
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerBookAdapter mAdapter;
     private ProgressBar mUserBookProgress;
     private TextView mMessageAgain;
     private SwipeRefreshLayout mSwipeRefresh;
-    private APIUtils apiUtils;
-    private TokenUtils tokenUtils;
+    private WorkAPI workAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tokenUtils = new TokenUtils(getActivity());
-        apiUtils = new APIUtils(getActivity());
-        tokenUtils = new TokenUtils(getActivity());
+        workAPI = new WorkAPI(getActivity());
     }
 
     @Override
@@ -63,15 +60,14 @@ public class UserBookFragment extends Fragment {
                 viewUserBook();
             }
         });
-        mLayoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         viewUserBook();
 
         return v;
     }
 
     private void viewUserBook() {
-        getUserBook(new BooksCallback() {
+        workAPI.getUserBook(new BooksCallback() {
             @Override
             public void onSuccess(@NonNull List<Book.BookData> books) {
                 visibleProgress(mMessageAgain, false);
@@ -96,30 +92,9 @@ public class UserBookFragment extends Fragment {
                 mSwipeRefresh.setRefreshing(false);
                 Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }, HOMEBOOKAPI);
     }
 
-    private void getUserBook(final BooksCallback callback) {
-        if (callback != null) {
-            final List<Book.BookData> booksData = new ArrayList<>();
-            final Book.BookRequest book = new Book.BookRequest(tokenUtils.readToken());
-            Call<Book.BookRespond> request = apiUtils.initializePlamberAPI().getUserBook(book);
-            request.enqueue(new Callback<Book.BookRespond>() {
-                @Override
-                public void onResponse(Call<Book.BookRespond> call, Response<Book.BookRespond> response) {
-                    if (response.isSuccessful()) {
-                        booksData.addAll(response.body().getBookData());
-                    }
-                    callback.onSuccess(booksData);
-                }
-
-                @Override
-                public void onFailure(Call<Book.BookRespond> call, Throwable t) {
-                    callback.onError(t);
-                }
-            });
-        }
-    }
 
     private void visibleProgress(View v, boolean status) {
         if (status) {
