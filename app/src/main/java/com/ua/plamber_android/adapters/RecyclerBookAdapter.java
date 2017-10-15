@@ -1,6 +1,8 @@
 package com.ua.plamber_android.adapters;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +19,9 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
@@ -28,8 +32,9 @@ import java.util.List;
 public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapter.ViewHolder>{
 
     private List<Book.BookData> books;
+    public static final String BOOKKEY = "BOOKKEY";
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public ImageView img;
         public TextView nameBook;
@@ -44,6 +49,14 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
             this.nameBook = (TextView) v.findViewById(R.id.book_item_name);
             this.authorBook= (TextView) v.findViewById(R.id.book_item_author);
             this.userProgressImage = (ProgressBar) v.findViewById(R.id.pb_user_book_download);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
+            intent.putExtra(BOOKKEY, new Gson().toJson(books.get(getAdapterPosition())));
+            view.getContext().startActivity(intent);
         }
     }
 
