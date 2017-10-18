@@ -159,7 +159,6 @@ public class DetailBookActivity extends AppCompatActivity {
         args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookData));
         dialogFragmant.setArguments(args);
         dialogFragmant.setCancelable(false);
-        dialogFragmant.setRetainInstance(true);
         dialogFragmant.show(getSupportFragmentManager(), "DownloadDialog");
     }
 }

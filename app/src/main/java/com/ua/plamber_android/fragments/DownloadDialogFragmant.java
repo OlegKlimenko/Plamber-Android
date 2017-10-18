@@ -34,6 +34,7 @@ public class DownloadDialogFragmant extends DialogFragment {
 
     public static final String DOWNLOADBOOK = "DOWNLOADBOOK";
     private APIUtils apiUtils;
+    private boolean isDownloading;
 
     ProgressBar progressDownload;
     TextView percentDownload;
@@ -48,6 +49,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         bookData = new Gson().fromJson(getArguments().getString(DOWNLOADBOOK), Book.BookData.class);
         apiUtils = new APIUtils(getActivity());
         utils = new Utils(getActivity());
+        setRetainInstance(true);
     }
 
     @Override
@@ -65,6 +67,8 @@ public class DownloadDialogFragmant extends DialogFragment {
         percentDownload = v.findViewById(R.id.tv_percent_dialog_download);
 
         final File file = new File(utils.getBooksPath() + getFileName(bookData));
+
+        if (!isDownloading)
         downloadBook(file);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -76,6 +80,7 @@ public class DownloadDialogFragmant extends DialogFragment {
                         if (asyncTask != null) {
                             asyncTask.cancel(true);
                         }
+                        isDownloading = false;
                         file.delete();
                         Toast.makeText(getActivity(), "Download was interrupted", Toast.LENGTH_SHORT).show();
                     }
@@ -84,6 +89,7 @@ public class DownloadDialogFragmant extends DialogFragment {
     }
 
     private void downloadBook(final File file) {
+        isDownloading = true;
         final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFileWithDynamicUrlAsync(bookData.getBookFile());
         request.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -124,9 +130,11 @@ public class DownloadDialogFragmant extends DialogFragment {
                         protected void onPostExecute(Boolean status) {
                             dismiss();
                             if (status) {
+                                isDownloading = false;
                                 Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
                                 ((DetailBookActivity)getActivity()).checkFileExist();
                             } else {
+                                isDownloading = false;
                                 file.delete();
                                 Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();
                             }
