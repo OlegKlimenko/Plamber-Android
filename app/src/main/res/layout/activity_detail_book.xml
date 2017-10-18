@@ -44,14 +44,14 @@
 
 
             <Button
-                android:id="@+id/btn_detail_read_book"
+                android:id="@+id/btn_detail_download_book"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/forgot_margin"
                 android:layout_marginRight="@dimen/forgot_margin"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                android:text="Read Book"
+                android:text="Download Book"
                 android:textAllCaps="false"
                 android:theme="@style/AppTheme.GreenButton" />
 

@@ -1,6 +1,8 @@
 package com.ua.plamber_android.utils;
 
 import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -8,8 +10,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
 
-public class Utils {
+import java.io.File;
 
+public class Utils {
 
     private Context context;
 
@@ -20,5 +23,19 @@ public class Utils {
     public void initBackgroundImage(ImageView background) {
         Glide.with(context).load(R.drawable.main_background)
                 .apply(new RequestOptions().transform(new CenterCrop())).into(background);
+    }
+
+    public String getBooksPath() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            String path = Environment.getExternalStorageDirectory() + File.separator + "Plamber" + File.separator;
+            File plamberDirectory = new File(path);
+            if (!plamberDirectory.exists()) {
+                plamberDirectory.mkdir();
+            }
+            return path;
+        } else {
+            return context.getFilesDir().getPath() + File.separator;
+        }
     }
 }
