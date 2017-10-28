@@ -2,7 +2,7 @@ package com.ua.plamber_android.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -37,5 +37,15 @@ public class Utils {
         } else {
             return context.getFilesDir().getPath() + File.separator;
         }
+    }
+
+    public float getHeightDeviceDP() {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.heightPixels / displayMetrics.density;
+    }
+
+    public float getWidthDeviceDP() {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.widthPixels / displayMetrics.density;
     }
 }

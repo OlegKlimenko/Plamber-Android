@@ -12,7 +12,17 @@
         <item
             android:id="@+id/nav_library"
             android:icon="@drawable/ic_library_books_black_24dp"
-            android:title="My library" />
+            android:title="Library" />
+
+        <item
+            android:id="@+id/nav_recommended"
+            android:icon="@drawable/ic_bookmark_border_black_24dp"
+            android:title="Recommended" />
+
+        <item
+        android:id="@+id/nav_upload_book"
+        android:icon="@drawable/ic_cloud_upload_black_24dp"
+        android:title="Upload" />
     </group>
 
     <group
@@ -20,14 +30,18 @@
         android:checkableBehavior="none">
 
         <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_info_black_24dp"
-            android:title="About" />
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Setting" />
+
+        <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_info_black_24dp"
+        android:title="About" />
 
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="Logout" />
-
     </group>
 </menu>

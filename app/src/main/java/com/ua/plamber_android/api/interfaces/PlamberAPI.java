@@ -49,5 +49,5 @@ public interface PlamberAPI {
 
     @Streaming
     @GET
-    Call<ResponseBody> downloadFileWithDynamicUrlAsync(@Url String fileUrl);
+    Call<ResponseBody> downloadFile(@Url String fileUrl);
 }

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,6 @@ public class DownloadDialogFragmant extends DialogFragment {
     TextView percentDownload;
 
     Book.BookData bookData;
-    private AsyncTask asyncTask;
     private Utils utils;
 
     @Override
@@ -59,6 +59,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         super.onDestroyView();
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflate = getActivity().getLayoutInflater();
@@ -69,7 +70,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         final File file = new File(utils.getBooksPath() + getFileName(bookData));
 
         if (!isDownloading)
-        downloadBook(file);
+    downloadBook(file);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
@@ -77,9 +78,6 @@ public class DownloadDialogFragmant extends DialogFragment {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (asyncTask != null) {
-                            asyncTask.cancel(true);
-                        }
                         isDownloading = false;
                         file.delete();
                         Toast.makeText(getActivity(), "Download was interrupted", Toast.LENGTH_SHORT).show();
@@ -90,56 +88,12 @@ public class DownloadDialogFragmant extends DialogFragment {
 
     private void downloadBook(final File file) {
         isDownloading = true;
-        final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFileWithDynamicUrlAsync(bookData.getBookFile());
+        final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFile(bookData.getBookFile());
         request.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    asyncTask = new AsyncTask<Void, Integer, Boolean>() {
-                        @Override
-                        protected Boolean doInBackground(Void... voids) {
-                            boolean checkFile = false;
-                            try {
-                                float fileSize = response.body().contentLength();
-                                FileOutputStream stream = new FileOutputStream(file);
-                                BufferedInputStream inputStream = new BufferedInputStream(response.body().byteStream());
-                                byte[] data = new byte[8192];
-                                float total = 0;
-                                int readBytes;
-
-                                while ((readBytes = inputStream.read(data)) != -1) {
-                                    total += readBytes;
-                                    stream.write(data, 0, readBytes);
-                                    publishProgress((int) ((total / fileSize) * 100));
-                                }
-                                if (fileSize == total) {
-                                    checkFile = true;
-                                }
-                            } catch (IOException e) {
-                                Log.i("BookReaderActivity", e.getLocalizedMessage());
-                            }
-                            return checkFile;
-                        }
-
-                        @Override
-                        protected void onProgressUpdate(Integer... values) {
-                            setProgress(values[0]);
-                        }
-
-                        @Override
-                        protected void onPostExecute(Boolean status) {
-                            dismiss();
-                            if (status) {
-                                isDownloading = false;
-                                Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
-                                ((DetailBookActivity)getActivity()).checkFileExist();
-                            } else {
-                                isDownloading = false;
-                                file.delete();
-                                Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }.execute();
+                    new asyncDownloadBook(file, response).execute();
                 } else {
                     Log.d("BookReaderActivity", "Error");
                 }
@@ -160,4 +114,60 @@ public class DownloadDialogFragmant extends DialogFragment {
         progressDownload.setProgress(progress);
         percentDownload.setText(progress + "%");
     }
+
+    private class asyncDownloadBook extends AsyncTask<Void, Integer, Boolean> {
+
+        private File file;
+        private Response<ResponseBody> response;
+
+        public asyncDownloadBook(File file, Response<ResponseBody> response) {
+            this.file = file;
+            this.response = response;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean checkFile = false;
+            try {
+                float fileSize = response.body().contentLength();
+                FileOutputStream stream = new FileOutputStream(file);
+                BufferedInputStream inputStream = new BufferedInputStream(response.body().byteStream());
+                byte[] data = new byte[8192];
+                float total = 0;
+                int readBytes;
+
+                while ((readBytes = inputStream.read(data)) != -1) {
+                    total += readBytes;
+                    stream.write(data, 0, readBytes);
+                    publishProgress((int) ((total / fileSize) * 100));
+                }
+                if (fileSize == total) {
+                    checkFile = true;
+                }
+            } catch (IOException e) {
+                Log.i("BookReaderActivity", e.getLocalizedMessage());
+            }
+            return checkFile;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean status) {
+            dismiss();
+            if (status) {
+                isDownloading = false;
+                Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
+                ((DetailBookActivity)getActivity()).checkFileExist();
+            } else {
+                isDownloading = false;
+                file.delete();
+                Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

@@ -95,17 +95,17 @@ public class DetailBookActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
-        if (mDetailButton.getTag() == "Download") {
-            if (checkPermission()) {
+        if (checkPermission()) {
+            if (mDetailButton.getTag() == "Download") {
                 if (apiUtils.isOnline())
                     runDownloadDialog();
             } else {
-                runQuestionPermissions();
+                Intent intent = BookReaderActivity.startReaderActivity(this);
+                intent.putExtra(PDFPATH, utils.getBooksPath() + dialogFragmant.getFileName(bookData));
+                startActivity(intent);
             }
         } else {
-            Intent intent = BookReaderActivity.startReaderActivity(this);
-            intent.putExtra(PDFPATH, utils.getBooksPath() + dialogFragmant.getFileName(bookData));
-            startActivity(intent);
+            runQuestionPermissions();
         }
     }
 
