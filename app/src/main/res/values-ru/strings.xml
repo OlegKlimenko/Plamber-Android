@@ -18,4 +18,7 @@
     <string name="press_once_to_exit">Нажмите дважды для выхода</string>
     <string name="back_to_login_page">Вернуться к странице входа?</string>
     <string name="restore_account">Восстановить аккаунт</string>
+    <string name="old_password">Текущий пароль</string>
+    <string name="save">Сохранить</string>
+    <string name="change_password">Изменить пароль</string>
 </resources>

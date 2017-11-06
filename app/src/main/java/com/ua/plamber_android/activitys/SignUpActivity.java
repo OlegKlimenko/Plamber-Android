@@ -3,6 +3,7 @@ package com.ua.plamber_android.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
@@ -28,18 +29,28 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    @BindView(R.id.iv_singup_background)
+    ImageView backgroundSing;
+    @BindView(R.id.singup_progress_bar)
+    LinearLayout mSingUpProgressBar;
+
+    @BindView(R.id.et_sing_up_password_again)
+    EditText mPasswordAgainSingUpEdit;
     @BindView(R.id.et_sing_up_username)
     EditText mUserNameSingUpEdit;
     @BindView(R.id.et_sing_up_email)
     EditText mEmailSingUpEdit;
     @BindView(R.id.et_sing_up_password)
     EditText mPasswordSingUpEdit;
-    @BindView(R.id.et_sing_up_password_again)
-    EditText mPasswordAgainSingUpEdit;
-    @BindView(R.id.iv_singup_background)
-    ImageView backgroundSing;
-    @BindView(R.id.singup_progress_bar)
-    LinearLayout mSingUpProgressBar;
+
+    @BindView(R.id.til_sing_up_username)
+    TextInputLayout mTilUserNameSingUpEdit;
+    @BindView(R.id.til_sing_up_email)
+    TextInputLayout mTilEmailSingUpEdit;
+    @BindView(R.id.til_sing_up_password)
+    TextInputLayout mTilPasswordSingUpEdit;
+    @BindView(R.id.til_sing_up_password_again)
+    TextInputLayout mTilPasswordAgainSingUpEdit;
 
     private final static String TAG = "SignUpActivity";
     APIUtils apiUtils;
@@ -62,8 +73,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (apiUtils.isOnline()) {
             Validate valid = new Validate(getApplicationContext());
-            if (valid.userNameValidate(mUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit)
-                    & valid.passwordAgainValidate(mPasswordSingUpEdit, mPasswordAgainSingUpEdit)) {
+            if (valid.userNameValidate(mUserNameSingUpEdit, mTilUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit, mTilEmailSingUpEdit)
+                    & valid.passwordAgainValidate(mPasswordSingUpEdit, mPasswordAgainSingUpEdit, mTilPasswordSingUpEdit, mTilPasswordAgainSingUpEdit)) {
                 visibleProgressBar(true);
                 checkUserName(new AccountCallback() {
                     @Override

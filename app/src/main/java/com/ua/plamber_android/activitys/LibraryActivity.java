@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
@@ -23,6 +24,7 @@ import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LibraryActivity extends AppCompatActivity {
 
@@ -39,6 +41,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     public static final String TAG = "LibraryActivity";
     private Utils utils;
+    private static long timeExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,17 @@ public class LibraryActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (timeExit + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+        } else {
+            String mess = getString(R.string.press_once_to_exit);
+            Toast.makeText(this, mess, Toast.LENGTH_SHORT).show();
+        }
+        timeExit = System.currentTimeMillis();
     }
 
     public void setupPager() {
@@ -108,6 +122,11 @@ public class LibraryActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_upload_book:
                         setPage(3);
+                        break;
+
+                    case R.id.nav_setting:
+                        Intent intent = SettingActivity.startSettingActivity(getApplicationContext());
+                        startActivity(intent);
                         break;
 
                     case R.id.nav_logout:

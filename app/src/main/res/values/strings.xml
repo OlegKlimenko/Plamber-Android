@@ -1,4 +1,11 @@
 <resources>
+
+    <!--no localization-->
+    <string name="plamber_version">1.0</string>
+    <string name="plamber_web_page">http://ec2-52-201-246-230.compute-1.amazonaws.com/</string>
+    <string name="plamber_page_about">http://ec2-52-201-246-230.compute-1.amazonaws.com/about</string>
+
+
     <string name="app_name">Plamber</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -22,6 +29,11 @@
     <string name="back_to_login_page">Back to login page?</string>
     <string name="restore_account">Restore account</string>
     <string name="error_recycler">Please pull to update</string>
+    <string name="tap_to_change">Tap to change avatar</string>
+    <string name="old_password">Old password</string>
+    <string name="save">Save</string>
+    <string name="change_password">Change password</string>
+    <string name="validate_password_clone">Old and new passwords can not be the same</string>
 
 
 </resources>

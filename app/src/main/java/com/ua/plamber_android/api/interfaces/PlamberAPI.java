@@ -3,6 +3,7 @@ package com.ua.plamber_android.api.interfaces;
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Library;
+import com.ua.plamber_android.model.Password;
 import com.ua.plamber_android.model.User;
 
 import okhttp3.ResponseBody;
@@ -50,4 +51,8 @@ public interface PlamberAPI {
     @Streaming
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/change-password/")
+    Call<Password.PasswordRespond> changePassword(@Body Password.PasswordRequest passwordRequest);
 }

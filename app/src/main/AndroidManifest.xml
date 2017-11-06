@@ -24,7 +24,9 @@
         <activity android:name=".activitys.LibraryActivity" />
         <activity android:name=".activitys.RestoreAccountActivity" />
         <activity android:name=".activitys.DetailBookActivity" />
-        <activity android:name=".activitys.BookReaderActivity"></activity>
+        <activity android:name=".activitys.BookReaderActivity" />
+        <activity android:name=".activitys.SettingActivity" />
+        <activity android:name=".activitys.ChangePasswordActivity"></activity>
     </application>
 
 </manifest>

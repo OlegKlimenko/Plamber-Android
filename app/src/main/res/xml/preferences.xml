@@ -1,0 +1,61 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Profile Setting">
+
+        <Preference
+            android:key="change_avatar"
+            android:title="Change avatar"
+            android:summary="Change user avatar"
+            >
+        </Preference>
+
+        <Preference
+            android:key="change_password"
+            android:title="Change password"
+            android:summary="Change user password">
+        </Preference>
+
+        <Preference
+            android:key="switch_language"
+            android:title="Switch language"
+            android:summary="Switch user lanuage">
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+
+        <Preference
+            android:key="support"
+            android:title="Email support"
+            android:summary="Find errors or have questions? Write to us">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="mailto:plamber.reading@gmail.com" />
+        </Preference>
+
+        <Preference android:title="Home page"
+            android:summary="Plamber.com.ua">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/plamber_web_page" />
+        </Preference>
+
+        <Preference
+            android:key="about_plamber"
+            android:title="About plamber"
+            android:summary="Information about plamber">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/plamber_page_about" />
+        </Preference>
+
+        <Preference
+            android:key="version"
+            android:title="Version"
+            android:summary="@string/plamber_version">
+        </Preference>
+
+
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

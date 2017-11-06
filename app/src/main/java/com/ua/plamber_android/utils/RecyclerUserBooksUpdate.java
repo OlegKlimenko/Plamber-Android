@@ -9,8 +9,8 @@ import java.util.List;
 
 public class RecyclerUserBooksUpdate extends DiffUtil.Callback {
 
-    List<Book.BookData> oldBooks;
-    List<Book.BookData> newBooks;
+    private List<Book.BookData> oldBooks;
+    private List<Book.BookData> newBooks;
 
     public RecyclerUserBooksUpdate(List<Book.BookData> oldBooks, List<Book.BookData> newBooks) {
         this.oldBooks = oldBooks;

@@ -3,6 +3,7 @@ package com.ua.plamber_android.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,14 +28,24 @@ public class LoginActivity extends AppCompatActivity {
 
     private final static String TAG = "LoginActivity";
 
-    @BindView(R.id.et_login_email)
-    EditText mUsername;
-    @BindView(R.id.et_login_password)
-    EditText mPasswordLoginEdit;
+
     @BindView(R.id.iv_login_background)
     ImageView mBackgroundLogin;
+
     @BindView(R.id.login_progress_bar)
     LinearLayout mLoginProgressBar;
+
+    @BindView(R.id.et_login_email)
+    EditText mUsername;
+
+    @BindView(R.id.et_login_password)
+    EditText mPasswordLoginEdit;
+
+    @BindView(R.id.til_login_email)
+    TextInputLayout mTilUsername;
+
+    @BindView(R.id.til_login_password)
+    TextInputLayout mTilPasswordLoginEdit;
 
     private static long timeExit;
 
@@ -57,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         if (tokenUtils.checkUserToken()) {
             Intent intent = LibraryActivity.startLibraryActivity(this);
             startActivity(intent);
+
         }
     }
 
@@ -75,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loginButton() {
         if (apiUtils.isOnline()) {
             Validate valid = new Validate(getApplicationContext());
-            if (valid.userNameValidate(mUsername) & valid.passwordValidate(mPasswordLoginEdit)) {
+            if (valid.userNameValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
                 userLoginInSystem();
             }
         }
@@ -113,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                         visibleProgressBar(false);
                         Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
                         startActivity(intent);
+                        finish();
                     } else {
                         Toast.makeText(getBaseContext(), "Incorrect!!!", Toast.LENGTH_SHORT).show();
                         visibleProgressBar(false);

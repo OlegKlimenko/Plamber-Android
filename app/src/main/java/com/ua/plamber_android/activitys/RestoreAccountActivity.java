@@ -2,6 +2,7 @@ package com.ua.plamber_android.activitys;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,10 +29,12 @@ public class RestoreAccountActivity extends AppCompatActivity {
 
     @BindView(R.id.iv_restore_background)
     ImageView mBackgroundRestore;
-    @BindView(R.id.et_email_restore)
-    EditText mRestoreAccountEdit;
     @BindView(R.id.restore_progress_bar)
     LinearLayout mRestoreProgressBar;
+    @BindView(R.id.et_email_restore)
+    EditText mRestoreAccountEdit;
+    @BindView(R.id.til_email_restore)
+    TextInputLayout mTilRestoreAccountEdit;
 
     APIUtils apiUtils;
 
@@ -52,7 +55,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
     public void restoreAccountButton() {
         if (apiUtils.isOnline()) {
             Validate validate = new Validate(getApplicationContext());
-            if (validate.emailValidate(mRestoreAccountEdit)) {
+            if (validate.emailValidate(mRestoreAccountEdit, mTilRestoreAccountEdit)) {
                 restoreAccount();
             }
         }

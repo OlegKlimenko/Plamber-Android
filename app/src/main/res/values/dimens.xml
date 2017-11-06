@@ -9,6 +9,7 @@
     <dimen name="margin_nav_header_height">140dp</dimen>
     <dimen name="margin_library">16dp</dimen>
     <dimen name="dialog_padding">24dp</dimen>
+    <dimen name="logo_setting_size">50dp</dimen>
 
     <!-- Default screen margins, per the Android Design-->
     <dimen name="activity_horizontal_margin">16dp</dimen>
