@@ -35,7 +35,7 @@ public class DownloadDialogFragmant extends DialogFragment {
 
     public static final String DOWNLOADBOOK = "DOWNLOADBOOK";
     private APIUtils apiUtils;
-    private boolean isDownloading;
+    private AsyncDownloadBook asyncDownload;
 
     ProgressBar progressDownload;
     TextView percentDownload;
@@ -68,9 +68,8 @@ public class DownloadDialogFragmant extends DialogFragment {
         percentDownload = v.findViewById(R.id.tv_percent_dialog_download);
 
         final File file = new File(utils.getBooksPath() + getFileName(bookData));
-
-        if (!isDownloading)
-    downloadBook(file);
+        if (asyncDownload == null || asyncDownload.getStatus() != AsyncTask.Status.RUNNING)
+        downloadBook(file);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
@@ -78,7 +77,9 @@ public class DownloadDialogFragmant extends DialogFragment {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        isDownloading = false;
+                        if (asyncDownload != null) {
+                            asyncDownload.cancel(true);
+                        }
                         file.delete();
                         Toast.makeText(getActivity(), "Download was interrupted", Toast.LENGTH_SHORT).show();
                     }
@@ -87,13 +88,13 @@ public class DownloadDialogFragmant extends DialogFragment {
     }
 
     private void downloadBook(final File file) {
-        isDownloading = true;
         final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFile(bookData.getBookFile());
         request.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    new asyncDownloadBook(file, response).execute();
+                   asyncDownload = new AsyncDownloadBook(file);
+                   asyncDownload.execute(response);
                 } else {
                     Log.d("BookReaderActivity", "Error");
                 }
@@ -115,23 +116,21 @@ public class DownloadDialogFragmant extends DialogFragment {
         percentDownload.setText(progress + "%");
     }
 
-    private class asyncDownloadBook extends AsyncTask<Void, Integer, Boolean> {
+    private class AsyncDownloadBook extends AsyncTask<Response<ResponseBody>, Integer, Boolean> {
 
         private File file;
-        private Response<ResponseBody> response;
 
-        public asyncDownloadBook(File file, Response<ResponseBody> response) {
+        public AsyncDownloadBook(File file) {
             this.file = file;
-            this.response = response;
         }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected Boolean doInBackground(Response<ResponseBody>... response) {
             boolean checkFile = false;
             try {
-                float fileSize = response.body().contentLength();
+                float fileSize = response[0].body().contentLength();
                 FileOutputStream stream = new FileOutputStream(file);
-                BufferedInputStream inputStream = new BufferedInputStream(response.body().byteStream());
+                BufferedInputStream inputStream = new BufferedInputStream(response[0].body().byteStream());
                 byte[] data = new byte[8192];
                 float total = 0;
                 int readBytes;
@@ -159,11 +158,9 @@ public class DownloadDialogFragmant extends DialogFragment {
         protected void onPostExecute(Boolean status) {
             dismiss();
             if (status) {
-                isDownloading = false;
                 Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
                 ((DetailBookActivity)getActivity()).checkFileExist();
             } else {
-                isDownloading = false;
                 file.delete();
                 Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();
             }
