@@ -2,6 +2,7 @@ package com.ua.plamber_android.api.interfaces;
 
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.CategoryBook;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.Password;
 import com.ua.plamber_android.model.User;
@@ -33,7 +34,7 @@ public interface PlamberAPI {
     Call<Account.LoginRespond> checkLogin(@Body Account.LoginRequest loginRequest);
 
     @Headers("Content-Type: application/json")
-    @POST("api/v1/is-mail-exists")
+    @POST("api/v1/is-mail-exists/")
     Call<Account.EmailRespond> checkEmail(@Body Account.EmailRequest emailRequest);
 
     @Headers("Content-Type: application/json")
@@ -55,4 +56,9 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/change-password/")
     Call<Password.PasswordRespond> changePassword(@Body Password.PasswordRequest passwordRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/category/{id}/")
+    Call<CategoryBook.CategoryBookRespond>
+    getCurrentCategory(@Path("id") Long id, @Body CategoryBook.CategoryBookRequest categoryRequest);
 }

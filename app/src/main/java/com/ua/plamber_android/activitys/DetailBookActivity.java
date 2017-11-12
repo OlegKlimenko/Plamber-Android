@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,7 +34,9 @@ import butterknife.OnClick;
 
 public class DetailBookActivity extends AppCompatActivity {
 
+
     public static final String PDFPATH = "PDFPATH";
+    public static final String TAG = "DetailBookActivity";
     private static final int REQUEST_WRITE_STORAGE = 101;
 
     @BindView(R.id.iv_detail_book_image)

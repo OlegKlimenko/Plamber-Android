@@ -91,7 +91,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFile(bookData.getBookFile());
         request.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                    asyncDownload = new AsyncDownloadBook(file);
                    asyncDownload.execute(response);
@@ -101,7 +101,7 @@ public class DownloadDialogFragmant extends DialogFragment {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -113,7 +113,7 @@ public class DownloadDialogFragmant extends DialogFragment {
 
     private void setProgress(int progress) {
         progressDownload.setProgress(progress);
-        percentDownload.setText(progress + "%");
+        percentDownload.setText(new StringBuilder().append(progress).append("%").toString());
     }
 
     private class AsyncDownloadBook extends AsyncTask<Response<ResponseBody>, Integer, Boolean> {
@@ -124,8 +124,9 @@ public class DownloadDialogFragmant extends DialogFragment {
             this.file = file;
         }
 
+        @SafeVarargs
         @Override
-        protected Boolean doInBackground(Response<ResponseBody>... response) {
+        protected final Boolean doInBackground(Response<ResponseBody>... response) {
             boolean checkFile = false;
             try {
                 float fileSize = response[0].body().contentLength();

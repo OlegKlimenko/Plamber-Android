@@ -18,7 +18,7 @@ public class Book {
 
     public class BookRespond {
         @SerializedName("status")
-        private String status;
+        private int status;
 
         @SerializedName("detail")
         private String detail;
@@ -26,7 +26,7 @@ public class Book {
         @SerializedName("data")
         private List<BookData> bookData;
 
-        public String getStatus() {
+        public int getStatus() {
             return status;
         }
 
@@ -70,6 +70,9 @@ public class Book {
         @SerializedName("private_book")
         private boolean isprivatBeook;
 
+        @SerializedName("url")
+        private String bookUrl;
+
         public String getBookName() {
             return bookName;
         }
@@ -106,8 +109,12 @@ public class Book {
             return uploadDate;
         }
 
-        public boolean isprivatBeook() {
+        public boolean isPrivatBeook() {
             return isprivatBeook;
+        }
+
+        public String getBookUrl() {
+            return bookUrl;
         }
 
         @Override

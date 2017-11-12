@@ -26,7 +26,8 @@
         <activity android:name=".activitys.DetailBookActivity" />
         <activity android:name=".activitys.BookReaderActivity" />
         <activity android:name=".activitys.SettingActivity" />
-        <activity android:name=".activitys.ChangePasswordActivity"></activity>
+        <activity android:name=".activitys.ChangePasswordActivity" />
+        <activity android:name=".activitys.CategoryActivity"></activity>
     </application>
 
 </manifest>
