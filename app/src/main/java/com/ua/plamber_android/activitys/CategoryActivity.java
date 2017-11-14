@@ -1,31 +1,45 @@
 package com.ua.plamber_android.activitys;
 
-import android.content.Context;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.ua.plamber_android.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CategoryActivity extends AppCompatActivity {
+public class CategoryActivity extends BaseDrawerActivity {
 
-    @BindView(R.id.drawerLayout)
-    DrawerLayout mDrawerLayout;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  setContentView(R.layout.activity_category);
-
+        setContentView(R.layout.activity_category);
         ButterKnife.bind(this);
 
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.activity_category, null, false);
-        mDrawerLayout.addView(contentView, 0);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setElevation(10);
+        }
+
+        mNavigationView.getMenu().getItem(1).setChecked(true);
+
+        backToLibrary();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

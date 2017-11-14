@@ -1,14 +1,14 @@
 package com.ua.plamber_android.activitys;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,14 +19,12 @@ import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
-import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
-public class LibraryActivity extends AppCompatActivity {
+public class LibraryActivity extends BaseDrawerActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -34,14 +32,11 @@ public class LibraryActivity extends AppCompatActivity {
     ViewPager mViewPager;
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(R.id.navigation_view)
-    NavigationView mNavigationView;
-    @BindView(R.id.drawerLayout)
-    DrawerLayout mDrawerLayout;
 
     public static final String TAG = "LibraryActivity";
     private Utils utils;
     private static long timeExit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +44,51 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library);
         ButterKnife.bind(this);
         utils = new Utils(this);
-        setupPager();
         setSupportActionBar(mToolbar);
-        setupNavigationDrawer();
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.drawer_open, R.string.drawer_close);
-        mDrawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
+        setupPager();
+        setPagerSwipe();
+        setToggle();
         setPage(0);
+        setupNavigationDrawer();
+    }
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LibraryFragment.MENU_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                setPage(data.getIntExtra(BACK_WITH_MENU, 0));
             }
+        }
+    }
 
+    public void setupNavigationDrawer() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onPageSelected(int position) {
-                setPage(position);
-            }
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.nav_user_books:
+                        setPage(0);
+                        break;
+                    case R.id.nav_library:
+                        setPage(1);
+                        break;
+                    case R.id.nav_recommended:
+                        setPage(2);
+                        break;
+                    case R.id.nav_upload_book:
+                        setPage(3);
+                        break;
+                    case R.id.nav_setting:
+                        startSetting();
+                        break;
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+                    case R.id.nav_logout:
+                        logoutApplication();
+                        break;
+                }
+                return true;
             }
         });
     }
@@ -96,61 +113,44 @@ public class LibraryActivity extends AppCompatActivity {
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        if (utils.getWidthDeviceDP() > 360){
+        if (utils.getWidthDeviceDP() > 360) {
             mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         } else {
             mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         }
     }
 
-    public void setupNavigationDrawer() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.nav_user_books:
-                        setPage(0);
-                        break;
-
-                    case R.id.nav_library:
-                        setPage(1);
-                        break;
-
-                    case R.id.nav_recommended:
-                        setPage(2);
-                        break;
-                    case R.id.nav_upload_book:
-                        setPage(3);
-                        break;
-
-                    case R.id.nav_setting:
-                        Intent intent = SettingActivity.startSettingActivity(getApplicationContext());
-                        startActivity(intent);
-                        break;
-
-                    case R.id.nav_logout:
-                        logoutApplication();
-                        break;
-                }
-                return true;
-            }
-        });
-    }
-
-    private void setPage(int postion) {
+    public void setPage(int postion) {
         mViewPager.setCurrentItem(postion);
         getSupportActionBar().setTitle(mViewPager.getAdapter().getPageTitle(postion));
         mDrawerLayout.closeDrawers();
         mNavigationView.getMenu().getItem(postion).setChecked(true);
     }
 
-    private void logoutApplication() {
-        TokenUtils tokenUtils = new TokenUtils(getApplicationContext());
-        tokenUtils.removeToken();
-        finish();
-        Intent intent = LoginActivity.startLoginActivity(getApplicationContext());
-        startActivity(intent);
+    private void setPagerSwipe() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setPage(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void setToggle() {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
     }
 
     public static Intent startLibraryActivity(Context context) {

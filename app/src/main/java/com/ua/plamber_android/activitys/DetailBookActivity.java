@@ -86,9 +86,12 @@ public class DetailBookActivity extends AppCompatActivity {
         mDetailButton.setTag("Download");
 
         setSupportActionBar(mToolbarDeatil);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(bookData.getBookName());
-        getSupportActionBar().setElevation(10);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(bookData.getBookName());
+            getSupportActionBar().setElevation(10);
+        }
+
     }
 
     @Override

@@ -41,6 +41,7 @@ public class LibraryFragment extends Fragment {
     APIUtils apiUtils;
 
     private static final String TAG = "LibraryFragment";
+    public static final int MENU_REQUEST = 123;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class LibraryFragment extends Fragment {
                     public void onClick(View view, int position) {
                        //getBooksFromCategory(categories.get(position).getId(), 1);
                         Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                        startActivity(intent);
+                        getActivity().startActivityForResult(intent, MENU_REQUEST);
                     }
                 };
 
