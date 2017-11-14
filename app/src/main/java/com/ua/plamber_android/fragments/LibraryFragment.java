@@ -14,13 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
 import com.ua.plamber_android.adapters.RecyclerLibraryAdapter;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.interfaces.BooksCallback;
-import com.ua.plamber_android.api.interfaces.CategoryCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.CategoryBook;
 import com.ua.plamber_android.model.Library;

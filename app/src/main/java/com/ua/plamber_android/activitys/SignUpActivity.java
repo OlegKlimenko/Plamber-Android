@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.interfaces.AccountCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.AccountCallbacks;
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;
@@ -76,11 +75,11 @@ public class SignUpActivity extends AppCompatActivity {
             if (valid.userNameValidate(mUserNameSingUpEdit, mTilUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit, mTilEmailSingUpEdit)
                     & valid.passwordAgainValidate(mPasswordSingUpEdit, mPasswordAgainSingUpEdit, mTilPasswordSingUpEdit, mTilPasswordAgainSingUpEdit)) {
                 visibleProgressBar(true);
-                checkUserName(new AccountCallback() {
+                checkUserName(new AccountCallbacks() {
                     @Override
                     public void onSuccess(@NonNull boolean isCreate) {
                         if (!isCreate) {
-                            checkUserEmail(new AccountCallback() {
+                            checkUserEmail(new AccountCallbacks() {
                                 @Override
                                 public void onSuccess(@NonNull boolean isCreate) {
                                     if (!isCreate) {
@@ -120,7 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void checkUserName(final AccountCallback callback) {
+    private void checkUserName(final AccountCallbacks callback) {
         if (callback != null) {
             Account.LoginRequest userLogin =
                     new Account.LoginRequest(mUserNameSingUpEdit.getText().toString().trim());
@@ -143,7 +142,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void checkUserEmail(final AccountCallback callback) {
+    private void checkUserEmail(final AccountCallbacks callback) {
         if (callback != null) {
             Account.EmailRequest userEmail =
                     new Account.EmailRequest(mEmailSingUpEdit.getText().toString().trim());
