@@ -58,7 +58,7 @@ public interface PlamberAPI {
     Call<Password.PasswordRespond> changePassword(@Body Password.PasswordRequest passwordRequest);
 
     @Headers("Content-Type: application/json")
-    @POST("api/v1/category/{id}/")
+    @POST("api/v1/category/")
     Call<CategoryBook.CategoryBookRespond>
-    getCurrentCategory(@Path("id") Long id, @Body CategoryBook.CategoryBookRequest categoryRequest);
+    getCurrentCategory(@Body CategoryBook.CategoryBookRequest categoryRequest);
 }

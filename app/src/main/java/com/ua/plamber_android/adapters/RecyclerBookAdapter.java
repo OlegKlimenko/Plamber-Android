@@ -60,6 +60,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
         }
     }
 
+
     public RecyclerBookAdapter(List<Book.BookData> books) {
         this.books = books;
     }
@@ -68,8 +69,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.list_item_book, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override

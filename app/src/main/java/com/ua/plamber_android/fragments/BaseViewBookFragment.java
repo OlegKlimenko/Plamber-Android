@@ -18,7 +18,9 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.CurrentCategoryCallback;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.CategoryBook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,46 +58,56 @@ public abstract class BaseViewBookFragment extends Fragment {
             }
         });
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        viewUserBook();
+            viewUserBook();
+
         return v;
     }
 
-    private void viewUserBook() {
+
+    public void viewUserBook() {
         workAPI.getUserBook(new BooksCallback() {
             @Override
             public void onSuccess(@NonNull List<Book.BookData> books) {
-                visibleProgress(mMessageAgain, false);
-                visibleProgress(mUserBookProgress, false);
-                visibleProgress(recyclerView, true);
-                mSwipeRefresh.setRefreshing(false);
-                if (recyclerView.getAdapter() == null) {
-                    List<Book.BookData> oldBooks = new ArrayList<>();
-                    oldBooks.addAll(books);
-                    if (mAdapter == null) {
-                        mAdapter = new RecyclerBookAdapter(oldBooks);
-                    }
-                    recyclerView.setAdapter(mAdapter);
-                } else {
-                    mAdapter.updateList(books);
-                }
+               viewBookFromList(books);
             }
 
             @Override
             public void onError(@NonNull Throwable t) {
-                visibleProgress(recyclerView, false);
-                visibleProgress(mUserBookProgress, false);
-                visibleProgress(mMessageAgain, true);
-                mSwipeRefresh.setRefreshing(false);
-                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+               errorViewBook(t);
             }
         }, getBookAPI());
+    }
+
+    public void errorViewBook(Throwable t) {
+        visibleProgress(recyclerView, false);
+        visibleProgress(mUserBookProgress, false);
+        visibleProgress(mMessageAgain, true);
+        mSwipeRefresh.setRefreshing(false);
+        Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void viewBookFromList(List<Book.BookData> books) {
+        visibleProgress(mMessageAgain, false);
+        visibleProgress(mUserBookProgress, false);
+        visibleProgress(recyclerView, true);
+        mSwipeRefresh.setRefreshing(false);
+        if (recyclerView.getAdapter() == null) {
+            List<Book.BookData> oldBooks = new ArrayList<>();
+            oldBooks.addAll(books);
+            if (mAdapter == null) {
+                mAdapter = new RecyclerBookAdapter(oldBooks);
+            }
+            recyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.updateList(books);
+        }
     }
 
     private void visibleProgress(View v, boolean status) {
         if (status) {
             v.setVisibility(View.VISIBLE);
         } else {
-            v.setVisibility(v.GONE);
+            v.setVisibility(View.GONE);
         }
     }
 

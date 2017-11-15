@@ -39,6 +39,8 @@ public class LibraryFragment extends Fragment {
     APIUtils apiUtils;
 
     private static final String TAG = "LibraryFragment";
+    public static final String IDCATEGORI = "IdCategory";
+    public static final String NAMECATEGORI = "NAMECategory";
     public static final int MENU_REQUEST = 123;
 
     @Override
@@ -50,7 +52,7 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragmnet_library, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.library_recycler_view);
         mProgressLibrary = (ProgressBar) v.findViewById(R.id.progress_library);
@@ -63,8 +65,10 @@ public class LibraryFragment extends Fragment {
                 RecyclerViewClickListener listener = new RecyclerViewClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                       //getBooksFromCategory(categories.get(position).getId(), 1);
+
                         Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                        intent.putExtra(IDCATEGORI, categories.get(position).getId());
+                        intent.putExtra(NAMECATEGORI, categories.get(position).getCategoryName());
                         getActivity().startActivityForResult(intent, MENU_REQUEST);
                     }
                 };
@@ -102,28 +106,6 @@ public class LibraryFragment extends Fragment {
                 visibleProgress(mRecyclerView, true);
             }
         });
-    }
-
-    private void getBooksFromCategory(long idCategory, int pageNumber) {
-        CategoryBook.CategoryBookRequest category = new CategoryBook.CategoryBookRequest(tokenUtils.readToken(), pageNumber);
-        final Call<CategoryBook.CategoryBookRespond> request = apiUtils.initializePlamberAPI().getCurrentCategory(idCategory, category);
-
-        request.enqueue(new Callback<CategoryBook.CategoryBookRespond>() {
-            @Override
-            public void onResponse(Call<CategoryBook.CategoryBookRespond> call, Response<CategoryBook.CategoryBookRespond> response) {
-                if (response.isSuccessful()) {
-                    Log.i(TAG, response.body().getDetail());
-                } else {
-                    Log.i(TAG, "Error");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CategoryBook.CategoryBookRespond> call, Throwable t) {
-                Log.i(TAG, t.getLocalizedMessage());
-            }
-        });
-
     }
 
     private void visibleProgress(View v, boolean status) {

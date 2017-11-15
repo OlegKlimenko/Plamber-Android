@@ -14,9 +14,13 @@ public class CategoryBook {
         @SerializedName("page")
         private int pageNumber;
 
-        public CategoryBookRequest(String userToken, int pageNumber) {
+        @SerializedName("category_id")
+        private long categoryID;
+
+        public CategoryBookRequest(String userToken, int pageNumber, long categoryID) {
             this.userToken = userToken;
             this.pageNumber = pageNumber;
+            this.categoryID = categoryID;
         }
     }
 
@@ -49,13 +53,13 @@ public class CategoryBook {
         private List<Book.BookData> bookData;
 
         @SerializedName("next_page")
-        private boolean nextPageNumber;
+        private int nextPageNumber;
 
         public List<Book.BookData> getBookData() {
             return bookData;
         }
 
-        public boolean getNextPageNumber() {
+        public int getNextPageNumber() {
             return nextPageNumber;
         }
     }
