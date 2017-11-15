@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         if (tokenUtils.checkUserToken()) {
             Intent intent = LibraryActivity.startLibraryActivity(this);
             startActivity(intent);
-
+            finish();
         }
     }
 

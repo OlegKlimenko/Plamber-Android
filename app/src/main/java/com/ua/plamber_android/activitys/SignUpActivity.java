@@ -180,6 +180,7 @@ public class SignUpActivity extends AppCompatActivity {
                     tokenUtils.writeToken(response.body().getData().getToken());
                     Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
                     startActivity(intent);
+                    finish();
                 }
             }
 

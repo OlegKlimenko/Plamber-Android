@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
+import com.ua.plamber_android.api.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
@@ -29,10 +31,39 @@ import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
 
 import java.util.List;
 
-public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapter.ViewHolder>{
+public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapter.ViewHolder> {
 
     private List<Book.BookData> books;
     public static final String BOOKKEY = "BOOKKEY";
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private boolean isLoading;
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+
+
+    public RecyclerBookAdapter(RecyclerView recyclerView, List<Book.BookData> books) {
+        this.books = books;
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (mOnLoadMoreListener != null) {
+                        mOnLoadMoreListener.onLoadMore();
+                    }
+                    isLoading = true;
+                }
+            }
+        });
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+        this.mOnLoadMoreListener = mOnLoadMoreListener;
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -61,9 +92,6 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     }
 
 
-    public RecyclerBookAdapter(List<Book.BookData> books) {
-        this.books = books;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -105,5 +133,9 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
         this.books.clear();
         this.books.addAll(newLsit);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void setLoading(boolean isLoad) {
+        isLoading = isLoad;
     }
 }

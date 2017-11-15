@@ -95,7 +95,7 @@ public abstract class BaseViewBookFragment extends Fragment {
             List<Book.BookData> oldBooks = new ArrayList<>();
             oldBooks.addAll(books);
             if (mAdapter == null) {
-                mAdapter = new RecyclerBookAdapter(oldBooks);
+                mAdapter = new RecyclerBookAdapter(recyclerView, oldBooks);
             }
             recyclerView.setAdapter(mAdapter);
         } else {
@@ -110,5 +110,4 @@ public abstract class BaseViewBookFragment extends Fragment {
             v.setVisibility(View.GONE);
         }
     }
-
 }
