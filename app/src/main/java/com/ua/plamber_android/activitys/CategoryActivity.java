@@ -42,7 +42,7 @@ public class CategoryActivity extends BaseDrawerActivity {
         args.putLong(LibraryFragment.IDCATEGORI, getIntent().getLongExtra(LibraryFragment.IDCATEGORI, 1));
         fragment.setArguments(args);
 
-        mNavigationView.getMenu().getItem(1).setChecked(true);
+        getNavigationView().getMenu().getItem(1).setChecked(true);
         backToLibrary();
     }
 

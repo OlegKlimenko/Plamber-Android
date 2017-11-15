@@ -25,6 +25,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
+import com.ua.plamber_android.fragments.CategoryFragment;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
 
@@ -103,6 +104,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Book.BookData book = books.get(position);
+        Log.i(CategoryFragment.TAG, book.getBookName());
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
         Glide.with(holder.view).load(currentUrl)

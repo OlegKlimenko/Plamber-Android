@@ -27,12 +27,12 @@ import java.util.List;
 
 public abstract class BaseViewBookFragment extends Fragment {
 
-    public RecyclerView recyclerView;
-    public RecyclerBookAdapter mAdapter;
-    public ProgressBar mUserBookProgress;
-    public TextView mMessageAgain;
-    public SwipeRefreshLayout mSwipeRefresh;
-    public WorkAPI workAPI;
+    private RecyclerView recyclerView;
+    private RecyclerBookAdapter mAdapter;
+    private ProgressBar mUserBookProgress;
+    private TextView mMessageAgain;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private WorkAPI workAPI;
 
     public abstract String getBookAPI();
 
@@ -54,7 +54,7 @@ public abstract class BaseViewBookFragment extends Fragment {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                viewUserBook();
+                fullUpdate();
             }
         });
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -63,6 +63,9 @@ public abstract class BaseViewBookFragment extends Fragment {
         return v;
     }
 
+    public void fullUpdate() {
+        viewUserBook();
+    }
 
     public void viewUserBook() {
         workAPI.getUserBook(new BooksCallback() {
@@ -109,5 +112,29 @@ public abstract class BaseViewBookFragment extends Fragment {
         } else {
             v.setVisibility(View.GONE);
         }
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public RecyclerBookAdapter getmAdapter() {
+        return mAdapter;
+    }
+
+    public ProgressBar getmUserBookProgress() {
+        return mUserBookProgress;
+    }
+
+    public TextView getmMessageAgain() {
+        return mMessageAgain;
+    }
+
+    public SwipeRefreshLayout getmSwipeRefresh() {
+        return mSwipeRefresh;
+    }
+
+    public WorkAPI getWorkAPI() {
+        return workAPI;
     }
 }

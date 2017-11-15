@@ -32,21 +32,32 @@ public class CategoryFragment extends BaseViewBookFragment {
         books = new ArrayList<>();
     }
 
+    @Override
+    public void fullUpdate() {
+       loadCategoryBook(true);
+    }
 
     @Override
     public void viewUserBook() {
+        loadCategoryBook(false);
+    }
+
+    private void loadCategoryBook(boolean isFullUpdate) {
+        if (isFullUpdate)
+            page = 0;
+
         if (page != 0) {
-            workAPI.getBooksFromCategory(new CurrentCategoryCallback() {
+            getWorkAPI().getBooksFromCategory(new CurrentCategoryCallback() {
                 @Override
                 public void onSuccess(@NonNull final CategoryBook.CategoryBookData data) {
                     books.addAll(data.getBookData());
                     page = data.getNextPageNumber();
                     viewBookFromList(books);
-                    mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+                    getmAdapter().setOnLoadMoreListener(new OnLoadMoreListener() {
                         @Override
                         public void onLoadMore() {
                             if (page != 0)
-                            viewUserBook();
+                                viewUserBook();
                         }
                     });
                 }
@@ -61,8 +72,9 @@ public class CategoryFragment extends BaseViewBookFragment {
             page = 1;
             viewUserBook();
         }
-        if (mAdapter != null)
-        mAdapter.setLoading(false);
+        if (getmAdapter() != null) {
+            getmAdapter().setLoading(false);
+        }
     }
 }
 

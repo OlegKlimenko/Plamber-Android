@@ -91,6 +91,14 @@ public class BaseDrawerActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
+
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
+    }
+
+    public NavigationView getNavigationView() {
+        return mNavigationView;
+    }
 }
 
 

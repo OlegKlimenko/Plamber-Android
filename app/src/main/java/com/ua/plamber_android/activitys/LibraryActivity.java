@@ -63,7 +63,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     public void setupNavigationDrawer() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        getNavigationView().setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
@@ -123,8 +123,8 @@ public class LibraryActivity extends BaseDrawerActivity {
     public void setPage(int postion) {
         mViewPager.setCurrentItem(postion);
         getSupportActionBar().setTitle(mViewPager.getAdapter().getPageTitle(postion));
-        mDrawerLayout.closeDrawers();
-        mNavigationView.getMenu().getItem(postion).setChecked(true);
+        getDrawerLayout().closeDrawers();
+        getNavigationView().getMenu().getItem(postion).setChecked(true);
     }
 
     private void setPagerSwipe() {
@@ -147,9 +147,9 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     private void setToggle() {
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, getDrawerLayout(), mToolbar,
                 R.string.drawer_open, R.string.drawer_close);
-        mDrawerLayout.addDrawerListener(drawerToggle);
+        getDrawerLayout().addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
 
