@@ -56,8 +56,9 @@ public class CategoryFragment extends BaseViewBookFragment {
                     getmAdapter().setOnLoadMoreListener(new OnLoadMoreListener() {
                         @Override
                         public void onLoadMore() {
-                            if (page != 0)
+                            if (page != 0) {
                                 viewUserBook();
+                            }
                         }
                     });
                 }

@@ -7,10 +7,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.utils.TokenUtils;
 
@@ -38,6 +44,8 @@ public class BaseDrawerActivity extends AppCompatActivity {
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
         super.setContentView(fullView);
         ButterKnife.bind(this);
+        setImage();
+        setAvatar();
     }
 
     public void logoutApplication() {
@@ -47,6 +55,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
         Intent intent = LoginActivity.startLoginActivity(getApplicationContext());
         startActivity(intent);
     }
+
 
     public void startSetting() {
         Intent intent = SettingActivity.startSettingActivity(getApplicationContext());
@@ -92,6 +101,12 @@ public class BaseDrawerActivity extends AppCompatActivity {
         finish();
     }
 
+    public void setToggle(Toolbar toolbar) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, getDrawerLayout(), toolbar, R.string.drawer_open, R.string.drawer_close);
+        getDrawerLayout().addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+    }
+
     public DrawerLayout getDrawerLayout() {
         return mDrawerLayout;
     }
@@ -99,6 +114,17 @@ public class BaseDrawerActivity extends AppCompatActivity {
     public NavigationView getNavigationView() {
         return mNavigationView;
     }
+
+    private void setImage() {
+        ImageView headerImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
+        Glide.with(this).load(R.drawable.main_background).apply(new RequestOptions().transform(new CenterCrop())).into(headerImage);
+    }
+
+    private void setAvatar() {
+        ImageView profileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
+        Glide.with(this).load(R.drawable.logo2).into(profileImage);
+    }
+
 }
 
 

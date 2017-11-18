@@ -47,7 +47,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         setSupportActionBar(mToolbar);
         setupPager();
         setPagerSwipe();
-        setToggle();
+        setToggle(mToolbar);
         setPage(0);
         setupNavigationDrawer();
     }
@@ -146,12 +146,6 @@ public class LibraryActivity extends BaseDrawerActivity {
         });
     }
 
-    private void setToggle() {
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, getDrawerLayout(), mToolbar,
-                R.string.drawer_open, R.string.drawer_close);
-        getDrawerLayout().addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-    }
 
     public static Intent startLibraryActivity(Context context) {
         Intent intent = new Intent(context, LibraryActivity.class);
