@@ -130,7 +130,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             final BookHolder bookHolder = (BookHolder) holder;
             Book.BookData book = books.get(position);
-            Log.i(CategoryFragment.TAG, book.getBookName());
+           // Log.i(CategoryFragment.TAG, book.getBookName());
             String url = PlamberAPI.ENDPOINT;
             String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
             Glide.with(bookHolder.view).load(currentUrl)

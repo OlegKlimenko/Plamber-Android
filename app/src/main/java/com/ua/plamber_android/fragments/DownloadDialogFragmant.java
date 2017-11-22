@@ -67,7 +67,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         progressDownload = v.findViewById(R.id.pb_dialog_download);
         percentDownload = v.findViewById(R.id.tv_percent_dialog_download);
 
-        final File file = new File(utils.getBooksPath() + getFileName(bookData));
+        final File file = new File(utils.getBooksPath() + Utils.getFileName(bookData));
         if (asyncDownload == null || asyncDownload.getStatus() != AsyncTask.Status.RUNNING)
         downloadBook(file);
 
@@ -107,9 +107,6 @@ public class DownloadDialogFragmant extends DialogFragment {
         });
     }
 
-    public String getFileName(Book.BookData book) {
-        return book.getBookName() + ".pdf";
-    }
 
     private void setProgress(int progress) {
         progressDownload.setProgress(progress);

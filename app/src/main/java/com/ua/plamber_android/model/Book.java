@@ -40,6 +40,9 @@ public class Book {
     }
 
     public class BookData {
+        @SerializedName("id")
+        private long idBook;
+
         @SerializedName("book_name")
         private String bookName;
 
@@ -117,6 +120,14 @@ public class Book {
             return bookUrl;
         }
 
+        public long getIdBook() {
+            return idBook;
+        }
+
+        public boolean isIsprivatBeook() {
+            return isprivatBeook;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -124,6 +135,7 @@ public class Book {
 
             BookData bookData = (BookData) o;
 
+            if (idBook != bookData.idBook) return false;
             if (isprivatBeook != bookData.isprivatBeook) return false;
             if (bookName != null ? !bookName.equals(bookData.bookName) : bookData.bookName != null)
                 return false;
@@ -141,13 +153,15 @@ public class Book {
                 return false;
             if (whoAdded != null ? !whoAdded.equals(bookData.whoAdded) : bookData.whoAdded != null)
                 return false;
-            return uploadDate != null ? uploadDate.equals(bookData.uploadDate) : bookData.uploadDate == null;
-
+            if (uploadDate != null ? !uploadDate.equals(bookData.uploadDate) : bookData.uploadDate != null)
+                return false;
+            return bookUrl != null ? bookUrl.equals(bookData.bookUrl) : bookData.bookUrl == null;
         }
 
         @Override
         public int hashCode() {
-            int result = bookName != null ? bookName.hashCode() : 0;
+            int result = (int) (idBook ^ (idBook >>> 32));
+            result = 31 * result + (bookName != null ? bookName.hashCode() : 0);
             result = 31 * result + (idAuthor != null ? idAuthor.hashCode() : 0);
             result = 31 * result + (idCategory != null ? idCategory.hashCode() : 0);
             result = 31 * result + (description != null ? description.hashCode() : 0);
@@ -157,6 +171,7 @@ public class Book {
             result = 31 * result + (whoAdded != null ? whoAdded.hashCode() : 0);
             result = 31 * result + (uploadDate != null ? uploadDate.hashCode() : 0);
             result = 31 * result + (isprivatBeook ? 1 : 0);
+            result = 31 * result + (bookUrl != null ? bookUrl.hashCode() : 0);
             return result;
         }
     }

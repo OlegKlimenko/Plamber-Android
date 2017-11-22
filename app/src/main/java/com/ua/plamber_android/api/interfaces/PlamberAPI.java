@@ -4,6 +4,7 @@ import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.CategoryBook;
 import com.ua.plamber_android.model.Library;
+import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Password;
 import com.ua.plamber_android.model.User;
 
@@ -61,4 +62,12 @@ public interface PlamberAPI {
     @POST("api/v1/category/")
     Call<CategoryBook.CategoryBookRespond>
     getCurrentCategory(@Body CategoryBook.CategoryBookRequest categoryRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/set-current-page/")
+    Call<Page.SetPageRespond> setPage(@Body Page.SetPageRequest setCurrentPage);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/read-book/")
+    Call<Page.GetPageRespond> getPage(@Body Page.GetPageRequest getCurrentPage);
 }

@@ -22,6 +22,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
+import com.ua.plamber_android.fragments.CategoryFragment;
 import com.ua.plamber_android.fragments.DownloadDialogFragmant;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.Utils;
@@ -36,6 +37,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
 
     public static final String PDFPATH = "PDFPATH";
+    public static final String BOOKID = "BOOKID";
     public static final String TAG = "DetailBookActivity";
     private static final int REQUEST_WRITE_STORAGE = 101;
 
@@ -85,6 +87,8 @@ public class DetailBookActivity extends AppCompatActivity {
         mAboutBook.setText(bookData.getDescription());
         mDetailButton.setTag("Download");
 
+        Log.i(CategoryFragment.TAG, "" + bookData.getIdBook());
+
         setSupportActionBar(mToolbarDeatil);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -108,7 +112,8 @@ public class DetailBookActivity extends AppCompatActivity {
                     runDownloadDialog();
             } else {
                 Intent intent = BookReaderActivity.startReaderActivity(this);
-                intent.putExtra(PDFPATH, utils.getBooksPath() + dialogFragmant.getFileName(bookData));
+                intent.putExtra(PDFPATH, utils.getBooksPath() + Utils.getFileName(bookData));
+                intent.putExtra(BOOKID, bookData.getIdBook());
                 startActivity(intent);
             }
         } else {
@@ -142,7 +147,7 @@ public class DetailBookActivity extends AppCompatActivity {
     }
 
     public void checkFileExist() {
-        File file = new File(utils.getBooksPath(), dialogFragmant.getFileName(bookData));
+        File file = new File(utils.getBooksPath(), Utils.getFileName(bookData));
         if (file.exists()) {
             mDetailButton.setText("Read Book");
             mDetailButton.setTag("Read");

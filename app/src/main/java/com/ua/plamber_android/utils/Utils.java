@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.model.Book;
 
 import java.io.File;
 
@@ -47,5 +48,9 @@ public class Utils {
     public float getWidthDeviceDP() {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return displayMetrics.widthPixels / displayMetrics.density;
+    }
+
+    public static String getFileName(Book.BookData book) {
+        return book.getBookName() + ".pdf";
     }
 }
