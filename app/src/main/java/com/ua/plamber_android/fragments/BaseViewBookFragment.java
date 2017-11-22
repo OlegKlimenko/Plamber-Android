@@ -18,11 +18,8 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.interfaces.callbacks.BooksCallback;
-import com.ua.plamber_android.api.interfaces.callbacks.CurrentCategoryCallback;
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.CategoryBook;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseViewBookFragment extends Fragment {
@@ -33,6 +30,7 @@ public abstract class BaseViewBookFragment extends Fragment {
     private TextView mMessageAgain;
     private SwipeRefreshLayout mSwipeRefresh;
     private WorkAPI workAPI;
+    GridLayoutManager gridLayoutManager;
 
     public abstract String getBookAPI();
 
@@ -54,24 +52,32 @@ public abstract class BaseViewBookFragment extends Fragment {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fullUpdate();
+                viewUserBook();
             }
         });
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (mAdapter.getItemViewType(position) == mAdapter.VIEW_TYPE_LOADING) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        recyclerView.setLayoutManager(gridLayoutManager);
             viewUserBook();
 
         return v;
     }
 
-    public void fullUpdate() {
-        viewUserBook();
-    }
 
     public void viewUserBook() {
         workAPI.getUserBook(new BooksCallback() {
             @Override
             public void onSuccess(@NonNull List<Book.BookData> books) {
-               viewBookFromList(books);
+               initAdapter(books);
             }
 
             @Override
@@ -89,22 +95,15 @@ public abstract class BaseViewBookFragment extends Fragment {
         Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    public void viewBookFromList(List<Book.BookData> books) {
+    public void initAdapter(List<Book.BookData> books) {
         visibleProgress(mMessageAgain, false);
         visibleProgress(mUserBookProgress, false);
         visibleProgress(recyclerView, true);
         mSwipeRefresh.setRefreshing(false);
-        if (recyclerView.getAdapter() == null) {
-            List<Book.BookData> oldBooks = new ArrayList<>();
-            oldBooks.addAll(books);
-            if (mAdapter == null) {
-                mAdapter = new RecyclerBookAdapter(recyclerView, oldBooks);
-            }
-            recyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.updateList(books);
-        }
+        mAdapter = new RecyclerBookAdapter(recyclerView, books);
+        recyclerView.setAdapter(mAdapter);
     }
+
 
     private void visibleProgress(View v, boolean status) {
         if (status) {

@@ -2,7 +2,7 @@ package com.ua.plamber_android.adapters;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,9 +30,10 @@ import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapter.ViewHolder> {
+public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Book.BookData> books;
     public static final String BOOKKEY = "BOOKKEY";
@@ -40,6 +41,8 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     private boolean isLoading;
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
+    private final int VIEW_TYPE_ITEM = 0;
+    public final int VIEW_TYPE_LOADING = 1;
 
 
     public RecyclerBookAdapter(RecyclerView recyclerView, List<Book.BookData> books) {
@@ -65,8 +68,21 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
         this.mOnLoadMoreListener = mOnLoadMoreListener;
     }
 
+    public class LoadProgressHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private LoadProgressHolder(View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.progressBar_item);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return books.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView img;
         public TextView nameBook;
@@ -74,7 +90,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
         public ProgressBar userProgressImage;
         public View view;
 
-        public ViewHolder(View v) {
+        public BookHolder(View v) {
             super(v);
             this.view = v;
             this.img = (ImageView) v.findViewById(R.id.book_item_image);
@@ -93,35 +109,46 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     }
 
 
-
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.list_item_book, parent, false);
-        return new ViewHolder(v);
+        if (viewType == VIEW_TYPE_LOADING) {
+            View v = inflater.inflate(R.layout.layout_loading_item, parent, false);
+            return new LoadProgressHolder(v);
+        } else {
+            View v = inflater.inflate(R.layout.list_item_book, parent, false);
+            return new BookHolder(v);
+        }
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        Book.BookData book = books.get(position);
-        Log.i(CategoryFragment.TAG, book.getBookName());
-        String url = PlamberAPI.ENDPOINT;
-        String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
-        Glide.with(holder.view).load(currentUrl)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof LoadProgressHolder) {
+            Log.i(CategoryFragment.TAG, "LoadHolder");
+            LoadProgressHolder loadProgressHolder = (LoadProgressHolder) holder;
+            loadProgressHolder.progressBar.setIndeterminate(true);
+        } else {
+            final BookHolder bookHolder = (BookHolder) holder;
+            Book.BookData book = books.get(position);
+            Log.i(CategoryFragment.TAG, book.getBookName());
+            String url = PlamberAPI.ENDPOINT;
+            String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
+            Glide.with(bookHolder.view).load(currentUrl)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.userProgressImage.setVisibility(View.GONE);
-                        return false;
-                    }
-                }).into(holder.img);
-        holder.nameBook.setText(book.getBookName());
-        holder.authorBook.setText(book.getIdAuthor());
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            bookHolder.userProgressImage.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(bookHolder.img);
+            bookHolder.nameBook.setText(book.getBookName());
+            bookHolder.authorBook.setText(book.getIdAuthor());
+        }
     }
 
     @Override
@@ -130,14 +157,13 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerBookAdapte
     }
 
     public void updateList(List<Book.BookData> newLsit) {
-        DiffUtil.DiffResult diffResult =
-                DiffUtil.calculateDiff(new RecyclerUserBooksUpdate(this.books, newLsit));
-        this.books.clear();
-        this.books.addAll(newLsit);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RecyclerUserBooksUpdate(this.books, newLsit));
+        books.clear();
+        books.addAll(newLsit);
         diffResult.dispatchUpdatesTo(this);
     }
 
-    public void setLoading(boolean isLoad) {
-        isLoading = isLoad;
+    public void stopLoading() {
+        isLoading = false;
     }
 }
