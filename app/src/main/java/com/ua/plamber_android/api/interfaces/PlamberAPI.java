@@ -70,4 +70,12 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/read-book/")
     Call<Page.GetPageRespond> getPage(@Body Page.GetPageRequest getCurrentPage);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/book/")
+    Call<Book.BookDetailRespond> getBookDetail(@Body Book.BookDetailRequest bookDetailRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/add-book-home/")
+    Call<Book.BookDetailRespond> addBookToLibrary(@Body Book.BookDetailRequest bookDetailRequest);
 }

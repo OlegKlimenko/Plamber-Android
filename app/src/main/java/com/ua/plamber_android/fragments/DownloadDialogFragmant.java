@@ -157,7 +157,7 @@ public class DownloadDialogFragmant extends DialogFragment {
             dismiss();
             if (status) {
                 Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
-                ((DetailBookActivity)getActivity()).checkFileExist();
+                ((DetailBookActivity)getActivity()).checkBook();
             } else {
                 file.delete();
                 Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();

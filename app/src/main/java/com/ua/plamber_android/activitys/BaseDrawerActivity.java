@@ -56,7 +56,6 @@ public class BaseDrawerActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     public void startSetting() {
         Intent intent = SettingActivity.startSettingActivity(getApplicationContext());
         startActivity(intent);

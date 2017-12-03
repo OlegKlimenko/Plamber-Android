@@ -1,5 +1,6 @@
 package com.ua.plamber_android.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -39,6 +40,90 @@ public class Book {
         }
     }
 
+    public static class BookDetailRequest {
+        @SerializedName("user_token")
+        private String userToken;
+
+        @SerializedName("book_id")
+        private long idBook;
+
+        public BookDetailRequest(String userToken, long idBook) {
+            this.userToken = userToken;
+            this.idBook = idBook;
+        }
+    }
+
+    public class BookDetailRespond {
+        @SerializedName("status")
+        private int status;
+
+        @SerializedName("detail")
+        private String detail;
+
+        @SerializedName("data")
+        private BookDetailData data;
+
+        public int getStatus() {
+            return status;
+        }
+
+        public String getDetail() {
+            return detail;
+        }
+
+        public BookDetailData getData() {
+            return data;
+        }
+    }
+
+    public class BookDetailData {
+        @SerializedName("book_rating")
+        private double bookRating;
+
+        @SerializedName("is_added_book")
+        private boolean isAddedBook;
+
+        @SerializedName("book_rated_count")
+        private int countBookRated;
+
+        @SerializedName("comments")
+        private List<Comment> commentData;
+
+        @SerializedName("book")
+        private BookData bookData;
+
+        @SerializedName("user_reading_count")
+        private int countUserReading;
+
+        public double getBookRating() {
+            return bookRating;
+        }
+
+        public boolean isAddedBook() {
+            return isAddedBook;
+        }
+
+        public int getCountBookRated() {
+            return countBookRated;
+        }
+
+        public List<Comment> getCommentData() {
+            return commentData;
+        }
+
+        public BookData getBookData() {
+            return bookData;
+        }
+
+        public int getCountUserReading() {
+            return countUserReading;
+        }
+
+        public void setAddedBook(boolean addedBook) {
+            isAddedBook = addedBook;
+        }
+    }
+
     public class BookData {
         @SerializedName("id")
         private long idBook;
@@ -71,7 +156,7 @@ public class Book {
         private String uploadDate;
 
         @SerializedName("private_book")
-        private boolean isprivatBeook;
+        private boolean isPrivatBook;
 
         @SerializedName("url")
         private String bookUrl;
@@ -113,7 +198,7 @@ public class Book {
         }
 
         public boolean isPrivatBeook() {
-            return isprivatBeook;
+            return isPrivatBook;
         }
 
         public String getBookUrl() {
@@ -124,8 +209,8 @@ public class Book {
             return idBook;
         }
 
-        public boolean isIsprivatBeook() {
-            return isprivatBeook;
+        public boolean isPrivatBook() {
+            return isPrivatBook;
         }
 
         @Override
@@ -136,7 +221,7 @@ public class Book {
             BookData bookData = (BookData) o;
 
             if (idBook != bookData.idBook) return false;
-            if (isprivatBeook != bookData.isprivatBeook) return false;
+            if (isPrivatBook != bookData.isPrivatBook) return false;
             if (bookName != null ? !bookName.equals(bookData.bookName) : bookData.bookName != null)
                 return false;
             if (idAuthor != null ? !idAuthor.equals(bookData.idAuthor) : bookData.idAuthor != null)
@@ -170,7 +255,7 @@ public class Book {
             result = 31 * result + (bookFile != null ? bookFile.hashCode() : 0);
             result = 31 * result + (whoAdded != null ? whoAdded.hashCode() : 0);
             result = 31 * result + (uploadDate != null ? uploadDate.hashCode() : 0);
-            result = 31 * result + (isprivatBeook ? 1 : 0);
+            result = 31 * result + (isPrivatBook ? 1 : 0);
             result = 31 * result + (bookUrl != null ? bookUrl.hashCode() : 0);
             return result;
         }

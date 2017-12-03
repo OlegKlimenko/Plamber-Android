@@ -8,6 +8,19 @@
 
     <include layout="@layout/toolbar" />
 
+    <LinearLayout
+        android:id="@+id/detail_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -115,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:maxLines="2"
+                    android:maxLines="5"
                     android:textSize="19dp" />
 
             </LinearLayout>

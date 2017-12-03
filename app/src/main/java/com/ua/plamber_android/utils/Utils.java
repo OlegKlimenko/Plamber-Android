@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -36,7 +37,8 @@ public class Utils {
             }
             return path;
         } else {
-            return context.getFilesDir().getPath() + File.separator;
+            Toast.makeText(context, "Error path", Toast.LENGTH_SHORT).show();
+            return null;
         }
     }
 

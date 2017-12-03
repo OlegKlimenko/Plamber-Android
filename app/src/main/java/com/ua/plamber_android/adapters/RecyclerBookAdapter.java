@@ -25,6 +25,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
+import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.fragments.CategoryFragment;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
@@ -36,17 +37,18 @@ import java.util.List;
 public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Book.BookData> books;
-    public static final String BOOKKEY = "BOOKKEY";
     private OnLoadMoreListener mOnLoadMoreListener;
     private boolean isLoading;
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private final int VIEW_TYPE_ITEM = 0;
     public final int VIEW_TYPE_LOADING = 1;
+    private RecyclerViewClickListener mListener;
 
 
-    public RecyclerBookAdapter(RecyclerView recyclerView, List<Book.BookData> books) {
+    public RecyclerBookAdapter(RecyclerView recyclerView, List<Book.BookData> books, RecyclerViewClickListener listener) {
         this.books = books;
+        mListener = listener;
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -89,8 +91,9 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public TextView authorBook;
         public ProgressBar userProgressImage;
         public View view;
+        private RecyclerViewClickListener mListener;
 
-        public BookHolder(View v) {
+        public BookHolder(View v, RecyclerViewClickListener listener) {
             super(v);
             this.view = v;
             this.img = (ImageView) v.findViewById(R.id.book_item_image);
@@ -98,13 +101,12 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.authorBook= (TextView) v.findViewById(R.id.book_item_author);
             this.userProgressImage = (ProgressBar) v.findViewById(R.id.pb_user_book_download);
             itemView.setOnClickListener(this);
+            mListener = listener;
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
-            intent.putExtra(BOOKKEY, new Gson().toJson(books.get(getAdapterPosition())));
-            view.getContext().startActivity(intent);
+            mListener.onClick(view, getAdapterPosition());
         }
     }
 
@@ -117,7 +119,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return new LoadProgressHolder(v);
         } else {
             View v = inflater.inflate(R.layout.list_item_book, parent, false);
-            return new BookHolder(v);
+            return new BookHolder(v, mListener);
         }
     }
 
@@ -130,7 +132,6 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             final BookHolder bookHolder = (BookHolder) holder;
             Book.BookData book = books.get(position);
-           // Log.i(CategoryFragment.TAG, book.getBookName());
             String url = PlamberAPI.ENDPOINT;
             String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
             Glide.with(bookHolder.view).load(currentUrl)

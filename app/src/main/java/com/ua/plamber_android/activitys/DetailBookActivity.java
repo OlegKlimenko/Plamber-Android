@@ -1,5 +1,6 @@
 package com.ua.plamber_android.activitys;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +25,24 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
-import com.ua.plamber_android.fragments.CategoryFragment;
+import com.ua.plamber_android.api.interfaces.callbacks.BookDetailCallback;
+import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.DownloadDialogFragmant;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailBookActivity extends AppCompatActivity {
-
 
     public static final String PDFPATH = "PDFPATH";
     public static final String BOOKID = "BOOKID";
@@ -57,11 +65,13 @@ public class DetailBookActivity extends AppCompatActivity {
     Toolbar mToolbarDeatil;
     @BindView(R.id.btn_detail_download_book)
     Button mDetailButton;
+    @BindView(R.id.detail_progress_bar)
+    LinearLayout loadDetailProgress;
 
-    Book.BookData bookData;
-    DownloadDialogFragmant dialogFragmant;
+    private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
     private Utils utils;
+    private TokenUtils tokenUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,26 +79,28 @@ public class DetailBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_book);
         ButterKnife.bind(this);
 
-        bookData = new Gson().fromJson(getIntent().getStringExtra(RecyclerBookAdapter.BOOKKEY),
-                Book.BookData.class);
-
-        String url = PlamberAPI.ENDPOINT;
-        String currentUrl = url.substring(0, url.length() - 1) + bookData.getPhoto();
-        Glide.with(this).load(currentUrl).into(mImageBook);
-
-        dialogFragmant = new DownloadDialogFragmant();
         apiUtils = new APIUtils(this);
         utils = new Utils(this);
+        tokenUtils = new TokenUtils(this);
 
-        mBookName.setText(bookData.getBookName());
-        mAuthorBook.setText(bookData.getIdAuthor());
-        mLanguageBook.setText(bookData.getLanguage());
-        mGenreBook.setText(bookData.getIdCategory());
-        mAboutBook.setText(bookData.getDescription());
-        mDetailButton.setTag("Download");
+        getBookDetail(new BookDetailCallback() {
+            @Override
+            public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
+                bookDataDetail = bookDetail.getData();
+                viewProgress(false);
+                initDetailBook();
+                checkBook();
+            }
 
-        Log.i(CategoryFragment.TAG, "" + bookData.getIdBook());
+            @Override
+            public void onError(@NonNull Throwable t) {
+                viewProgress(false);
+            }
+        }, getIntent().getLongExtra(BaseViewBookFragment.BOOKKEY, 0));
+    }
 
+    private void initDetailBook() {
+        Book.BookData bookData = bookDataDetail.getBookData();
         setSupportActionBar(mToolbarDeatil);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -96,24 +108,38 @@ public class DetailBookActivity extends AppCompatActivity {
             getSupportActionBar().setElevation(10);
         }
 
+        String url = PlamberAPI.ENDPOINT;
+        String currentUrl = url.substring(0, url.length() - 1) + bookData.getPhoto();
+        if (!this.isFinishing())
+        Glide.with(this).load(currentUrl).into(mImageBook);
+
+        mBookName.setText(bookData.getBookName());
+        mAuthorBook.setText(bookData.getIdAuthor());
+        mLanguageBook.setText(bookData.getLanguage());
+        mGenreBook.setText(bookData.getIdCategory());
+        mAboutBook.setText(bookData.getDescription());
+        mDetailButton.setTag("Download");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkFileExist();
+        if (bookDataDetail != null)
+        checkBook();
     }
+
 
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
         if (checkPermission()) {
-            if (mDetailButton.getTag() == "Download") {
-                if (apiUtils.isOnline())
-                    runDownloadDialog();
+            if (mDetailButton.getTag() == "Download" && apiUtils.isOnline()) {
+                runDownloadDialog();
+            } else if (mDetailButton.getTag() == "Added") {
+                addBookToLibrary(bookDataDetail.getBookData().getIdBook());
             } else {
                 Intent intent = BookReaderActivity.startReaderActivity(this);
-                intent.putExtra(PDFPATH, utils.getBooksPath() + Utils.getFileName(bookData));
-                intent.putExtra(BOOKID, bookData.getIdBook());
+                intent.putExtra(PDFPATH, utils.getBooksPath() + Utils.getFileName(bookDataDetail.getBookData()));
+                intent.putExtra(BOOKID, bookDataDetail.getBookData().getIdBook());
                 startActivity(intent);
             }
         } else {
@@ -146,15 +172,21 @@ public class DetailBookActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkFileExist() {
-        File file = new File(utils.getBooksPath(), Utils.getFileName(bookData));
-        if (file.exists()) {
-            mDetailButton.setText("Read Book");
-            mDetailButton.setTag("Read");
+    public void checkBook() {
+        if (bookDataDetail.isAddedBook()) {
+            File file = new File(utils.getBooksPath(), Utils.getFileName(bookDataDetail.getBookData()));
+            if (file.exists()) {
+                mDetailButton.setText("Read Book");
+                mDetailButton.setTag("Read");
+            } else {
+                mDetailButton.setText("Download Book");
+                mDetailButton.setTag("Download");
+            }
         } else {
-            mDetailButton.setText("Download Book");
-            mDetailButton.setTag("Download");
+            mDetailButton.setText("Added Book");
+            mDetailButton.setTag("Added");
         }
+
     }
 
     public static Intent startDetailActivity(Context context) {
@@ -168,9 +200,73 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private void runDownloadDialog() {
         Bundle args = new Bundle();
-        args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookData));
+        args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
+        DownloadDialogFragmant dialogFragmant = new DownloadDialogFragmant();
         dialogFragmant.setArguments(args);
         dialogFragmant.setCancelable(false);
         dialogFragmant.show(getSupportFragmentManager(), "DownloadDialog");
+    }
+
+    private void getBookDetail(final BookDetailCallback callback, long bookId) {
+        if (callback != null) {
+            viewProgress(true);
+            Book.BookDetailRequest book = new Book.BookDetailRequest(tokenUtils.readToken(), bookId);
+            Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().getBookDetail(book);
+            request.enqueue(new Callback<Book.BookDetailRespond>() {
+                @Override
+                public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Book.BookDetailRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    private void addBookToLibrary(long bookId) {
+        Book.BookDetailRequest book = new Book.BookDetailRequest(tokenUtils.readToken(), bookId);
+        Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().addBookToLibrary(book);
+        request.enqueue(new Callback<Book.BookDetailRespond>() {
+            @Override
+            public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
+                if (response.isSuccessful() && response.body().getStatus() == 200) {
+                    Toast.makeText(getApplicationContext(), "Book added", Toast.LENGTH_SHORT).show();
+                    bookDataDetail.setAddedBook(true);
+                    checkBook();
+                    Intent intentResult = new Intent();
+                    setResult(Activity.RESULT_OK, intentResult);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Book.BookDetailRespond> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void viewProgress(boolean status) {
+        if (status) {
+            loadDetailProgress.setVisibility(View.VISIBLE);
+            mBookName.setVisibility(View.GONE);
+            mAuthorBook.setVisibility(View.GONE);
+            mLanguageBook.setVisibility(View.GONE);
+            mGenreBook.setVisibility(View.GONE);
+            mAboutBook.setVisibility(View.GONE);
+            mDetailButton.setVisibility(View.GONE);
+        } else {
+            loadDetailProgress.setVisibility(View.GONE);
+            mBookName.setVisibility(View.VISIBLE);
+            mAuthorBook.setVisibility(View.VISIBLE);
+            mLanguageBook.setVisibility(View.VISIBLE);
+            mGenreBook.setVisibility(View.VISIBLE);
+            mAboutBook.setVisibility(View.VISIBLE);
+            mDetailButton.setVisibility(View.VISIBLE);
+        }
     }
 }
