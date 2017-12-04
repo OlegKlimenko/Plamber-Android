@@ -89,6 +89,11 @@ public class Validate {
             isValid = false;
             inputLayout.setError(context.getString(R.string.validate_username));
         }
+        //*** in release uncomment ***
+//        else if (user.equals("admin")) {
+//            isValid = false;
+//            inputLayout.setError("Not allowed username");
+//        }
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override

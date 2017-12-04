@@ -78,4 +78,8 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/add-book-home/")
     Call<Book.BookDetailRespond> addBookToLibrary(@Body Book.BookDetailRequest bookDetailRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/my-profile/")
+    Call<User.ProfileRespond> getProfileData(@Body User.ProfileRequest profileRequest);
 }

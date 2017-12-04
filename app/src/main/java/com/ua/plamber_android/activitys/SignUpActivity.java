@@ -128,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Account.LoginRespond> call, Response<Account.LoginRespond> response) {
                     boolean isCreated = true;
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body().getDetail().equals("successful")) {
                         isCreated = response.body().getData().isLoginStatus();
                     }
                     callback.onSuccess(isCreated);
