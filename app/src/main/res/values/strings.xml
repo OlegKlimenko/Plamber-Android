@@ -34,6 +34,9 @@
     <string name="save">Save</string>
     <string name="change_password">Change password</string>
     <string name="validate_password_clone">Old and new passwords can not be the same</string>
+    <string name="search">Search</string>
+    <string name="clear_search">Clear Search</string>
+    <string name="remove_book">Remove book</string>
 
 
 </resources>

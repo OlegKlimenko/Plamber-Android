@@ -76,8 +76,8 @@ public interface PlamberAPI {
     Call<Book.BookDetailRespond> getBookDetail(@Body Book.BookDetailRequest bookDetailRequest);
 
     @Headers("Content-Type: application/json")
-    @POST("api/v1/add-book-home/")
-    Call<Book.BookDetailRespond> addBookToLibrary(@Body Book.BookDetailRequest bookDetailRequest);
+    @POST("{manageBook}")
+    Call<Book.BookDetailRespond> manageBookInLibrary(@Body Book.BookDetailRequest bookDetailRequest, @Path("manageBook") String manageBookUrl);
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/my-profile/")

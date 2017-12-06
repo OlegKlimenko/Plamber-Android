@@ -11,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +26,10 @@ import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.interfaces.PlamberAPI;
 import com.ua.plamber_android.api.interfaces.callbacks.BookDetailCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.DownloadDialogFragmant;
 import com.ua.plamber_android.model.Book;
@@ -47,6 +51,8 @@ public class DetailBookActivity extends AppCompatActivity {
     public static final String PDFPATH = "PDFPATH";
     public static final String BOOKID = "BOOKID";
     public static final String TAG = "DetailBookActivity";
+    public static final String URL_ADDED_BOOK = "api/v1/add-book-home/";
+    public static final String URL_REMOVE_BOOK = "api/v1/remove-book-home/";
     private static final int REQUEST_WRITE_STORAGE = 101;
 
     @BindView(R.id.iv_detail_book_image)
@@ -72,6 +78,7 @@ public class DetailBookActivity extends AppCompatActivity {
     private APIUtils apiUtils;
     private Utils utils;
     private TokenUtils tokenUtils;
+    private WorkAPI workAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,7 @@ public class DetailBookActivity extends AppCompatActivity {
         apiUtils = new APIUtils(this);
         utils = new Utils(this);
         tokenUtils = new TokenUtils(this);
+        workAPI = new WorkAPI(this);
 
         getBookDetail(new BookDetailCallback() {
             @Override
@@ -135,10 +143,11 @@ public class DetailBookActivity extends AppCompatActivity {
             if (mDetailButton.getTag() == "Download" && apiUtils.isOnline()) {
                 runDownloadDialog();
             } else if (mDetailButton.getTag() == "Added") {
+
                 addBookToLibrary(bookDataDetail.getBookData().getIdBook());
             } else {
                 Intent intent = BookReaderActivity.startReaderActivity(this);
-                intent.putExtra(PDFPATH, utils.getBooksPath() + Utils.getFileName(bookDataDetail.getBookData()));
+                intent.putExtra(PDFPATH, utils.getBooksPath() + utils.getFileName(bookDataDetail.getBookData()));
                 intent.putExtra(BOOKID, bookDataDetail.getBookData().getIdBook());
                 startActivity(intent);
             }
@@ -167,14 +176,34 @@ public class DetailBookActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return true;
+                break;
+            case R.id.item_remove:
+                removeBookFromLinrary(bookDataDetail.getBookData().getIdBook());
+                break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.manage_book, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mDetailButton.getTag() == "Added") {
+            menu.findItem(R.id.item_remove).setEnabled(false);
+        } else {
+            menu.findItem(R.id.item_remove).setEnabled(true);
+        }
+        return true;
     }
 
     public void checkBook() {
         if (bookDataDetail.isAddedBook()) {
-            File file = new File(utils.getBooksPath(), Utils.getFileName(bookDataDetail.getBookData()));
+            File file = new File(utils.getBooksPath(), utils.getFileName(bookDataDetail.getBookData()));
             if (file.exists()) {
                 mDetailButton.setText("Read Book");
                 mDetailButton.setTag("Read");
@@ -228,26 +257,50 @@ public class DetailBookActivity extends AppCompatActivity {
         }
     }
 
-    private void addBookToLibrary(long bookId) {
-        Book.BookDetailRequest book = new Book.BookDetailRequest(tokenUtils.readToken(), bookId);
-        Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().addBookToLibrary(book);
-        request.enqueue(new Callback<Book.BookDetailRespond>() {
+    private void addBookToLibrary(long id) {
+        workAPI.manageBookInLibrary(new ManageBookCallback() {
             @Override
-            public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
-                if (response.isSuccessful() && response.body().getStatus() == 200) {
-                    Toast.makeText(getApplicationContext(), "Book added", Toast.LENGTH_SHORT).show();
+            public void onSuccess(@NonNull boolean result) {
+                if (result) {
+                    message("Book added");
                     bookDataDetail.setAddedBook(true);
                     checkBook();
                     Intent intentResult = new Intent();
                     setResult(Activity.RESULT_OK, intentResult);
+                } else {
+                    message("Book added error");
                 }
             }
 
             @Override
-            public void onFailure(Call<Book.BookDetailRespond> call, Throwable t) {
-
+            public void onError(@NonNull Throwable t) {
+               message(t.getLocalizedMessage());
             }
-        });
+        }, id, URL_ADDED_BOOK);
+    }
+
+    private void removeBookFromLinrary(long id) {
+        workAPI.manageBookInLibrary(new ManageBookCallback() {
+            @Override
+            public void onSuccess(@NonNull boolean result) {
+                if (result) {
+                    message("Book was removed");
+                    bookDataDetail.setAddedBook(false);
+                    checkBook();
+                    Intent intentResult = new Intent();
+                    setResult(Activity.RESULT_OK, intentResult);
+                    File file = new File(utils.getBooksPath() + utils.getFileName(bookDataDetail.getBookData()));
+                    file.delete();
+                } else {
+                    message("Boor remove error");
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable t) {
+                message(t.getLocalizedMessage());
+            }
+        }, id, URL_REMOVE_BOOK);
     }
 
     private void viewProgress(boolean status) {
@@ -268,5 +321,9 @@ public class DetailBookActivity extends AppCompatActivity {
             mAboutBook.setVisibility(View.VISIBLE);
             mDetailButton.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void message(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

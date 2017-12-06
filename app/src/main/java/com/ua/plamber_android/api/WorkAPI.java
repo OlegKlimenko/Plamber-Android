@@ -1,10 +1,14 @@
 package com.ua.plamber_android.api;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ua.plamber_android.api.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.api.interfaces.callbacks.CurrentCategoryCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.CategoryBook;
 import com.ua.plamber_android.utils.TokenUtils;
@@ -56,7 +60,7 @@ public class WorkAPI {
             @Override
             public void onResponse(Call<CategoryBook.CategoryBookRespond> call, Response<CategoryBook.CategoryBookRespond> response) {
                 if (response.isSuccessful()) {
-                   callback.onSuccess(response.body().getData());
+                    callback.onSuccess(response.body().getData());
                 }
             }
 
@@ -67,4 +71,25 @@ public class WorkAPI {
         });
     }
 
+    public void manageBookInLibrary(final ManageBookCallback callback, long bookId, String manageUrl) {
+        if (callback != null) {
+            Book.BookDetailRequest book = new Book.BookDetailRequest(tokenUtils.readToken(), bookId);
+            Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().manageBookInLibrary(book, manageUrl);
+            request.enqueue(new Callback<Book.BookDetailRespond>() {
+                @Override
+                public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
+                    if (response.isSuccessful() && response.body().getStatus() == 200) {
+                        callback.onSuccess(true);
+                    } else {
+                        callback.onSuccess(false);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Book.BookDetailRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
 }

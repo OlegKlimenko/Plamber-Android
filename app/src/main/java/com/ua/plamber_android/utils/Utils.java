@@ -52,7 +52,7 @@ public class Utils {
         return displayMetrics.widthPixels / displayMetrics.density;
     }
 
-    public static String getFileName(Book.BookData book) {
+    public String getFileName(Book.BookData book) {
         return book.getBookName() + ".pdf";
     }
 }
