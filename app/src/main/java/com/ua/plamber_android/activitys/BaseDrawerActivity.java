@@ -43,6 +43,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
     NavigationView mNavigationView;
 
     public static final String BACK_WITH_MENU = "BackWithMenu";
+    public static final String START_WITH_MENU = "SartWithMenu";
     private static final String TAG = "BaseDrawerActivity";
 
     private TokenUtils tokenUtils;
@@ -55,11 +56,6 @@ public class BaseDrawerActivity extends AppCompatActivity {
         apiUtils = new APIUtils(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.library_menu, menu);
-        return true;
-    }
 
     @Override
     public void setContentView(int layoutResID) {

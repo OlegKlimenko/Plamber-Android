@@ -3,12 +3,11 @@ package com.ua.plamber_android.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.ua.plamber_android.api.interfaces.OnLoadMoreListener;
-import com.ua.plamber_android.api.interfaces.callbacks.CurrentCategoryCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.CategoryBook;
+import com.ua.plamber_android.model.LoadMoreBook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +38,9 @@ public class CategoryFragment extends BaseViewBookFragment {
 
     private void loadCategoryBook() {
         if (page != 0) {
-            getWorkAPI().getBooksFromCategory(new CurrentCategoryCallback() {
+            getWorkAPI().getBooksFromCategory(new LoadMoreCallback() {
                 @Override
-                public void onSuccess(@NonNull final CategoryBook.CategoryBookData data) {
+                public void onSuccess(@NonNull final LoadMoreBook.LoadMoreBookData data) {
                     final List<Book.BookData> books = new ArrayList<>();
                     books.addAll(data.getBookData());
                     page = data.getNextPageNumber();
@@ -52,9 +51,9 @@ public class CategoryFragment extends BaseViewBookFragment {
                             if (page != 0) {
                                 books.add(null);
                                 getmAdapter().notifyItemInserted(books.size() - 1);
-                                getWorkAPI().getBooksFromCategory(new CurrentCategoryCallback() {
+                                getWorkAPI().getBooksFromCategory(new LoadMoreCallback() {
                                     @Override
-                                    public void onSuccess(@NonNull CategoryBook.CategoryBookData data) {
+                                    public void onSuccess(@NonNull LoadMoreBook.LoadMoreBookData data) {
                                         books.remove(books.size() - 1);
                                         getmAdapter().notifyItemRemoved(books.size());
                                         getmAdapter().stopLoading();
@@ -64,7 +63,7 @@ public class CategoryFragment extends BaseViewBookFragment {
 
                                     @Override
                                     public void onError(@NonNull Throwable t) {
-
+                                        errorViewBook(t);
                                     }
                                 }, page, idCategory);
                             }

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,17 +95,17 @@ public abstract class BaseViewBookFragment extends Fragment {
     }
 
     public void errorViewBook(Throwable t) {
-        visibleProgress(recyclerView, false);
-        visibleProgress(mUserBookProgress, false);
-        visibleProgress(mMessageAgain, true);
+        visible(recyclerView, false);
+        visible(mUserBookProgress, false);
+        visible(mMessageAgain, true);
         mSwipeRefresh.setRefreshing(false);
         Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 
     public void initAdapter(final List<Book.BookData> books) {
-        visibleProgress(mMessageAgain, false);
-        visibleProgress(mUserBookProgress, false);
-        visibleProgress(recyclerView, true);
+        visible(mMessageAgain, false);
+        visible(mUserBookProgress, false);
+        visible(recyclerView, true);
         mSwipeRefresh.setRefreshing(false);
         RecyclerViewClickListener listner = new RecyclerViewClickListener() {
             @Override
@@ -121,7 +120,7 @@ public abstract class BaseViewBookFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void visibleProgress(View v, boolean status) {
+    public void visible(View v, boolean status) {
         if (status) {
             v.setVisibility(View.VISIBLE);
         } else {

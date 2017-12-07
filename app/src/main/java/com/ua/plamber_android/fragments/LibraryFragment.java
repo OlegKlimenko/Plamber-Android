@@ -20,7 +20,6 @@ import com.ua.plamber_android.adapters.RecyclerLibraryAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.model.CategoryBook;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.utils.TokenUtils;
 

@@ -1,21 +1,17 @@
 package com.ua.plamber_android.activitys;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
@@ -67,6 +63,23 @@ public class LibraryActivity extends BaseDrawerActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_library, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_search_library:
+                Intent intent = SearchActivity.startSearchActivity(this);
+                intent.putExtra(START_WITH_MENU, mViewPager.getCurrentItem());
+                startActivityForResult(intent, LibraryFragment.MENU_REQUEST);
+                break;
+        }
+        return true;
+    }
 
     public void setupNavigationDrawer() {
         getNavigationView().setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CategoryBook {
+public class LoadMoreBook {
 
-    public static class CategoryBookRequest {
+    public static class LoadMoreRequestCategory {
 
         @SerializedName("user_token")
         private String userToken;
@@ -17,14 +17,32 @@ public class CategoryBook {
         @SerializedName("category_id")
         private long categoryID;
 
-        public CategoryBookRequest(String userToken, int pageNumber, long categoryID) {
+        public LoadMoreRequestCategory(String userToken, int pageNumber, long categoryID) {
             this.userToken = userToken;
             this.pageNumber = pageNumber;
             this.categoryID = categoryID;
         }
     }
 
-    public class CategoryBookRespond {
+    public static class LoadMoreRequestSearch {
+
+        @SerializedName("user_token")
+        private String userToken;
+
+        @SerializedName("search_term")
+        private String term;
+
+        @SerializedName("page")
+        private int page;
+
+        public LoadMoreRequestSearch (String userToken, String term, int page) {
+            this.userToken = userToken;
+            this.term = term;
+            this.page = page;
+        }
+    }
+
+    public class LoadMoreBookRespond {
         @SerializedName("status")
         private int status;
 
@@ -32,7 +50,7 @@ public class CategoryBook {
         private String detail;
 
         @SerializedName("data")
-        private CategoryBookData data;
+        private LoadMoreBookData data;
 
         public int getStatus() {
             return status;
@@ -42,12 +60,12 @@ public class CategoryBook {
             return detail;
         }
 
-        public CategoryBookData getData() {
+        public LoadMoreBookData getData() {
             return data;
         }
     }
 
-    public class CategoryBookData {
+    public class LoadMoreBookData {
 
         @SerializedName("books")
         private List<Book.BookData> bookData;
@@ -63,7 +81,4 @@ public class CategoryBook {
             return nextPageNumber;
         }
     }
-
-
-
 }

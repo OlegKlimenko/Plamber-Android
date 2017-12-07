@@ -1,20 +1,13 @@
 package com.ua.plamber_android.api;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.ua.plamber_android.api.interfaces.callbacks.BooksCallback;
-import com.ua.plamber_android.api.interfaces.callbacks.CurrentCategoryCallback;
+import com.ua.plamber_android.api.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.api.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.CategoryBook;
+import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.utils.TokenUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,20 +45,38 @@ public class WorkAPI {
         }
     }
 
-    public void getBooksFromCategory(final CurrentCategoryCallback callback, int pageNumber, long idCategory) {
-        CategoryBook.CategoryBookRequest category = new CategoryBook.CategoryBookRequest(tokenUtils.readToken(), pageNumber, idCategory);
-        final Call<CategoryBook.CategoryBookRespond> request = apiUtils.initializePlamberAPI().getCurrentCategory(category);
+    public void getBooksFromCategory(final LoadMoreCallback callback, int pageNumber, long idCategory) {
+        LoadMoreBook.LoadMoreRequestCategory category = new LoadMoreBook.LoadMoreRequestCategory(tokenUtils.readToken(), pageNumber, idCategory);
+        final Call<LoadMoreBook.LoadMoreBookRespond> request = apiUtils.initializePlamberAPI().getCurrentCategory(category);
 
-        request.enqueue(new Callback<CategoryBook.CategoryBookRespond>() {
+        request.enqueue(new Callback<LoadMoreBook.LoadMoreBookRespond>() {
             @Override
-            public void onResponse(Call<CategoryBook.CategoryBookRespond> call, Response<CategoryBook.CategoryBookRespond> response) {
+            public void onResponse(Call<LoadMoreBook.LoadMoreBookRespond> call, Response<LoadMoreBook.LoadMoreBookRespond> response) {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<CategoryBook.CategoryBookRespond> call, Throwable t) {
+            public void onFailure(Call<LoadMoreBook.LoadMoreBookRespond> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void searchBook(final LoadMoreCallback callback, int pageNumber, String term) {
+        LoadMoreBook.LoadMoreRequestSearch search = new LoadMoreBook.LoadMoreRequestSearch(tokenUtils.readToken(), term, pageNumber);
+        final Call<LoadMoreBook.LoadMoreBookRespond> request = apiUtils.initializePlamberAPI().searchBook(search);
+        request.enqueue(new Callback<LoadMoreBook.LoadMoreBookRespond>() {
+            @Override
+            public void onResponse(Call<LoadMoreBook.LoadMoreBookRespond> call, Response<LoadMoreBook.LoadMoreBookRespond> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoadMoreBook.LoadMoreBookRespond> call, Throwable t) {
                 callback.onError(t);
             }
         });

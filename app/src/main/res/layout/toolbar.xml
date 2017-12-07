@@ -6,6 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@android:color/white"
-    app:layout_scrollFlags="scroll|enterAlways">
+    app:layout_scrollFlags="scroll|enterAlways"
+    app:contentInsetStartWithNavigation="0dp">
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchViewBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:queryHint="Search"
+        app:queryBackground="@android:color/transparent"
+        app:searchIcon="@null"
+        app:iconifiedByDefault="false"
+        />
 
 </android.support.v7.widget.Toolbar>

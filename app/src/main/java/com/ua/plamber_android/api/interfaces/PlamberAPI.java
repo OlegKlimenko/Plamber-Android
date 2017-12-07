@@ -2,7 +2,7 @@ package com.ua.plamber_android.api.interfaces;
 
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.CategoryBook;
+import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Password;
@@ -60,8 +60,8 @@ public interface PlamberAPI {
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/category/")
-    Call<CategoryBook.CategoryBookRespond>
-    getCurrentCategory(@Body CategoryBook.CategoryBookRequest categoryRequest);
+    Call<LoadMoreBook.LoadMoreBookRespond>
+    getCurrentCategory(@Body LoadMoreBook.LoadMoreRequestCategory categoryRequest);
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/set-current-page/")
@@ -82,4 +82,8 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/my-profile/")
     Call<User.ProfileRespond> getProfileData(@Body User.ProfileRequest profileRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/search-book/")
+    Call<LoadMoreBook.LoadMoreBookRespond> searchBook(@Body LoadMoreBook.LoadMoreRequestSearch searchBook);
 }
