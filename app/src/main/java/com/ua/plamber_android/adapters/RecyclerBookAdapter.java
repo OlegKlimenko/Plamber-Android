@@ -1,13 +1,10 @@
 package com.ua.plamber_android.adapters;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +17,18 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.gson.Gson;
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.activitys.DetailBookActivity;
-import com.ua.plamber_android.api.interfaces.OnLoadMoreListener;
-import com.ua.plamber_android.api.interfaces.PlamberAPI;
-import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.fragments.CategoryFragment;
+import com.ua.plamber_android.interfaces.OnLoadMoreListener;
+import com.ua.plamber_android.api.PlamberAPI;
+import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
 
 
-import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -70,12 +66,13 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mOnLoadMoreListener = mOnLoadMoreListener;
     }
 
-    public class LoadProgressHolder extends RecyclerView.ViewHolder {
+    class LoadProgressHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.progressBar_item)
         ProgressBar progressBar;
 
         private LoadProgressHolder(View itemView) {
             super(itemView);
-            progressBar = itemView.findViewById(R.id.progressBar_item);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -86,20 +83,21 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView img;
-        public TextView nameBook;
-        public TextView authorBook;
-        public ProgressBar userProgressImage;
+        @BindView(R.id.book_item_image)
+        ImageView img;
+        @BindView(R.id.book_item_name)
+        TextView nameBook;
+        @BindView(R.id.book_item_author)
+        TextView authorBook;
+        @BindView(R.id.pb_user_book_download)
+        ProgressBar userProgressImage;
         public View view;
         private RecyclerViewClickListener mListener;
 
-        public BookHolder(View v, RecyclerViewClickListener listener) {
+        private BookHolder(View v, RecyclerViewClickListener listener) {
             super(v);
+            ButterKnife.bind(this, v);
             this.view = v;
-            this.img = (ImageView) v.findViewById(R.id.book_item_image);
-            this.nameBook = (TextView) v.findViewById(R.id.book_item_name);
-            this.authorBook= (TextView) v.findViewById(R.id.book_item_author);
-            this.userProgressImage = (ProgressBar) v.findViewById(R.id.pb_user_book_download);
             itemView.setOnClickListener(this);
             mListener = listener;
         }
@@ -109,7 +107,6 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mListener.onClick(view, getAdapterPosition());
         }
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -126,7 +123,6 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LoadProgressHolder) {
-            Log.i(CategoryFragment.TAG, "LoadHolder");
             LoadProgressHolder loadProgressHolder = (LoadProgressHolder) holder;
             loadProgressHolder.progressBar.setIndeterminate(true);
         } else {

@@ -1,4 +1,4 @@
-package com.ua.plamber_android.api.interfaces.callbacks;
+package com.ua.plamber_android.interfaces.callbacks;
 
 import android.support.annotation.NonNull;
 

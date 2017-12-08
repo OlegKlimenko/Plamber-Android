@@ -5,8 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.ua.plamber_android.api.interfaces.PlamberAPI;
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;

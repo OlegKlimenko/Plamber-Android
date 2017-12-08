@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group
         android:id="@+id/group_first"
         android:checkableBehavior="single">
@@ -7,22 +8,22 @@
             android:id="@+id/nav_user_books"
             android:checked="true"
             android:icon="@drawable/ic_book_black_24dp"
-            android:title="My books" />
+            android:title="@string/my_books" />
 
         <item
             android:id="@+id/nav_library"
             android:icon="@drawable/ic_library_books_black_24dp"
-            android:title="Library" />
+            android:title="@string/library" />
 
         <item
             android:id="@+id/nav_recommended"
             android:icon="@drawable/ic_bookmark_border_black_24dp"
-            android:title="Recommended" />
+            android:title="@string/recommended" />
 
         <item
         android:id="@+id/nav_upload_book"
         android:icon="@drawable/ic_cloud_upload_black_24dp"
-        android:title="Upload" />
+        android:title="@string/upload" />
     </group>
 
     <group
@@ -30,13 +31,19 @@
         android:checkableBehavior="none">
 
         <item
+            android:id="@+id/nav_mode_switch"
+            android:title="@string/download_only"
+            android:icon="@drawable/ic_cloud_off_black_24dp"
+            app:actionLayout="@layout/switch_offline_mode"/>
+
+        <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Setting" />
+            android:title="@string/setting" />
 
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="Logout" />
+            android:title="@string/logout" />
     </group>
 </menu>

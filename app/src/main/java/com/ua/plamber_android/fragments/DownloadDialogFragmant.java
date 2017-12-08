@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +39,9 @@ public class DownloadDialogFragmant extends DialogFragment {
     private APIUtils apiUtils;
     private AsyncDownloadBook asyncDownload;
 
+    @BindView(R.id.pb_dialog_download)
     ProgressBar progressDownload;
+    @BindView(R.id.tv_percent_dialog_download)
     TextView percentDownload;
 
     Book.BookData bookData;
@@ -64,8 +68,7 @@ public class DownloadDialogFragmant extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflate = getActivity().getLayoutInflater();
         View v = inflate.inflate(R.layout.download_fragment_dialog, null);
-        progressDownload = v.findViewById(R.id.pb_dialog_download);
-        percentDownload = v.findViewById(R.id.tv_percent_dialog_download);
+        ButterKnife.bind(this, v);
 
         final File file = new File(utils.getBooksPath() + utils.getFileName(bookData));
         if (asyncDownload == null || asyncDownload.getStatus() != AsyncTask.Status.RUNNING)

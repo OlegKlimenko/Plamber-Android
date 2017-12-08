@@ -5,13 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
+import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Library;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RecyclerLibraryAdapter extends RecyclerView.Adapter<RecyclerLibraryAdapter.ViewHolder> {
 
@@ -26,13 +28,14 @@ public class RecyclerLibraryAdapter extends RecyclerView.Adapter<RecyclerLibrary
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public View view;
-        public TextView libraryName;
+        @BindView(R.id.tv_library_name)
+        TextView libraryName;
         private RecyclerViewClickListener mListener;
 
         public ViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
             this.view = view;
-            this.libraryName = (TextView) view.findViewById(R.id.tv_library_name);
+            ButterKnife.bind(this, view);
             this.mListener = listener;
             itemView.setOnClickListener(this);
 

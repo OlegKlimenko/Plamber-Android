@@ -38,6 +38,13 @@
     <string name="clear_search">Clear Search</string>
     <string name="remove_book">Remove book</string>
     <string name="nothing_found">Nothing found on your request</string>
+    <string name="download_only">Download only</string>
+    <string name="setting">Setting</string>
+    <string name="logout">Logout</string>
+    <string name="upload">Upload</string>
+    <string name="recommended">Recommended</string>
+    <string name="library">Library</string>
+    <string name="my_books">My books</string>
 
 
 </resources>

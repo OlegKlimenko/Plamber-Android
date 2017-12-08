@@ -3,19 +3,25 @@ package com.ua.plamber_android.activitys;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
+import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
@@ -33,6 +39,8 @@ public class LibraryActivity extends BaseDrawerActivity {
     ViewPager mViewPager;
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+    @BindView(R.id.fab_upload)
+    FloatingActionButton mFabUpload;
 
     public static final String TAG = "LibraryActivity";
     private Utils utils;
@@ -51,6 +59,9 @@ public class LibraryActivity extends BaseDrawerActivity {
         setToggle(mToolbar);
         setPage(0);
         setupNavigationDrawer();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mFabUpload.setElevation(5);
+        }
     }
 
     @Override
@@ -156,11 +167,28 @@ public class LibraryActivity extends BaseDrawerActivity {
             @Override
             public void onPageSelected(int position) {
                 setPage(position);
+                initFabButton(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+    }
+
+    private void initFabButton(int position) {
+        UploadFragment.currentPosition = position;
+        if (position == 3) {
+            mFabUpload.setVisibility(View.VISIBLE);
+        } else {
+            mFabUpload.setVisibility(View.GONE);
+        }
+
+        mFabUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Click fab", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -20,24 +20,34 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.WorkAPI;
-import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.api.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
+import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.model.Book;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public abstract class BaseViewBookFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private RecyclerBookAdapter mAdapter;
-    private ProgressBar mUserBookProgress;
-    private TextView mMessageAgain;
-    private SwipeRefreshLayout mSwipeRefresh;
     private WorkAPI workAPI;
-    GridLayoutManager gridLayoutManager;
     public static final String BOOKKEY = "BOOKKEY";
     public static final int ADDEDREQUEST = 142;
     public static boolean isUpdate = false;
+
+    @BindView(R.id.user_book_recycler)
+    RecyclerView recyclerView;
+
+    @BindView(R.id.user_book_progress)
+    ProgressBar mUserBookProgress;
+
+    @BindView(R.id.tv_user_book_again)
+    TextView mMessageAgain;
+
+    @BindView(R.id.user_book_refresh_layout)
+    SwipeRefreshLayout mSwipeRefresh;
 
     public abstract String getBookAPI();
 
@@ -51,10 +61,8 @@ public abstract class BaseViewBookFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.base_view_book_fragment, container, false);
-        recyclerView = (RecyclerView) v.findViewById(R.id.user_book_recycler);
-        mUserBookProgress = (ProgressBar) v.findViewById(R.id.user_book_progress);
-        mMessageAgain = (TextView) v.findViewById(R.id.tv_user_book_again);
-        mSwipeRefresh = (SwipeRefreshLayout) v.findViewById(R.id.user_book_refresh_layout);
+        ButterKnife.bind(this, v);
+
 
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -62,7 +70,7 @@ public abstract class BaseViewBookFragment extends Fragment {
                 viewUserBook();
             }
         });
-        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {

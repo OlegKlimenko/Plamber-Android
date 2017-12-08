@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ua.plamber_android.api.interfaces.OnLoadMoreListener;
-import com.ua.plamber_android.api.interfaces.callbacks.LoadMoreCallback;
+import com.ua.plamber_android.interfaces.OnLoadMoreListener;
+import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.LoadMoreBook;
 

@@ -1,21 +1,36 @@
 package com.ua.plamber_android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 
 import com.ua.plamber_android.R;
 
-public class UploadFragment extends Fragment{
+public class UploadFragment extends BaseViewBookFragment {
 
-    @Nullable
+    private final static String UPLOAD_BOOK_API = "api/v1/uploaded/";
+    public static int currentPosition;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragmant_upload, container, false );
+    public String getBookAPI() {
+        return UPLOAD_BOOK_API;
+    }
 
-        return v;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab_upload);
+        getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    fab.hide();
+                } else if (currentPosition == 3){
+                    fab.show();
+                }
+            }
+        });
     }
 }

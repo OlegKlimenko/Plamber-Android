@@ -1,4 +1,4 @@
-package com.ua.plamber_android.api.interfaces;
+package com.ua.plamber_android.interfaces;
 
 import android.view.View;
 

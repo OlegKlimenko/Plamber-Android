@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.interfaces.callbacks.AccountCallback;
+import com.ua.plamber_android.interfaces.callbacks.AccountCallback;
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.TokenUtils;

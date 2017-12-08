@@ -11,7 +11,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.interfaces.callbacks.PageCallback;
+import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.utils.TokenUtils;
 
@@ -19,7 +19,6 @@ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

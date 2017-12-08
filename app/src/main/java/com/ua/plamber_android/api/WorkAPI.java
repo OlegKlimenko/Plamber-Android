@@ -2,9 +2,9 @@ package com.ua.plamber_android.api;
 
 import android.content.Context;
 
-import com.ua.plamber_android.api.interfaces.callbacks.BooksCallback;
-import com.ua.plamber_android.api.interfaces.callbacks.LoadMoreCallback;
-import com.ua.plamber_android.api.interfaces.callbacks.ManageBookCallback;
+import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
+import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.utils.TokenUtils;

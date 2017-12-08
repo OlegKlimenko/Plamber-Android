@@ -18,21 +18,26 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
 import com.ua.plamber_android.adapters.RecyclerLibraryAdapter;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.interfaces.callbacks.CategoryCallback;
-import com.ua.plamber_android.api.interfaces.RecyclerViewClickListener;
+import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
+import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.utils.TokenUtils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LibraryFragment extends Fragment {
-    private RecyclerView mRecyclerView;
     private RecyclerLibraryAdapter mLibraryAdapter;
-    private ProgressBar mProgressLibrary;
+
+    @BindView(R.id.library_recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.progress_library)
+    ProgressBar mProgressLibrary;
 
     TokenUtils tokenUtils;
     APIUtils apiUtils;
@@ -53,8 +58,7 @@ public class LibraryFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragmnet_library, container, false);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.library_recycler_view);
-        mProgressLibrary = (ProgressBar) v.findViewById(R.id.progress_library);
+        ButterKnife.bind(this, v);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         visibleProgress(mProgressLibrary, true);

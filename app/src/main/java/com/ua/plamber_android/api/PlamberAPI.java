@@ -1,4 +1,4 @@
-package com.ua.plamber_android.api.interfaces;
+package com.ua.plamber_android.api;
 
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.Book;
