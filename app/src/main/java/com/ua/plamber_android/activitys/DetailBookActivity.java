@@ -115,8 +115,8 @@ public class DetailBookActivity extends AppCompatActivity {
 
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + bookData.getPhoto();
-        if (!this.isFinishing())
-        Glide.with(this).load(currentUrl).into(mImageBook);
+
+        Glide.with(getApplicationContext()).load(currentUrl).into(mImageBook);
 
         mBookName.setText(bookData.getBookName());
         mAuthorBook.setText(bookData.getIdAuthor());
@@ -144,7 +144,7 @@ public class DetailBookActivity extends AppCompatActivity {
                 addBookToLibrary(bookDataDetail.getBookData().getIdBook());
             } else {
                 Intent intent = BookReaderActivity.startReaderActivity(this);
-                intent.putExtra(PDFPATH, utils.getBooksPath() + utils.getFileName(bookDataDetail.getBookData()));
+                intent.putExtra(PDFPATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
                 intent.putExtra(BOOKID, bookDataDetail.getBookData().getIdBook());
                 startActivity(intent);
             }
@@ -174,8 +174,11 @@ public class DetailBookActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 break;
-            case R.id.item_remove:
-                removeBookFromLinrary(bookDataDetail.getBookData().getIdBook());
+            case R.id.item_remove_library:
+                removeBookFromLibrary(bookDataDetail.getBookData().getIdBook());
+                break;
+            case R.id.item_remove_device:
+                removeBookFromDevice(bookDataDetail.getBookData().getBookName());
                 break;
         }
         return true;
@@ -191,16 +194,21 @@ public class DetailBookActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mDetailButton.getTag() == "Added") {
-            menu.findItem(R.id.item_remove).setEnabled(false);
+            menu.findItem(R.id.item_remove_library).setEnabled(false);
+            menu.findItem(R.id.item_remove_device).setEnabled(false);
+        } else if (mDetailButton.getTag() == "Read") {
+            menu.findItem(R.id.item_remove_device).setEnabled(true);
+            menu.findItem(R.id.item_remove_library).setEnabled(true);
         } else {
-            menu.findItem(R.id.item_remove).setEnabled(true);
+            menu.findItem(R.id.item_remove_device).setEnabled(false);
+            menu.findItem(R.id.item_remove_library).setEnabled(true);
         }
         return true;
     }
 
     public void checkBook() {
         if (bookDataDetail.isAddedBook()) {
-            File file = new File(utils.getBooksPath(), utils.getFileName(bookDataDetail.getBookData()));
+            File file = new File(utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
             if (file.exists()) {
                 mDetailButton.setText("Read Book");
                 mDetailButton.setTag("Read");
@@ -276,18 +284,16 @@ public class DetailBookActivity extends AppCompatActivity {
         }, id, URL_ADDED_BOOK);
     }
 
-    private void removeBookFromLinrary(long id) {
+    private void removeBookFromLibrary(long id) {
         workAPI.manageBookInLibrary(new ManageBookCallback() {
             @Override
             public void onSuccess(@NonNull boolean result) {
                 if (result) {
                     message("Book was removed");
                     bookDataDetail.setAddedBook(false);
-                    checkBook();
                     Intent intentResult = new Intent();
                     setResult(Activity.RESULT_OK, intentResult);
-                    File file = new File(utils.getBooksPath() + utils.getFileName(bookDataDetail.getBookData()));
-                    file.delete();
+                    removeBookFromDevice(bookDataDetail.getBookData().getBookName());
                 } else {
                     message("Boor remove error");
                 }
@@ -298,6 +304,12 @@ public class DetailBookActivity extends AppCompatActivity {
                 message(t.getLocalizedMessage());
             }
         }, id, URL_REMOVE_BOOK);
+    }
+
+    private void removeBookFromDevice(String bookName) {
+        File file = new File(utils.getFullFileName(bookName));
+        file.delete();
+        checkBook();
     }
 
     private void viewProgress(boolean status) {

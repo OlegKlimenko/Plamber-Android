@@ -28,10 +28,9 @@
         <activity android:name=".activitys.SettingActivity" />
         <activity android:name=".activitys.ChangePasswordActivity" />
         <activity android:name=".activitys.CategoryActivity" />
-        <activity android:name=".activitys.SearchActivity"
-           >
-
-        </activity>
+        <activity android:name=".activitys.SearchActivity" />
+        <activity android:name=".activitys.UploadActivity" />
+        <activity android:name=".activitys.BookFilePickActivity"></activity>
     </application>
 
 </manifest>

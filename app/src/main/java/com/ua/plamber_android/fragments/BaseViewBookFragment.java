@@ -115,7 +115,7 @@ public abstract class BaseViewBookFragment extends Fragment {
         visible(mUserBookProgress, false);
         visible(recyclerView, true);
         mSwipeRefresh.setRefreshing(false);
-        RecyclerViewClickListener listner = new RecyclerViewClickListener() {
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
@@ -124,7 +124,7 @@ public abstract class BaseViewBookFragment extends Fragment {
                 isUpdate = false;
             }
         };
-        mAdapter = new RecyclerBookAdapter(recyclerView, books, listner);
+        mAdapter = new RecyclerBookAdapter(recyclerView, books, listener);
         recyclerView.setAdapter(mAdapter);
     }
 

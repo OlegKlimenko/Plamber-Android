@@ -133,20 +133,20 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
     private void setHeadrBackground() {
         ImageView headerImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
-        Glide.with(this).load(R.drawable.main_background).apply(new RequestOptions().transform(new CenterCrop())).into(headerImage);
+        Glide.with(getApplicationContext()).load(R.drawable.main_background).apply(new RequestOptions().transform(new CenterCrop())).into(headerImage);
     }
 
     private void setAvatar(String urlAvatar) {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + urlAvatar;
         ImageView profileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
-        Glide.with(this).load(currentUrl).into(profileImage);
+        Glide.with(getApplicationContext()).load(currentUrl).into(profileImage);
     }
 
     private void setAvatar(int drawable) {
         ImageView profileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
         profileImage.setColorFilter(getResources().getColor(R.color.colorAccent));
-        Glide.with(this).load(drawable).into(profileImage);
+        Glide.with(getApplicationContext()).load(drawable).into(profileImage);
     }
 
     private void setProfileName(String name) {

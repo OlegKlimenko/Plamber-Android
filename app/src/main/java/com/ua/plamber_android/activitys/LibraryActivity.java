@@ -180,15 +180,15 @@ public class LibraryActivity extends BaseDrawerActivity {
     private void initFabButton(int position) {
         UploadFragment.currentPosition = position;
         if (position == 3) {
-            mFabUpload.setVisibility(View.VISIBLE);
+            mFabUpload.show();
         } else {
-            mFabUpload.setVisibility(View.GONE);
+            mFabUpload.hide();
         }
 
         mFabUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Click fab", Toast.LENGTH_SHORT).show();
+               startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
             }
         });
     }

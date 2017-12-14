@@ -5,6 +5,7 @@
     <dimen name="forgot_margin">50dp</dimen>
     <dimen name="height_margin">75dp</dimen>
     <dimen name="margin_button">4dp</dimen>
+    <dimen name="margin_checkbox">8dp</dimen>
     <dimen name="margin_nav_header">16dp</dimen>
     <dimen name="margin_nav_header_height">140dp</dimen>
     <dimen name="margin_library">16dp</dimen>

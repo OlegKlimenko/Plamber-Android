@@ -34,9 +34,10 @@
     <string name="save">Save</string>
     <string name="change_password">Change password</string>
     <string name="validate_password_clone">Old and new passwords can not be the same</string>
-    <string name="search">Search</string>
+    <string name="search_menu">Search</string>
     <string name="clear_search">Clear Search</string>
-    <string name="remove_book">Remove book</string>
+    <string name="remove_book_from_library">Remove book from library</string>
+    <string name="remove_book_from_device">Remove book from device</string>
     <string name="nothing_found">Nothing found on your request</string>
     <string name="download_only">Download only</string>
     <string name="setting">Setting</string>
@@ -45,6 +46,19 @@
     <string name="recommended">Recommended</string>
     <string name="library">Library</string>
     <string name="my_books">My books</string>
+    <string name="upload_book_activity">Upload books</string>
+    <string name="upload_book_name">Book name</string>
+    <string name="upload_book_author">Book author</string>
+    <string name="upload_select_the_book_category">Select the book category</string>
+    <string name="upload_about_book">About book</string>
+    <string name="upload_select_book_language">Select book language</string>
+    <string name="upload_select_book_file">Select book file</string>
+    <string name="file_size">Mb</string>
+    <string name="file_folder">Folder</string>
+    <string name="close_picker">Exit</string>
+    <string name="pdf_file_don_t_search">PDF file don`t search</string>
+    <string name="show_hidden_file">Show hidden file</string>
+    <string name="no_show_hidden_file">Don`t show hidden file</string>
 
 
 </resources>

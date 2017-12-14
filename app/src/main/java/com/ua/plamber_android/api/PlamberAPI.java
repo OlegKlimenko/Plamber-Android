@@ -6,14 +6,19 @@ import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Password;
+import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.model.User;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
@@ -86,4 +91,15 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/search-book/")
     Call<LoadMoreBook.LoadMoreBookRespond> searchBook(@Body LoadMoreBook.LoadMoreRequestSearch searchBook);
+
+    @Multipart
+    @POST("api/v1/upload-book/")
+    Call<Upload.UploadRespond> uploadFile(@Part("user_token") RequestBody userToken,
+                                          @Part("book_name") RequestBody bookName,
+                                          @Part("author") RequestBody authorName,
+                                          @Part("category") RequestBody categoryName,
+                                          @Part("about") RequestBody aboutBook,
+                                          @Part("language") RequestBody languageBook,
+                                          @Part("private_book") boolean private_book,
+                                          @Part MultipartBody.Part file);
 }

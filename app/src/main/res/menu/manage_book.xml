@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/item_remove"
+        android:id="@+id/item_remove_library"
         app:showAsAction="never"
-        android:title="@string/remove_book" />
+        android:title="@string/remove_book_from_library" />
+    <item
+        android:id="@+id/item_remove_device"
+        app:showAsAction="never"
+        android:title="@string/remove_book_from_device" />
+
 </menu>

@@ -25,7 +25,7 @@ public class UploadFragment extends BaseViewBookFragment {
         getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) {
+                if (dy > 0 && fab.isShown()) {
                     fab.hide();
                 } else if (currentPosition == 3){
                     fab.show();

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+    android:id="@+id/item_show_hidden"
+    app:showAsAction="never"
+    android:title="@string/show_hidden_file" />
+
+    <item
+        android:id="@+id/item_close_picker"
+        app:showAsAction="never"
+        android:title="@string/close_picker" />
+
+
+</menu>

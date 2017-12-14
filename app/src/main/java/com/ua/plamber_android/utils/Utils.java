@@ -4,13 +4,11 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.model.Book;
 
 import java.io.File;
 
@@ -27,7 +25,7 @@ public class Utils {
                 .apply(new RequestOptions().transform(new CenterCrop())).into(background);
     }
 
-    public String getBooksPath() {
+    public String getPlamberPath() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             String path = Environment.getExternalStorageDirectory() + File.separator + "Plamber" + File.separator;
@@ -37,7 +35,15 @@ public class Utils {
             }
             return path;
         } else {
-            Toast.makeText(context, "Error path", Toast.LENGTH_SHORT).show();
+            return context.getFilesDir().getPath();
+        }
+    }
+
+    public String getRootDirectory() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return Environment.getExternalStorageDirectory().getPath();
+        } else {
             return null;
         }
     }
@@ -52,7 +58,7 @@ public class Utils {
         return displayMetrics.widthPixels / displayMetrics.density;
     }
 
-    public String getFileName(Book.BookData book) {
-        return book.getBookName() + ".pdf";
+    public String getFullFileName(String bookName) {
+        return getPlamberPath() + bookName + ".pdf";
     }
 }

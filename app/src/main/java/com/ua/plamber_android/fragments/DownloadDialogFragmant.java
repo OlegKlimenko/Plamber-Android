@@ -70,7 +70,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         View v = inflate.inflate(R.layout.download_fragment_dialog, null);
         ButterKnife.bind(this, v);
 
-        final File file = new File(utils.getBooksPath() + utils.getFileName(bookData));
+        final File file = new File(utils.getFullFileName(bookData.getBookName()));
         if (asyncDownload == null || asyncDownload.getStatus() != AsyncTask.Status.RUNNING)
         downloadBook(file);
 
@@ -127,27 +127,12 @@ public class DownloadDialogFragmant extends DialogFragment {
         @SafeVarargs
         @Override
         protected final Boolean doInBackground(Response<ResponseBody>... response) {
-            boolean checkFile = false;
             try {
-                float fileSize = response[0].body().contentLength();
-                FileOutputStream stream = new FileOutputStream(file);
-                BufferedInputStream inputStream = new BufferedInputStream(response[0].body().byteStream());
-                byte[] data = new byte[8192];
-                float total = 0;
-                int readBytes;
-
-                while ((readBytes = inputStream.read(data)) != -1) {
-                    total += readBytes;
-                    stream.write(data, 0, readBytes);
-                    publishProgress((int) ((total / fileSize) * 100));
-                }
-                if (fileSize == total) {
-                    checkFile = true;
-                }
+                return writeResponse(file, response[0]);
             } catch (IOException e) {
-                Log.i("BookReaderActivity", e.getLocalizedMessage());
+                e.printStackTrace();
+                return false;
             }
-            return checkFile;
         }
 
         @Override
@@ -165,6 +150,42 @@ public class DownloadDialogFragmant extends DialogFragment {
                 file.delete();
                 Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        private boolean writeResponse(File file, Response<ResponseBody> response) throws IOException {
+            boolean checkFile = false;
+            FileOutputStream stream = null;
+            BufferedInputStream inputStream = null;
+            try {
+                float fileSize = response.body().contentLength();
+                stream = new FileOutputStream(file);
+                inputStream = new BufferedInputStream(response.body().byteStream());
+                byte[] data = new byte[8192];
+                float total = 0;
+                int readBytes;
+                int progress = 0;
+
+                while ((readBytes = inputStream.read(data)) != -1) {
+                    int download = (int)((total / fileSize) * 100);
+                    if (progress + 1 <= download) {
+                        progress = download;
+                        publishProgress(download);
+                    }
+                    total += readBytes;
+                    stream.write(data, 0, readBytes);
+
+                }
+                if (fileSize == total) {
+                    checkFile = true;
+                }
+            } finally {
+                if (stream != null)
+                    stream.close();
+
+                if (inputStream != null)
+                    inputStream.close();
+            }
+            return checkFile;
         }
     }
 

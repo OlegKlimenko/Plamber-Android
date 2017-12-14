@@ -26,7 +26,7 @@
     </style>
 
     <style name="searchStyle" parent="Widget.AppCompat.SearchView.ActionBar">
-        <item name="queryHint">@string/search</item>
+        <item name="queryHint">@string/search_menu</item>
         <item name="searchIcon">@null</item>
     </style>
 
