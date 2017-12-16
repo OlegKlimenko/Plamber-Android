@@ -14,17 +14,31 @@ public class Upload {
         @SerializedName("author")
         String authorName;
 
-        @SerializedName("category")
+        @SerializedName("category_name")
         String categoryName;
 
-        @SerializedName("about")
-        String aboutBook;
+        @SerializedName("book_path")
+        String bookPath;
 
-        @SerializedName("language")
-        String languageBook;
+        @SerializedName("book_about")
+        String bookAbout;
+
+        @SerializedName("book_language")
+        String bookLanguage;
 
         @SerializedName("private_book")
         boolean isPrivateBook;
+
+        public UploadRequest(String userToken, String bookName, String authorName, String categoryName, String bookPath, String aboutBook, String languageBook, boolean isPrivateBook) {
+            this.userToken = userToken;
+            this.bookName = bookName;
+            this.authorName = authorName;
+            this.categoryName = categoryName;
+            this.bookPath = bookPath;
+            this.bookAbout = aboutBook;
+            this.bookLanguage = languageBook;
+            this.isPrivateBook = isPrivateBook;
+        }
 
         public String getUserToken() {
             return userToken;
@@ -42,12 +56,16 @@ public class Upload {
             return categoryName;
         }
 
+        public String getBookPath() {
+            return bookPath;
+        }
+
         public String getAboutBook() {
-            return aboutBook;
+            return bookAbout;
         }
 
         public String getLanguageBook() {
-            return languageBook;
+            return bookLanguage;
         }
 
         public boolean isPrivateBook() {

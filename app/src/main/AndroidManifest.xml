@@ -30,7 +30,8 @@
         <activity android:name=".activitys.CategoryActivity" />
         <activity android:name=".activitys.SearchActivity" />
         <activity android:name=".activitys.UploadActivity" />
-        <activity android:name=".activitys.BookFilePickActivity"></activity>
+        <activity android:name=".activitys.BookFilePickActivity" />
+        <activity android:name=".activitys.CategoryUploadActivity"></activity>
     </application>
 
 </manifest>

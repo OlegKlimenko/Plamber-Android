@@ -59,6 +59,15 @@
     <string name="pdf_file_don_t_search">PDF file don`t search</string>
     <string name="show_hidden_file">Show hidden file</string>
     <string name="no_show_hidden_file">Don`t show hidden file</string>
+    <string name="select_category_upload">Select category</string>
+    <string name="valid_book_name">Please enter book name</string>
+    <string name="valid_book_author">Please enter book`s author</string>
+    <string name="valid_book_category">Please select category</string>
+    <string name="valid_book_file">Please select book file</string>
+    <string name="valid_book_language">Please select book language</string>
+    <string name="valid_book_about">Please write about this book</string>
+    <string name="download_progress">Download progress: </string>
+    <string name="upload_progress">Upload progress: </string>
 
 
 </resources>

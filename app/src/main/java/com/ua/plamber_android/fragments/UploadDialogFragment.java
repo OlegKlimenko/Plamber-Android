@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Upload;
@@ -24,7 +26,6 @@ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -33,10 +34,15 @@ import retrofit2.Response;
 
 public class UploadDialogFragment extends DialogFragment {
 
+    @BindView(R.id.tv_loading_file)
+    TextView titleLoad;
     @BindView(R.id.pb_dialog_download)
     ProgressBar progressDownload;
     @BindView(R.id.tv_percent_dialog_download)
     TextView percentDownload;
+    public static final String UPLOAD_BOOK = "UPLOAD_BOOK";
+
+    private Upload.UploadRequest uploadData;
 
     Utils utils;
     TokenUtils tokenUtils;
@@ -51,6 +57,7 @@ public class UploadDialogFragment extends DialogFragment {
         utils = new Utils(getActivity());
         tokenUtils = new TokenUtils(getActivity());
         apiUtils = new APIUtils(getActivity());
+        uploadData = new Gson().fromJson(getArguments().getString(UPLOAD_BOOK), Upload.UploadRequest.class);
         setRetainInstance(true);
     }
 
@@ -70,7 +77,7 @@ public class UploadDialogFragment extends DialogFragment {
 
         if (request == null || request.isCanceled())
         uploadFileToServer();
-
+        titleLoad.setText(R.string.upload_progress);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
                 .setTitle("Upload book")
@@ -86,25 +93,34 @@ public class UploadDialogFragment extends DialogFragment {
     }
 
     private void uploadFileToServer() {
-        File file = new File("");
+        File file = new File(uploadData.getBookPath());
 
         MultipartBody.Part fileBody = prepareFilePart(file);
 
-        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(tokenUtils.readToken()), createRequest("1.pdf"), createRequest("LOL"), createRequest("IT"), createRequest("Uploaded book"), createRequest("Русский"), false, fileBody);
+        Log.i(TAG, uploadData.getLanguageBook());
+
+        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody);
 
         request.enqueue(new Callback<Upload.UploadRespond>() {
             @Override
             public void onResponse(Call<Upload.UploadRespond> call, Response<Upload.UploadRespond> response) {
                 if (response.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                    BaseViewBookFragment.isUpdate = true;
                     dismiss();
 
                 } else {
+                    Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                    dismiss();
+                    getActivity().finish();
                     Log.i(TAG, response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<Upload.UploadRespond> call, Throwable t) {
+                dismiss();
                 Log.i(TAG, t.getLocalizedMessage());
             }
         });

@@ -3,11 +3,16 @@ package com.ua.plamber_android.api;
 import android.content.Context;
 
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.interfaces.callbacks.CompleteAutoCallback;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
+import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.utils.TokenUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -98,6 +103,50 @@ public class WorkAPI {
 
                 @Override
                 public void onFailure(Call<Book.BookDetailRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void autoCompleteAuthor(final CompleteAutoCallback callback, String part) {
+        if (callback != null) {
+            final AutoComplete.AuthorRequest complete = new AutoComplete.AuthorRequest(tokenUtils.readToken(), part);
+            Call<AutoComplete.AuthorRespond> request = apiUtils.initializePlamberAPI().generateAuthor(complete);
+            request.enqueue(new Callback<AutoComplete.AuthorRespond>() {
+                @Override
+                public void onResponse(Call<AutoComplete.AuthorRespond> call, Response<AutoComplete.AuthorRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body().getData());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AutoComplete.AuthorRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void autoCompleteBook(final CompleteAutoCallback callback, String part) {
+        if (callback != null) {
+            final AutoComplete.BookRequest complete = new AutoComplete.BookRequest(tokenUtils.readToken(), part);
+            Call<Book.BookRespond> request = apiUtils.initializePlamberAPI().generateBooks(complete);
+            request.enqueue(new Callback<Book.BookRespond>() {
+                @Override
+                public void onResponse(Call<Book.BookRespond> call, Response<Book.BookRespond> response) {
+                    if (response.isSuccessful()) {
+                        List<String> bookNames = new ArrayList<>();
+                        for (Book.BookData book: response.body().getBookData()) {
+                            bookNames.add(book.getBookName());
+                        }
+                        callback.onSuccess(bookNames);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Book.BookRespond> call, Throwable t) {
                     callback.onError(t);
                 }
             });

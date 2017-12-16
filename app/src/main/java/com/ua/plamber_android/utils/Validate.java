@@ -47,6 +47,61 @@ public class Validate {
         return isValid;
     }
 
+    public boolean bookValidate(EditText editText, final TextInputLayout inputLayout, int text) {
+        boolean isValid = true;
+        inputLayout.setErrorEnabled(true);
+        String regex = "[A-Za-z0-9_ .]{2,150}";
+        String name = editText.getText().toString();
+        if (name.length() <= 0) {
+            isValid = false;
+            inputLayout.setError(context.getString(text));
+        }
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                inputLayout.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        return isValid;
+    }
+
+    public boolean bookValidate(EditText editText, final TextInputLayout inputLayout, int text, String  regex) {
+        boolean isValid = true;
+        inputLayout.setErrorEnabled(true);
+        String name = editText.getText().toString();
+        if (!name.matches(regex)) {
+            isValid = false;
+            inputLayout.setError(context.getString(text));
+        }
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                inputLayout.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        return isValid;
+    }
+
     public boolean passwordValidate(EditText editText, final TextInputLayout inputLayout) {
         boolean isValid = true;
         inputLayout.setErrorEnabled(true);

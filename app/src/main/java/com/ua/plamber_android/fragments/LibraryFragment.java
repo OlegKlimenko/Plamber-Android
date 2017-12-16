@@ -23,6 +23,7 @@ import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.utils.TokenUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,13 +47,14 @@ public class LibraryFragment extends Fragment {
     public static final String IDCATEGORI = "IdCategory";
     public static final String NAMECATEGORI = "NAMECategory";
     public static final int MENU_REQUEST = 123;
+    public List<Library.LibraryData> categoriesList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tokenUtils = new TokenUtils(getActivity());
         apiUtils = new APIUtils(getActivity());
-
+        categoriesList = new ArrayList<>();
     }
 
     @Override
@@ -64,24 +66,10 @@ public class LibraryFragment extends Fragment {
         visibleProgress(mProgressLibrary, true);
         getAllCategory(new CategoryCallback() {
             @Override
-            public void onSuccess(@NonNull final List<Library.LibraryData> categories) {
-                RecyclerViewClickListener listener = new RecyclerViewClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-
-                        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                        intent.putExtra(IDCATEGORI, categories.get(position).getId());
-                        intent.putExtra(NAMECATEGORI, categories.get(position).getCategoryName());
-                        getActivity().startActivityForResult(intent, MENU_REQUEST);
-                    }
-                };
-
-                if (mLibraryAdapter == null) {
-                    mLibraryAdapter = new RecyclerLibraryAdapter(categories, listener);
-                }
-                mRecyclerView.setAdapter(mLibraryAdapter);
-                visibleProgress(mProgressLibrary, false);
-                visibleProgress(mRecyclerView, true);
+            public void onSuccess(@NonNull List<Library.LibraryData> categories) {
+                categoriesList.clear();
+                categoriesList.addAll(categories);
+                actionSelectCategory();
             }
 
             @Override
@@ -90,6 +78,28 @@ public class LibraryFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    public void actionSelectCategory() {
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                intent.putExtra(IDCATEGORI, categoriesList.get(position).getId());
+                intent.putExtra(NAMECATEGORI, categoriesList.get(position).getCategoryName());
+                getActivity().startActivityForResult(intent, MENU_REQUEST);
+            }
+        };
+        setAdapter(listener);
+    }
+
+    public void setAdapter(RecyclerViewClickListener listener) {
+        if (mLibraryAdapter == null) {
+            mLibraryAdapter = new RecyclerLibraryAdapter(categoriesList, listener);
+        }
+        mRecyclerView.setAdapter(mLibraryAdapter);
+        visibleProgress(mProgressLibrary, false);
+        visibleProgress(mRecyclerView, true);
     }
 
     private void getAllCategory(final CategoryCallback callback) {
@@ -115,7 +125,11 @@ public class LibraryFragment extends Fragment {
         if (status) {
             v.setVisibility(View.VISIBLE);
         } else {
-            v.setVisibility(v.GONE);
+            v.setVisibility(View.GONE);
         }
+    }
+
+    public List<Library.LibraryData> getCategoriesList() {
+        return categoriesList;
     }
 }

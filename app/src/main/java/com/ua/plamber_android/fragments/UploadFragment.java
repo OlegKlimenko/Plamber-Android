@@ -33,4 +33,13 @@ public class UploadFragment extends BaseViewBookFragment {
             }
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isUpdate) {
+            viewUserBook();
+            isUpdate = false;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.ua.plamber_android.api;
 
 import com.ua.plamber_android.model.Account;
+import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Library;
@@ -102,4 +103,12 @@ public interface PlamberAPI {
                                           @Part("language") RequestBody languageBook,
                                           @Part("private_book") boolean private_book,
                                           @Part MultipartBody.Part file);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/generate-authors/")
+    Call<AutoComplete.AuthorRespond> generateAuthor(@Body AutoComplete.AuthorRequest completeAuthor);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/generate-books/")
+    Call<Book.BookRespond> generateBooks(@Body AutoComplete.BookRequest completeBook);
 }
