@@ -10,10 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -26,14 +25,18 @@ import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.UploadDialogFragment;
-import com.ua.plamber_android.interfaces.callbacks.CompleteAutoCallback;
+import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
+import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -93,8 +96,10 @@ public class UploadActivity extends AppCompatActivity {
     private static final String TAG = "UploadActivity";
     private static final int REQUEST_SELECT_FILE = 205;
     private static final int REQUEST_SELECT_CATEGORY = 105;
+    private static final int REQUEST_SELECT_LANGUAGE = 123;
     public static final String FILE_PATH = "FILEPATH";
     public static final String CATEGORY_NAME = "CATEGORY_NAME";
+    public static final String BOOK_LANGUAGE = "BOOK_LANGUAGE";
     private Timer timer;
 
     @Override
@@ -117,6 +122,12 @@ public class UploadActivity extends AppCompatActivity {
 
         mBookAuthor.addTextChangedListener(setAuthorWatcher(500));
         mBookName.addTextChangedListener(setBookWatcher(500));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     @OnClick(R.id.btn_upload_file)
@@ -158,7 +169,12 @@ public class UploadActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_upload_select_category)
     public void selectCategory() {
-        startActivityForResult(CategoryUploadActivity.startCategoryUploadActivity(this), REQUEST_SELECT_CATEGORY);
+        startActivityForResult(SelectCategoryActivity.startCategoryUploadActivity(this), REQUEST_SELECT_CATEGORY);
+    }
+
+    @OnClick(R.id.btn_upload_select_language)
+    public void selectBookLanguage() {
+        startActivityForResult(SelectLanguageActivity.startSelectLanguageActivity(this), REQUEST_SELECT_LANGUAGE);
     }
 
     @Override
@@ -181,6 +197,10 @@ public class UploadActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_SELECT_CATEGORY) {
             if (resultCode == Activity.RESULT_OK) {
                 mBookCategory.setText(data.getStringExtra(CATEGORY_NAME));
+            }
+        } else if (requestCode == REQUEST_SELECT_LANGUAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                mBookLanguage.setText(data.getStringExtra(BOOK_LANGUAGE));
             }
         }
     }
@@ -205,8 +225,8 @@ public class UploadActivity extends AppCompatActivity {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line);
-                        if (editable.toString().length() > 2 && !editable.toString().equals(currentAutoComplete)) {
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line);
+                        if (editable.toString().length() > 1 && !editable.toString().equals(currentAutoComplete)) {
                             currentAutoComplete = "";
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -214,7 +234,7 @@ public class UploadActivity extends AppCompatActivity {
                                     mAuthorProgressComplete.setVisibility(View.VISIBLE);
                                 }
                             });
-                           workAPI.autoCompleteAuthor(new CompleteAutoCallback() {
+                           workAPI.autoCompleteAuthor(new StringListCallback() {
                                 @Override
                                 public void onSuccess(@NonNull final List<String> stringsList) {
                                     adapter.clear();
@@ -269,9 +289,9 @@ public class UploadActivity extends AppCompatActivity {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line);
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line);
 
-                        if (editable.toString().length() > 2 && !editable.toString().equals(currentAutoComplete)) {
+                        if (editable.toString().length() > 1 && !editable.toString().equals(currentAutoComplete)) {
                             currentAutoComplete = "";
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -279,33 +299,40 @@ public class UploadActivity extends AppCompatActivity {
                                     mBookProgressComplete.setVisibility(View.VISIBLE);
                                 }
                             });
-                            workAPI.autoCompleteBook(new CompleteAutoCallback() {
-                                @Override
-                                public void onSuccess(@NonNull final List<String> stringsList) {
-                                    adapter.clear();
-                                    adapter.addAll(stringsList);
-                                    adapter.notifyDataSetChanged();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mBookName.setAdapter(adapter);
-                                            mBookProgressComplete.setVisibility(View.GONE);
-                                            mBookName.showDropDown();
-                                            mBookName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                @Override
-                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                    currentAutoComplete = stringsList.get(i);
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
+                           workAPI.autoCompleteBook(new BooksCallback() {
+                               @Override
+                               public void onSuccess(@NonNull final List<Book.BookData> books) {
+                                   final List<String> bookNames = new ArrayList<>();
+                                   for (Book.BookData book : books) {
+                                       bookNames.add(book.getBookName());
+                                   }
+                                   adapter.clear();
+                                   adapter.addAll(bookNames);
+                                   adapter.notifyDataSetChanged();
+                                   runOnUiThread(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           mBookName.setAdapter(adapter);
+                                           mBookProgressComplete.setVisibility(View.GONE);
+                                           mBookName.showDropDown();
+                                           mBookName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                               @Override
+                                               public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                   currentAutoComplete = bookNames.get(i);
+                                                   Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
+                                                   intent.putExtra(BaseViewBookFragment.BOOKKEY, books.get(i).getIdBook());
+                                                   startActivityForResult(intent, BaseViewBookFragment.ADDEDREQUEST);
+                                               }
+                                           });
+                                       }
+                                   });
+                               }
 
-                                @Override
-                                public void onError(@NonNull Throwable t) {
-                                    mBookProgressComplete.setVisibility(View.GONE);
-                                }
-                            }, editable.toString());
+                               @Override
+                               public void onError(@NonNull Throwable t) {
+
+                               }
+                           }, editable.toString());
                         }
                     }
                 }, delay);

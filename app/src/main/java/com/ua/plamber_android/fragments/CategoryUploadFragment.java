@@ -10,8 +10,6 @@ import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 
 public class CategoryUploadFragment extends LibraryFragment {
 
-
-
     @Override
     public void actionSelectCategory() {
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {

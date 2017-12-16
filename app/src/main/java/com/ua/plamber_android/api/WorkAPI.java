@@ -1,13 +1,15 @@
 package com.ua.plamber_android.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
-import com.ua.plamber_android.interfaces.callbacks.CompleteAutoCallback;
+import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.utils.TokenUtils;
 
@@ -23,6 +25,7 @@ public class WorkAPI {
     private Context context;
     private TokenUtils tokenUtils;
     private APIUtils apiUtils;
+    private static final String TAG = "WorkAPI";
 
     public WorkAPI(Context context) {
         this.context = context;
@@ -109,7 +112,7 @@ public class WorkAPI {
         }
     }
 
-    public void autoCompleteAuthor(final CompleteAutoCallback callback, String part) {
+    public void autoCompleteAuthor(final StringListCallback callback, String part) {
         if (callback != null) {
             final AutoComplete.AuthorRequest complete = new AutoComplete.AuthorRequest(tokenUtils.readToken(), part);
             Call<AutoComplete.AuthorRespond> request = apiUtils.initializePlamberAPI().generateAuthor(complete);
@@ -129,7 +132,7 @@ public class WorkAPI {
         }
     }
 
-    public void autoCompleteBook(final CompleteAutoCallback callback, String part) {
+    public void autoCompleteBook(final BooksCallback callback, String part) {
         if (callback != null) {
             final AutoComplete.BookRequest complete = new AutoComplete.BookRequest(tokenUtils.readToken(), part);
             Call<Book.BookRespond> request = apiUtils.initializePlamberAPI().generateBooks(complete);
@@ -137,16 +140,35 @@ public class WorkAPI {
                 @Override
                 public void onResponse(Call<Book.BookRespond> call, Response<Book.BookRespond> response) {
                     if (response.isSuccessful()) {
-                        List<String> bookNames = new ArrayList<>();
-                        for (Book.BookData book: response.body().getBookData()) {
-                            bookNames.add(book.getBookName());
-                        }
-                        callback.onSuccess(bookNames);
+
+                        callback.onSuccess(response.body().getBookData());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Book.BookRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void getAllLanguage(final StringListCallback callback) {
+        if (callback != null) {
+            final Language.LanguageRequest language = new Language.LanguageRequest(tokenUtils.readToken());
+            final Call<Language.LanguageRespond> request = apiUtils.initializePlamberAPI().getLanguage(language);
+            request.enqueue(new Callback<Language.LanguageRespond>() {
+                @Override
+                public void onResponse(Call<Language.LanguageRespond> call, Response<Language.LanguageRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body().getData());
+                    } else {
+                        Log.i(TAG, response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Language.LanguageRespond> call, Throwable t) {
                     callback.onError(t);
                 }
             });

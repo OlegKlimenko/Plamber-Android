@@ -8,20 +8,19 @@ import android.widget.TextView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.model.Library;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecyclerLibraryAdapter extends RecyclerView.Adapter<RecyclerLibraryAdapter.ViewHolder> {
+public class RecyclerSimpleAdapter extends RecyclerView.Adapter<RecyclerSimpleAdapter.ViewHolder> {
 
-    private List<Library.LibraryData> mCategories;
+    private List<String> itemsList;
     private RecyclerViewClickListener mListener;
 
-    public RecyclerLibraryAdapter(List<Library.LibraryData> categories, RecyclerViewClickListener listener) {
-        this.mCategories = categories;
+    public RecyclerSimpleAdapter(List<String> categories, RecyclerViewClickListener listener) {
+        this.itemsList = categories;
         this.mListener = listener;
     }
 
@@ -38,7 +37,6 @@ public class RecyclerLibraryAdapter extends RecyclerView.Adapter<RecyclerLibrary
             ButterKnife.bind(this, view);
             this.mListener = listener;
             itemView.setOnClickListener(this);
-
         }
 
         @Override
@@ -56,12 +54,12 @@ public class RecyclerLibraryAdapter extends RecyclerView.Adapter<RecyclerLibrary
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Library.LibraryData libraryItem = mCategories.get(position);
-        holder.libraryName.setText(libraryItem.getCategoryName());
+        String item = itemsList.get(position);
+        holder.libraryName.setText(item);
     }
 
     @Override
     public int getItemCount() {
-        return mCategories.size();
+        return itemsList.size();
     }
 }

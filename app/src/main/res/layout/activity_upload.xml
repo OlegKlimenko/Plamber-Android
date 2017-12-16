@@ -157,25 +157,43 @@
                         android:tint="@color/colorAccent"/>
                 </LinearLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/upload_book_language"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginTop="@dimen/margin_button">
 
-                    <EditText
-                        android:id="@+id/et_upload_book_language"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/upload_book_language"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/upload_select_book_language"
-                        android:textSize="19sp"
-                        android:inputType="text"
-                        android:text="Русский"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"/>
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_weight="1">
+
+                        <EditText
+                            android:id="@+id/et_upload_book_language"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/upload_select_book_language"
+                            android:textSize="19sp"
+                            android:inputType="text"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/btn_upload_select_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_language_black_24dp"
+                        android:layout_weight="7"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@android:color/transparent"
+                        android:tint="@color/colorAccent"/>
+                </LinearLayout>
+
+
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/upload_book_about"
@@ -189,7 +207,7 @@
                         android:hint="@string/upload_about_book"
                         android:textSize="19sp"
                         android:inputType="textMultiLine"
-                        android:maxLines="10" />
+                        android:maxLines="30" />
                 </android.support.design.widget.TextInputLayout>
 
                 <CheckBox

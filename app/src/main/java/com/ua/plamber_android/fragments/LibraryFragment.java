@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
-import com.ua.plamber_android.adapters.RecyclerLibraryAdapter;
+import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
@@ -33,19 +33,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LibraryFragment extends Fragment {
-    private RecyclerLibraryAdapter mLibraryAdapter;
+
 
     @BindView(R.id.library_recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.progress_library)
     ProgressBar mProgressLibrary;
 
+    private RecyclerSimpleAdapter mLibraryAdapter;
+
     TokenUtils tokenUtils;
     APIUtils apiUtils;
 
     private static final String TAG = "LibraryFragment";
     public static final String IDCATEGORI = "IdCategory";
-    public static final String NAMECATEGORI = "NAMECategory";
+    public static final String NAMECATEGORI = "NameCategory";
     public static final int MENU_REQUEST = 123;
     public List<Library.LibraryData> categoriesList;
 
@@ -95,7 +97,11 @@ public class LibraryFragment extends Fragment {
 
     public void setAdapter(RecyclerViewClickListener listener) {
         if (mLibraryAdapter == null) {
-            mLibraryAdapter = new RecyclerLibraryAdapter(categoriesList, listener);
+            List<String> items = new ArrayList<>();
+            for (Library.LibraryData libraryData : categoriesList) {
+                items.add(libraryData.getCategoryName());
+            }
+            mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
         }
         mRecyclerView.setAdapter(mLibraryAdapter);
         visibleProgress(mProgressLibrary, false);

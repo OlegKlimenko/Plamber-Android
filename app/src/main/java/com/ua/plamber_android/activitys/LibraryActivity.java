@@ -139,7 +139,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         adapter.addFragment(new UserBookFragment(), "My books");
         adapter.addFragment(new LibraryFragment(), "Library");
         adapter.addFragment(new RecommendedFragmnet(), "Recommended");
-        adapter.addFragment(new UploadFragment(), "Upload");
+        adapter.addFragment(new UploadFragment(), "Uploaded");
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
 

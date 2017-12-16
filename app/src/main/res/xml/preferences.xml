@@ -4,6 +4,7 @@
 
         <Preference
             android:key="change_avatar"
+            android:enabled="false"
             android:title="Change avatar"
             android:summary="Change user avatar"
             >
@@ -17,6 +18,7 @@
 
         <Preference
             android:key="switch_language"
+            android:enabled="false"
             android:title="Switch language"
             android:summary="Switch user lanuage">
         </Preference>

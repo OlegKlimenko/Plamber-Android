@@ -101,6 +101,9 @@ public class User {
         @SerializedName("user_photo")
         private String userPhotoUrl;
 
+        @SerializedName("email")
+        private String userEmail;
+
         public long getUserId() {
             return userId;
         }
@@ -111,6 +114,10 @@ public class User {
 
         public String getUserPhotoUrl() {
             return userPhotoUrl;
+        }
+
+        public String getUserEmail() {
+            return userEmail;
         }
     }
 }

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-public interface CompleteAutoCallback {
+public interface StringListCallback {
     void onSuccess(@NonNull List<String> stringsList);
 
     void onError(@NonNull Throwable t);
