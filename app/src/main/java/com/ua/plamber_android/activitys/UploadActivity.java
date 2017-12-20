@@ -93,6 +93,7 @@ public class UploadActivity extends AppCompatActivity {
     File mFile;
     String currentAutoComplete;
 
+    private static final String currentAutoCompleteKey = "CURRENT_AUTO_COMPLETE";
     private static final String TAG = "UploadActivity";
     private static final int REQUEST_SELECT_FILE = 205;
     private static final int REQUEST_SELECT_CATEGORY = 105;
@@ -120,8 +121,17 @@ public class UploadActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(title);
         }
 
+        if (savedInstanceState != null)
+            currentAutoComplete = savedInstanceState.getString(currentAutoCompleteKey);
+
         mBookAuthor.addTextChangedListener(setAuthorWatcher(500));
         mBookName.addTextChangedListener(setBookWatcher(500));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(currentAutoCompleteKey, currentAutoComplete);
     }
 
     @Override

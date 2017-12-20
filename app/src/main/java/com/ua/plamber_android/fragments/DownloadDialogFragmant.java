@@ -67,11 +67,11 @@ public class DownloadDialogFragmant extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflate = getActivity().getLayoutInflater();
-        View v = inflate.inflate(R.layout.download_fragment_dialog, null);
+        View v = inflate.inflate(R.layout.progress_fragment_dialog, null);
         ButterKnife.bind(this, v);
 
         final File file = new File(utils.getFullFileName(bookData.getBookName()));
-        if (asyncDownload == null || asyncDownload.getStatus() != AsyncTask.Status.RUNNING)
+        if (asyncDownload == null || asyncDownload.isCancelled())
         downloadBook(file);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

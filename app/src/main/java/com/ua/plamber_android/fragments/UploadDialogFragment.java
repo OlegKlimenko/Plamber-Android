@@ -3,26 +3,36 @@ package com.ua.plamber_android.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.shockwave.pdfium.PdfDocument;
+import com.shockwave.pdfium.PdfiumCore;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.utils.FileUploadProgress;
+import com.ua.plamber_android.utils.FileUtils;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +41,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Multipart;
 
 public class UploadDialogFragment extends DialogFragment {
 
@@ -40,6 +51,13 @@ public class UploadDialogFragment extends DialogFragment {
     ProgressBar progressDownload;
     @BindView(R.id.tv_percent_dialog_download)
     TextView percentDownload;
+
+    @BindView(R.id.linear_progress)
+    LinearLayout linearProgress;
+
+    @BindView(R.id.linear_wait)
+    LinearLayout linearWait;
+
     public static final String UPLOAD_BOOK = "UPLOAD_BOOK";
 
     private Upload.UploadRequest uploadData;
@@ -47,7 +65,7 @@ public class UploadDialogFragment extends DialogFragment {
     Utils utils;
     TokenUtils tokenUtils;
     APIUtils apiUtils;
-    Call<Upload.UploadRespond> request;
+    UploadFile uploadFile;
 
     private static final String TAG = "UploadDialogFragment";
 
@@ -72,11 +90,13 @@ public class UploadDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflate = getActivity().getLayoutInflater();
-        View v = inflate.inflate(R.layout.download_fragment_dialog, null);
+        View v = inflate.inflate(R.layout.progress_fragment_dialog, null);
         ButterKnife.bind(this, v);
-
-        if (request == null || request.isCanceled())
-        uploadFileToServer();
+        File file = new File(uploadData.getBookPath());
+        if (uploadFile == null || uploadFile.isCancelled()) {
+            uploadFile = new UploadFile();
+            uploadFile.execute(file);
+        }
         titleLoad.setText(R.string.upload_progress);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
@@ -84,22 +104,18 @@ public class UploadDialogFragment extends DialogFragment {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (request != null)
-                        request.cancel();
+                        if (uploadFile != null)
+                            uploadFile.cancel(true);
                     }
                 });
 
         return builder.create();
     }
 
-    private void uploadFileToServer() {
-        File file = new File(uploadData.getBookPath());
+    private void uploadFileToServer(final File file, MultipartBody.Part photo) {
 
         MultipartBody.Part fileBody = prepareFilePart(file);
-
-        Log.i(TAG, uploadData.getLanguageBook());
-
-        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody);
+        Call<Upload.UploadRespond> request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
 
         request.enqueue(new Callback<Upload.UploadRespond>() {
             @Override
@@ -150,8 +166,64 @@ public class UploadDialogFragment extends DialogFragment {
 
             }
         });
-
         return MultipartBody.Part.createFormData("book_file", file.getName(), requestFile);
+    }
+
+    private byte[] getFirstPageAsBitmap(File pdfFileUrl) {
+        PdfiumCore pdfiumCore = null;
+        PdfDocument pdfDocument = null;
+        try {
+            ParcelFileDescriptor fd = ParcelFileDescriptor.open(pdfFileUrl, ParcelFileDescriptor.MODE_READ_ONLY);
+            pdfiumCore = new PdfiumCore(getActivity());
+            pdfDocument = pdfiumCore.newDocument(fd);
+        } catch (IOException e) {
+            Log.i(TAG, e.getLocalizedMessage());
+        }
+        pdfiumCore.openPage(pdfDocument, 0);
+
+        int width = pdfiumCore.getPageWidthPoint(pdfDocument, 0);
+        int height = pdfiumCore.getPageHeightPoint(pdfDocument, 0);
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height,
+                Bitmap.Config.RGB_565);
+        pdfiumCore.renderPageBitmap(pdfDocument, bitmap, 0, 0, 0,
+                width, height);
+        pdfiumCore.closeDocument(pdfDocument);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    private class UploadFile extends AsyncTask<File, Void, MultipartBody.Part> {
+        File file;
+
+        @Override
+        protected MultipartBody.Part doInBackground(File... files) {
+            file = files[0];
+            RequestBody requestCover = RequestBody.create(MultipartBody.FORM, getFirstPageAsBitmap(files[0]));
+            return MultipartBody.Part.createFormData("photo", FileUtils.removeSymbol(files[0].getName(), 4) + ".png", requestCover);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            visibilityProgress(false);
+        }
+
+        @Override
+        protected void onPostExecute(MultipartBody.Part part) {
+            visibilityProgress(true);
+            uploadFileToServer(file, part);
+        }
+    }
+
+    private void visibilityProgress(boolean status) {
+        if (status) {
+            linearProgress.setVisibility(View.VISIBLE);
+            linearWait.setVisibility(View.GONE);
+        } else {
+            linearProgress.setVisibility(View.GONE);
+            linearWait.setVisibility(View.VISIBLE);
+        }
     }
 
 }

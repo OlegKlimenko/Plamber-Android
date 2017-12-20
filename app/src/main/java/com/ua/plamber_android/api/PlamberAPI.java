@@ -103,7 +103,8 @@ public interface PlamberAPI {
                                           @Part("about") RequestBody aboutBook,
                                           @Part("language") RequestBody languageBook,
                                           @Part("private_book") boolean private_book,
-                                          @Part MultipartBody.Part file);
+                                          @Part MultipartBody.Part file,
+                                          @Part MultipartBody.Part cover);
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/generate-authors/")

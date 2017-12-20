@@ -216,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:textSize="19sp"
-                    android:text="Make book is private"/>
+                    android:text="@string/make_book_is_private"/>
 
                 <Button
                     android:id="@+id/btn_upload_file"
@@ -226,7 +226,7 @@
                     android:padding="@dimen/top_margin"
                     android:textAllCaps="false"
                     android:theme="@style/AppTheme.GreenButton"
-                    android:text="Upload book"/>
+                    android:text="@string/upload_book_btn"/>
             </LinearLayout>
 
         </ScrollView>

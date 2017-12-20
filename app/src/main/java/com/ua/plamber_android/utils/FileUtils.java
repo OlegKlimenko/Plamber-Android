@@ -44,6 +44,10 @@ public class FileUtils {
         return type;
     }
 
+    public static String removeSymbol(String str, int number) {
+        return str.substring(0, str.length() - number);
+    }
+
     public static class FileCompare implements Comparator<File> {
         @Override
         public int compare(File f1, File f2) {
