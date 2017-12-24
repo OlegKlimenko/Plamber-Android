@@ -87,7 +87,7 @@ public class Book {
         private int countBookRated;
 
         @SerializedName("comments")
-        private List<Comment> commentData;
+        private List<Comment.CommentData> commentData;
 
         @SerializedName("book")
         private BookData bookData;
@@ -107,7 +107,7 @@ public class Book {
             return countBookRated;
         }
 
-        public List<Comment> getCommentData() {
+        public List<Comment.CommentData> getCommentData() {
             return commentData;
         }
 

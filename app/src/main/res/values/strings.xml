@@ -72,6 +72,16 @@
     <string name="file_is_being_prepared">File is being prepared</string>
     <string name="upload_book_btn">Upload book</string>
     <string name="make_book_is_private">Make book is private</string>
+    <string name="information_about_book">Information about book</string>
+    <string name="rating_book">Rating book:\ </string>
+    <string name="now_reading">Now reading:\ </string>
+    <string name="language">Language:\ </string>
+    <string name="genre">Genre:\ </string>
+    <string name="who_added">Who added:\ </string>
+    <string name="date_added">Date added:\ </string>
+    <string name="description_book">Description book</string>
+    <string name="download_book">Download Book</string>
+    <string name="view_all_comments">View all comments</string>
 
 
 </resources>

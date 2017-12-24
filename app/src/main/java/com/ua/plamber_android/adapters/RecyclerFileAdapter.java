@@ -32,7 +32,7 @@ public class RecyclerFileAdapter extends RecyclerView.Adapter<RecyclerFileAdapte
 
     public class FileHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public View view;
+        View view;
         @BindView(R.id.file_type_img)
         ImageView fileImage;
         @BindView(R.id.tv_file_name)

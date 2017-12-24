@@ -30,5 +30,16 @@
         <item name="searchIcon">@null</item>
     </style>
 
+    <style name="fullScreenDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="fullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
 
 </resources>

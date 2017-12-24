@@ -7,6 +7,7 @@
     <dimen name="margin_button">4dp</dimen>
     <dimen name="margin_checkbox">8dp</dimen>
     <dimen name="margin_nav_header">16dp</dimen>
+    <dimen name="button_padding">14dp</dimen>
     <dimen name="margin_nav_header_height">140dp</dimen>
     <dimen name="margin_library">16dp</dimen>
     <dimen name="dialog_padding">24dp</dimen>

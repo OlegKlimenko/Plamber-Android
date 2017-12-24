@@ -60,6 +60,7 @@
                 android:layout_marginTop="@dimen/top_margin"
                 android:theme="@style/AppTheme.EditText"
                 app:passwordToggleEnabled="true">
+
                 <EditText
                     android:id="@+id/et_sing_up_password"
                     android:layout_width="match_parent"
@@ -75,6 +76,7 @@
                 android:layout_marginTop="@dimen/top_margin"
                 android:theme="@style/AppTheme.EditText"
                 app:passwordToggleEnabled="true">
+
                 <EditText
                     android:id="@+id/et_sing_up_password_again"
                     android:layout_width="match_parent"

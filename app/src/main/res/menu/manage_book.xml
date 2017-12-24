@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/item_remove_library"
-        app:showAsAction="never"
-        android:title="@string/remove_book_from_library" />
-    <item
-        android:id="@+id/item_remove_device"
-        app:showAsAction="never"
-        android:title="@string/remove_book_from_device" />
+    <group android:id="@+id/manage_book_group">
+        <item
+            android:id="@+id/item_remove_library"
+            android:title="@string/remove_book_from_library"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/item_remove_device"
+            android:title="@string/remove_book_from_device"
+            app:showAsAction="never" />
+    </group>
+
 
 </menu>

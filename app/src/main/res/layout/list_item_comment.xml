@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image_comment"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_nav_header">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                android:id="@+id/comment_author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                tools:text="admin" />
+
+                <TextView
+                    android:id="@+id/comment_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:paddingLeft="@dimen/margin_checkbox"
+                    android:textColor="@android:color/black"
+                    tools:text="10.12.17" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill"
+                android:singleLine="false"
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingTop="@dimen/margin_checkbox"
+                android:paddingBottom="@dimen/dialog_padding"
+                android:textColor="@android:color/black"
+                tools:text="comment comment comment" />
+        </LinearLayout>
+
+</LinearLayout>

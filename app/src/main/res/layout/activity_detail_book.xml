@@ -13,8 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -23,119 +24,323 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:isScrollContainer="false">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_library"
-            android:layout_marginRight="@dimen/margin_library"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_checkbox"
+            android:layout_marginRight="@dimen/margin_checkbox"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/margin_checkbox">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="310dp"
-                android:layout_marginLeft="@dimen/forgot_margin"
-                android:layout_marginRight="@dimen/forgot_margin"
-                android:layout_marginTop="@dimen/margin_library">
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    app:cardCornerRadius="3dp"
-                    app:cardElevation="3dp">
-
-                    <ImageView
-                        android:id="@+id/iv_detail_book_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY" />
-                </android.support.v7.widget.CardView>
-            </FrameLayout>
-
-
-            <Button
-                android:id="@+id/btn_detail_download_book"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/forgot_margin"
-                android:layout_marginRight="@dimen/forgot_margin"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="Download Book"
-                android:textAllCaps="false"
-                android:theme="@style/AppTheme.GreenButton" />
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            app:cardCornerRadius="3dp"
+                            app:cardElevation="3dp">
+
+                            <ImageView
+                                android:id="@+id/iv_detail_book_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY" />
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_checkbox"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_detail_book_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="4"
+                        android:textColor="@android:color/black"
+                        android:textSize="19sp"
+                        android:ellipsize="end"
+                        tools:text="Темная башня" />
+
+                    <TextView
+                        android:id="@+id/tv_detail_author_book"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="4"
+                        android:textSize="16sp"
+                        android:ellipsize="end"
+                        tools:text="Стивен кинг"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_detail_download_book"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.1"
+                    android:paddingBottom="@dimen/button_padding"
+                    android:paddingTop="@dimen/button_padding"
+                    android:text="@string/download_book"
+                    android:textAllCaps="false"
+                    android:textSize="19sp"
+                    android:theme="@style/AppTheme.GreenButton" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <include layout="@layout/grey_line" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/margin_library"
-                android:layout_marginRight="@dimen/margin_library"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_detail_book_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:maxLines="2"
+                    android:maxLines="4"
+                    android:text="@string/rating_book"
                     android:textColor="@android:color/black"
-                    android:textSize="22sp"
-                    tools:text="Темная башня" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"/>
 
                 <TextView
-                    android:id="@+id/tv_detail_author_book"
+                    android:id="@+id/tv_detail_book_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="7.8 " />
+
+                <TextView
+                    android:id="@+id/tv_detail_book_rating_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    tools:text="(25)" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/now_reading"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_detail_now_read"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:maxLines="2"
-                    android:textSize="19sp"
-                    tools:text="Сттивен кинг" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="Астрология. Астрономия" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_detail_language"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:textSize="19sp"
-                    tools:text="Русский" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="Русский"
+                    android:ellipsize="end"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/genre"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_detail_genre_book"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:maxLines="2"
-                    android:textSize="19sp"
-                    tools:text="Астрология. Астрономия" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="Астрология. Астрономия"
+                    android:ellipsize="end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/who_added"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_detail_who_added"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="О книге"
-                    android:textSize="19dp" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="admin"
+                    android:ellipsize="end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_added"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_detail_date_added"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="10.12.2017" />
+
+            </LinearLayout>
+
+            <include layout="@layout/grey_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_detail_about_book"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:maxLines="5"
-                    android:textSize="19dp" />
-
+                    android:layout_gravity="fill"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
             </LinearLayout>
+
+            <include layout="@layout/grey_line" />
+
+            <RelativeLayout
+                android:id="@+id/comments_preview_frame"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_comment_preview"
+                    android:layout_marginBottom="-24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.RecyclerView>
+
+                <FrameLayout
+                    android:id="@+id/frame_grey_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/recycler_comment_preview">
+                    <include layout="@layout/grey_line" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_all_comments"
+                    android:textSize="18sp"
+                    android:layout_below="@id/frame_grey_line"
+                    android:paddingBottom="@dimen/margin_checkbox"
+                    android:textColor="@color/colorAccent"
+                    android:gravity="center_horizontal" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
     </ScrollView>
-
 
 </LinearLayout>

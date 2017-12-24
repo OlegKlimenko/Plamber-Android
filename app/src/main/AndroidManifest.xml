@@ -24,7 +24,8 @@
         <activity android:name=".activitys.LibraryActivity" />
         <activity android:name=".activitys.RestoreAccountActivity" />
         <activity android:name=".activitys.DetailBookActivity" />
-        <activity android:name=".activitys.BookReaderActivity" />
+        <activity android:name=".activitys.BookReaderActivity"
+            android:theme="@style/fullScreenTheme"/>
         <activity android:name=".activitys.SettingActivity" />
         <activity android:name=".activitys.ChangePasswordActivity" />
         <activity android:name=".activitys.CategoryActivity" />
@@ -32,7 +33,7 @@
         <activity android:name=".activitys.UploadActivity" />
         <activity android:name=".activitys.BookFilePickActivity" />
         <activity android:name=".activitys.SelectCategoryActivity" />
-        <activity android:name=".activitys.SelectLanguageActivity"></activity>
+        <activity android:name=".activitys.SelectLanguageActivity"/>
     </application>
 
 </manifest>

@@ -32,7 +32,6 @@ import com.ua.plamber_android.utils.Utils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +40,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Multipart;
 
 public class UploadDialogFragment extends DialogFragment {
 
@@ -169,7 +167,7 @@ public class UploadDialogFragment extends DialogFragment {
         return MultipartBody.Part.createFormData("book_file", file.getName(), requestFile);
     }
 
-    private byte[] getFirstPageAsBitmap(File pdfFileUrl) {
+    private byte[] getFirstPageAsByte(File pdfFileUrl) {
         PdfiumCore pdfiumCore = null;
         PdfDocument pdfDocument = null;
         try {
@@ -200,7 +198,7 @@ public class UploadDialogFragment extends DialogFragment {
         @Override
         protected MultipartBody.Part doInBackground(File... files) {
             file = files[0];
-            RequestBody requestCover = RequestBody.create(MultipartBody.FORM, getFirstPageAsBitmap(files[0]));
+            RequestBody requestCover = RequestBody.create(MultipartBody.FORM, getFirstPageAsByte(files[0]));
             return MultipartBody.Part.createFormData("photo", FileUtils.removeSymbol(files[0].getName(), 4) + ".png", requestCover);
         }
 

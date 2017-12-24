@@ -5,14 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,18 +28,29 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.PlamberAPI;
+import com.ua.plamber_android.fragments.AllCommentsFragment;
 import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.DownloadDialogFragmant;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.utils.TokenUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,30 +68,29 @@ public class DetailBookActivity extends AppCompatActivity {
     public static final String URL_REMOVE_BOOK = "api/v1/remove-book-home/";
     private static final int REQUEST_WRITE_STORAGE = 101;
 
-    @BindView(R.id.iv_detail_book_image)
-    ImageView mImageBook;
-    @BindView(R.id.tv_detail_book_name)
-    TextView mBookName;
-    @BindView(R.id.tv_detail_author_book)
-    TextView mAuthorBook;
-    @BindView(R.id.tv_detail_language)
-    TextView mLanguageBook;
-    @BindView(R.id.tv_detail_genre_book)
-    TextView mGenreBook;
-    @BindView(R.id.tv_detail_about_book)
-    TextView mAboutBook;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbarDeatil;
-    @BindView(R.id.btn_detail_download_book)
-    Button mDetailButton;
-    @BindView(R.id.detail_progress_bar)
-    LinearLayout loadDetailProgress;
+
+    @BindView(R.id.iv_detail_book_image) ImageView mImageBook;
+    @BindView(R.id.tv_detail_book_name) TextView mBookName;
+    @BindView(R.id.tv_detail_author_book) TextView mAuthorBook;
+    @BindView(R.id.tv_detail_language) TextView mLanguageBook;
+    @BindView(R.id.tv_detail_genre_book) TextView mGenreBook;
+    @BindView(R.id.tv_detail_about_book) TextView mAboutBook;
+    @BindView(R.id.tv_detail_book_rating) TextView mRatingBook;
+    @BindView(R.id.tv_detail_book_rating_count) TextView mCountRatingBook;
+    @BindView(R.id.tv_detail_now_read) TextView mNowReading;
+    @BindView(R.id.tv_detail_who_added) TextView mWhoAddedBook;
+    @BindView(R.id.tv_detail_date_added) TextView mDateAddedBook;
+    @BindView(R.id.toolbar) Toolbar mToolbarDeatil;
+    @BindView(R.id.btn_detail_download_book) Button mDetailButton;
+    @BindView(R.id.detail_progress_bar) LinearLayout loadDetailProgress;
+    @BindView(R.id.recycler_comment_preview) RecyclerView mRecyclerCommentPreview;
 
     private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
     private Utils utils;
     private TokenUtils tokenUtils;
     private WorkAPI workAPI;
+    private RecyclerCommentAdapter commentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +102,6 @@ public class DetailBookActivity extends AppCompatActivity {
         utils = new Utils(this);
         tokenUtils = new TokenUtils(this);
         workAPI = new WorkAPI(this);
-
         getBookDetail(new BookDetailCallback() {
             @Override
             public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
@@ -95,6 +109,7 @@ public class DetailBookActivity extends AppCompatActivity {
                 viewProgress(false);
                 initDetailBook();
                 checkBook();
+                initCommentsPreview();
             }
 
             @Override
@@ -123,7 +138,27 @@ public class DetailBookActivity extends AppCompatActivity {
         mLanguageBook.setText(bookData.getLanguage());
         mGenreBook.setText(bookData.getIdCategory());
         mAboutBook.setText(bookData.getDescription());
+        mRatingBook.setText(String.valueOf(bookDataDetail.getBookRating() + " "));
+        mCountRatingBook.setText(String.valueOf("(" + bookDataDetail.getCountBookRated() + ")"));
+        mNowReading.setText(String.valueOf(bookDataDetail.getCountUserReading()));
+        mWhoAddedBook.setText(bookData.getWhoAdded());
+        mDateAddedBook.setText(dateUpload(bookData.getUploadDate()));
         mDetailButton.setTag("Download");
+    }
+
+    private void initCommentsPreview() {
+        mRecyclerCommentPreview.setLayoutManager(new LinearLayoutManager(this));
+        if (bookDataDetail.getCommentData().size() > 3) {
+            List<Comment.CommentData> previewComments = new ArrayList<>();
+            previewComments.add(bookDataDetail.getCommentData().get(0));
+            previewComments.add(bookDataDetail.getCommentData().get(1));
+            previewComments.add(bookDataDetail.getCommentData().get(2));
+            commentAdapter = new RecyclerCommentAdapter(previewComments);
+        } else {
+            commentAdapter = new RecyclerCommentAdapter(bookDataDetail.getCommentData());
+        }
+        mRecyclerCommentPreview.setAdapter(commentAdapter);
+        mRecyclerCommentPreview.setLayoutFrozen(true);
     }
 
     @Override
@@ -131,6 +166,19 @@ public class DetailBookActivity extends AppCompatActivity {
         super.onResume();
         if (bookDataDetail != null)
         checkBook();
+    }
+
+    @OnClick(R.id.comments_preview_frame)
+    public void viewAllComments() {
+        openAllcoments();
+    }
+
+    private void openAllcoments() {
+        Bundle args = new Bundle();
+        args.putString(AllCommentsFragment.BOOK_COMMENTS, new Gson().toJson(bookDataDetail.getCommentData()));
+        AllCommentsFragment dialogComments = new AllCommentsFragment();
+        dialogComments.setArguments(args);
+        dialogComments.show(getSupportFragmentManager(), AllCommentsFragment.TAG);
     }
 
 
@@ -173,7 +221,7 @@ public class DetailBookActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                break;
+                return false;
             case R.id.item_remove_library:
                 removeBookFromLibrary(bookDataDetail.getBookData().getIdBook());
                 break;
@@ -181,7 +229,7 @@ public class DetailBookActivity extends AppCompatActivity {
                 removeBookFromDevice(bookDataDetail.getBookData().getBookName());
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -334,5 +382,17 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private void message(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private String dateUpload(String date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat plamberFormat = new SimpleDateFormat("dd.MM.yy", Locale.US);
+        Date newDate = null;
+        try {
+            newDate = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return plamberFormat.format(newDate);
     }
 }
