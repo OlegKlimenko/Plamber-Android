@@ -45,7 +45,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     public static final String TAG = "LibraryActivity";
     private Utils utils;
     private static long timeExit;
-
+    public static int currentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,8 +178,8 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     private void initFabButton(int position) {
-        UploadFragment.currentPosition = position;
-        if (position == 3) {
+        currentPosition = position;
+        if (position == 3 || position == 0) {
             mFabUpload.show();
         } else {
             mFabUpload.hide();

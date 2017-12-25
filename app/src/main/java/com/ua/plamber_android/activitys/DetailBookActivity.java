@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,13 +28,13 @@ import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.PlamberAPI;
+import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.fragments.AllCommentsFragment;
-import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
-import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.DownloadDialogFragmant;
+import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
+import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.utils.TokenUtils;
@@ -46,7 +44,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,21 +66,40 @@ public class DetailBookActivity extends AppCompatActivity {
     private static final int REQUEST_WRITE_STORAGE = 101;
 
 
-    @BindView(R.id.iv_detail_book_image) ImageView mImageBook;
-    @BindView(R.id.tv_detail_book_name) TextView mBookName;
-    @BindView(R.id.tv_detail_author_book) TextView mAuthorBook;
-    @BindView(R.id.tv_detail_language) TextView mLanguageBook;
-    @BindView(R.id.tv_detail_genre_book) TextView mGenreBook;
-    @BindView(R.id.tv_detail_about_book) TextView mAboutBook;
-    @BindView(R.id.tv_detail_book_rating) TextView mRatingBook;
-    @BindView(R.id.tv_detail_book_rating_count) TextView mCountRatingBook;
-    @BindView(R.id.tv_detail_now_read) TextView mNowReading;
-    @BindView(R.id.tv_detail_who_added) TextView mWhoAddedBook;
-    @BindView(R.id.tv_detail_date_added) TextView mDateAddedBook;
-    @BindView(R.id.toolbar) Toolbar mToolbarDeatil;
-    @BindView(R.id.btn_detail_download_book) Button mDetailButton;
-    @BindView(R.id.detail_progress_bar) LinearLayout loadDetailProgress;
-    @BindView(R.id.recycler_comment_preview) RecyclerView mRecyclerCommentPreview;
+    @BindView(R.id.iv_detail_book_image)
+    ImageView mImageBook;
+    @BindView(R.id.tv_detail_book_name)
+    TextView mBookName;
+    @BindView(R.id.tv_detail_author_book)
+    TextView mAuthorBook;
+    @BindView(R.id.tv_detail_language)
+    TextView mLanguageBook;
+    @BindView(R.id.tv_detail_genre_book)
+    TextView mGenreBook;
+    @BindView(R.id.tv_detail_about_book)
+    TextView mAboutBook;
+    @BindView(R.id.tv_detail_book_rating)
+    TextView mRatingBook;
+    @BindView(R.id.tv_detail_book_rating_count)
+    TextView mCountRatingBook;
+    @BindView(R.id.tv_detail_now_read)
+    TextView mNowReading;
+    @BindView(R.id.tv_detail_who_added)
+    TextView mWhoAddedBook;
+    @BindView(R.id.tv_detail_date_added)
+    TextView mDateAddedBook;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbarDeatil;
+    @BindView(R.id.btn_detail_download_book)
+    Button mDetailButton;
+    @BindView(R.id.detail_progress_bar)
+    LinearLayout loadDetailProgress;
+    @BindView(R.id.recycler_comment_preview)
+    RecyclerView mRecyclerCommentPreview;
+    @BindView(R.id.comments_preview_frame)
+    RelativeLayout commentsFrame;
+    @BindView(R.id.no_comments_information)
+    TextView noCommentsInformation;
 
     private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
@@ -148,24 +164,37 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private void initCommentsPreview() {
         mRecyclerCommentPreview.setLayoutManager(new LinearLayoutManager(this));
-        if (bookDataDetail.getCommentData().size() > 3) {
-            List<Comment.CommentData> previewComments = new ArrayList<>();
-            previewComments.add(bookDataDetail.getCommentData().get(0));
-            previewComments.add(bookDataDetail.getCommentData().get(1));
-            previewComments.add(bookDataDetail.getCommentData().get(2));
-            commentAdapter = new RecyclerCommentAdapter(previewComments);
+        if (bookDataDetail.getCommentData().size() == 0) {
+            commentsFrame.setVisibility(View.GONE);
+            noCommentsInformation.setVisibility(View.VISIBLE);
         } else {
-            commentAdapter = new RecyclerCommentAdapter(bookDataDetail.getCommentData());
+            if (bookDataDetail.getCommentData().size() > 3) {
+                List<Comment.CommentData> previewComments = new ArrayList<>();
+                previewComments.add(bookDataDetail.getCommentData().get(0));
+                previewComments.add(bookDataDetail.getCommentData().get(1));
+                previewComments.add(bookDataDetail.getCommentData().get(2));
+                commentAdapter = new RecyclerCommentAdapter(previewComments);
+            } else {
+                commentAdapter = new RecyclerCommentAdapter(bookDataDetail.getCommentData());
+            }
+            mRecyclerCommentPreview.setAdapter(commentAdapter);
+            mRecyclerCommentPreview.setLayoutFrozen(true);
         }
-        mRecyclerCommentPreview.setAdapter(commentAdapter);
-        mRecyclerCommentPreview.setLayoutFrozen(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (bookDataDetail != null)
-        checkBook();
+            checkBook();
+    }
+
+    @OnClick(R.id.share_book_btn)
+    public void shareBook() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdBook());
+        startActivity(intent);
     }
 
     @OnClick(R.id.comments_preview_frame)
@@ -327,7 +356,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull Throwable t) {
-               message(t.getLocalizedMessage());
+                message(t.getLocalizedMessage());
             }
         }, id, URL_ADDED_BOOK);
     }

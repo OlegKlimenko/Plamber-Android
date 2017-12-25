@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
+import com.ua.plamber_android.activitys.LibraryActivity;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
@@ -165,5 +167,19 @@ public abstract class BaseViewBookFragment extends Fragment {
 
     public WorkAPI getWorkAPI() {
         return workAPI;
+    }
+
+    public void hideFloatingButton() {
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab_upload);
+        getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && fab.isShown()) {
+                    fab.hide();
+                } else if (LibraryActivity.currentPosition == 3 || LibraryActivity.currentPosition == 0){
+                    fab.show();
+                }
+            }
+        });
     }
 }

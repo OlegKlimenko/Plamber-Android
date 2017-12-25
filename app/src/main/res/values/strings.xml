@@ -82,6 +82,7 @@
     <string name="description_book">Description book</string>
     <string name="download_book">Download Book</string>
     <string name="view_all_comments">View all comments</string>
+    <string name="this_book_has_no_comments">This book has no comments</string>
 
 
 </resources>

@@ -81,7 +81,6 @@ public class UploadActivity extends AppCompatActivity {
     @BindView(R.id.book_progress_complete)
     ProgressBar mBookProgressComplete;
 
-
     @BindString(R.string.upload_book_activity)
     String title;
 
