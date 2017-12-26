@@ -7,14 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.GreenButton">
-        <item name="colorButtonNormal">@color/colorAccent</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">19sp</item>
-    </style>
-
-    <style name="AppTheme.GreyButton">
-        <item name="colorButtonNormal">@color/colorDark</item>
+    <style name="AppTheme.GreenButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">19sp</item>
     </style>
@@ -30,7 +23,7 @@
         <item name="searchIcon">@null</item>
     </style>
 
-    <style name="fullScreenDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="fullScreenDialogThem" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -40,6 +33,5 @@
         <item name="android:windowFullscreen">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
-
 
 </resources>

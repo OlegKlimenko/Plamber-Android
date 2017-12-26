@@ -3,12 +3,40 @@ package com.ua.plamber_android.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Comment {
-    public class CommentRequest {
+    public static class CommentRequest {
+        @SerializedName("user_token")
+        private String userToken;
+        @SerializedName("book_id")
+        private long bookId;
+        @SerializedName("text")
+        private String commentText;
 
+        public CommentRequest(String userToken, long bookId, String commentText) {
+            this.userToken = userToken;
+            this.bookId = bookId;
+            this.commentText = commentText;
+        }
     }
 
     public class CommentRespond {
+        @SerializedName("status")
+        private int status;
+        @SerializedName("detail")
+        private String detail;
+        @SerializedName("data")
+        CommentData commentData;
 
+        public int getStatus() {
+            return status;
+        }
+
+        public String getDetail() {
+            return detail;
+        }
+
+        public CommentData getCommentData() {
+            return commentData;
+        }
     }
 
     public class CommentData {

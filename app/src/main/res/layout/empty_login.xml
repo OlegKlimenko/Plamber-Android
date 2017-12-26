@@ -65,7 +65,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/top_margin">
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_login_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -74,9 +74,11 @@
                     android:textAllCaps="false"
                     android:padding="@dimen/top_margin"
                     android:layout_marginRight="@dimen/margin_button"
-                    android:theme="@style/AppTheme.GreyButton"/>
+                    android:theme="@style/AppTheme.GreenButton"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    app:backgroundTint="@color/colorDark"/>
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,6 +87,7 @@
                     android:textAllCaps="false"
                     android:padding="@dimen/top_margin"
                     android:layout_marginLeft="@dimen/margin_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:theme="@style/AppTheme.GreenButton"/>
             </LinearLayout>
 

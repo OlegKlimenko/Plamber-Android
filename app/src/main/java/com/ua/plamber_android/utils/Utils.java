@@ -2,7 +2,9 @@ package com.ua.plamber_android.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -60,5 +62,16 @@ public class Utils {
 
     public String getFullFileName(String bookName) {
         return getPlamberPath() + bookName + ".pdf";
+    }
+
+    public static void messageSnack(View view, String mes) {
+        final Snackbar snackbar = Snackbar.make(view, mes, Snackbar.LENGTH_LONG);
+        snackbar.setAction("OK", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
     }
 }

@@ -41,7 +41,7 @@ public class AllCommentsFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.fullScreenDialogStyle);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.fullScreenDialogThem);
         commentData = new Gson().fromJson(getArguments().getString(BOOK_COMMENTS), new TypeToken<List<Comment.CommentData>>() {}.getType());
         setHasOptionsMenu(true);
     }

@@ -30,6 +30,7 @@ import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LibraryActivity extends BaseDrawerActivity {
 
@@ -62,6 +63,8 @@ public class LibraryActivity extends BaseDrawerActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mFabUpload.setElevation(5);
         }
+        //view fab on start in offline mode
+        initFabButton(0);
     }
 
     @Override
@@ -72,6 +75,11 @@ public class LibraryActivity extends BaseDrawerActivity {
                 setPage(data.getIntExtra(BACK_WITH_MENU, 0));
             }
         }
+    }
+
+    @OnClick(R.id.fab_upload)
+    public void openUploadActivity() {
+        startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
     }
 
     @Override
@@ -184,13 +192,6 @@ public class LibraryActivity extends BaseDrawerActivity {
         } else {
             mFabUpload.hide();
         }
-
-        mFabUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
-            }
-        });
     }
 
 

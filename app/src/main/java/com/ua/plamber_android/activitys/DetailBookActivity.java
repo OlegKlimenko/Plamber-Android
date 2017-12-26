@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +29,8 @@ import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.fragments.AddCommentFragment;
+import com.ua.plamber_android.fragments.AddRatedFragment;
 import com.ua.plamber_android.fragments.AllCommentsFragment;
 import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.DownloadDialogFragmant;
@@ -45,6 +46,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -93,13 +95,19 @@ public class DetailBookActivity extends AppCompatActivity {
     @BindView(R.id.btn_detail_download_book)
     Button mDetailButton;
     @BindView(R.id.detail_progress_bar)
-    LinearLayout loadDetailProgress;
+    LinearLayout mLoadDetailProgress;
     @BindView(R.id.recycler_comment_preview)
     RecyclerView mRecyclerCommentPreview;
-    @BindView(R.id.comments_preview_frame)
-    RelativeLayout commentsFrame;
-    @BindView(R.id.no_comments_information)
-    TextView noCommentsInformation;
+    @BindView(R.id.detail_comments_count)
+    TextView mCommentCountBook;
+    @BindView(R.id.frame_view_all_comments)
+    LinearLayout mFrameViewAllComments;
+    @BindView(R.id.frame_add_comment)
+    LinearLayout mFrameAddComment;
+    @BindView(R.id.frame_add_rated)
+    LinearLayout mFrameAddRated;
+    @BindView(R.id.detail_main_layout)
+    LinearLayout mMainLayout;
 
     private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
@@ -122,6 +130,7 @@ public class DetailBookActivity extends AppCompatActivity {
             @Override
             public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
                 bookDataDetail = bookDetail.getData();
+                Collections.reverse(bookDataDetail.getCommentData());
                 viewProgress(false);
                 initDetailBook();
                 checkBook();
@@ -162,12 +171,13 @@ public class DetailBookActivity extends AppCompatActivity {
         mDetailButton.setTag("Download");
     }
 
-    private void initCommentsPreview() {
+    public void initCommentsPreview() {
         mRecyclerCommentPreview.setLayoutManager(new LinearLayoutManager(this));
+        mCommentCountBook.setText(String.valueOf("(" + bookDataDetail.getCommentData().size() + ")"));
         if (bookDataDetail.getCommentData().size() == 0) {
-            commentsFrame.setVisibility(View.GONE);
-            noCommentsInformation.setVisibility(View.VISIBLE);
+            mFrameViewAllComments.setVisibility(View.GONE);
         } else {
+            mFrameViewAllComments.setVisibility(View.VISIBLE);
             if (bookDataDetail.getCommentData().size() > 3) {
                 List<Comment.CommentData> previewComments = new ArrayList<>();
                 previewComments.add(bookDataDetail.getCommentData().get(0));
@@ -198,8 +208,30 @@ public class DetailBookActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.comments_preview_frame)
-    public void viewAllComments() {
+    public void viewAllCommentsRecycler() {
         openAllcoments();
+    }
+
+    @OnClick(R.id.frame_add_comment)
+    public void addNewComment() {
+        AddCommentFragment commentFragment = new AddCommentFragment();
+        commentFragment.setArguments(bundleBookId(AddCommentFragment.BOOK_ID_COMMENT));
+        commentFragment.setCancelable(false);
+        commentFragment.show(getSupportFragmentManager(), AddCommentFragment.TAG);
+    }
+
+    private Bundle bundleBookId(String id) {
+        Bundle args = new Bundle();
+        args.putLong(id, bookDataDetail.getBookData().getIdBook());
+        return args;
+    }
+
+    @OnClick(R.id.frame_add_rated)
+    public void addRatedBook() {
+        AddRatedFragment ratedFragment = new AddRatedFragment();
+        ratedFragment.setArguments(bundleBookId(AddRatedFragment.BOOK_ID_RATED));
+        ratedFragment.setCancelable(false);
+        ratedFragment.show(getSupportFragmentManager(), AddRatedFragment.TAG);
     }
 
     private void openAllcoments() {
@@ -391,7 +423,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private void viewProgress(boolean status) {
         if (status) {
-            loadDetailProgress.setVisibility(View.VISIBLE);
+            mLoadDetailProgress.setVisibility(View.VISIBLE);
             mBookName.setVisibility(View.GONE);
             mAuthorBook.setVisibility(View.GONE);
             mLanguageBook.setVisibility(View.GONE);
@@ -399,7 +431,7 @@ public class DetailBookActivity extends AppCompatActivity {
             mAboutBook.setVisibility(View.GONE);
             mDetailButton.setVisibility(View.GONE);
         } else {
-            loadDetailProgress.setVisibility(View.GONE);
+            mLoadDetailProgress.setVisibility(View.GONE);
             mBookName.setVisibility(View.VISIBLE);
             mAuthorBook.setVisibility(View.VISIBLE);
             mLanguageBook.setVisibility(View.VISIBLE);
@@ -424,4 +456,13 @@ public class DetailBookActivity extends AppCompatActivity {
         }
         return plamberFormat.format(newDate);
     }
+
+    public void viewMessage(String message) {
+        Utils.messageSnack(mMainLayout, message);
+    }
+
+    public void addNewCommentToList(Comment.CommentData comment) {
+        bookDataDetail.getCommentData().add(comment);
+    }
+
 }

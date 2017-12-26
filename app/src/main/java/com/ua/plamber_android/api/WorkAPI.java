@@ -4,13 +4,17 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.interfaces.callbacks.CommentCallback;
+import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.LoadMoreBook;
+import com.ua.plamber_android.model.Rating;
 import com.ua.plamber_android.utils.TokenUtils;
 
 import java.util.ArrayList;
@@ -169,6 +173,50 @@ public class WorkAPI {
 
                 @Override
                 public void onFailure(Call<Language.LanguageRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void addRated(final StatusCallback callback, long bookId, int rated) {
+        if (callback != null) {
+            Rating.RatingRequest rating = new Rating.RatingRequest(tokenUtils.readToken(), bookId, rated);
+            Call<Rating.RatingRespond> request = apiUtils.initializePlamberAPI().addRating(rating);
+            request.enqueue(new Callback<Rating.RatingRespond>() {
+                @Override
+                public void onResponse(Call<Rating.RatingRespond> call, Response<Rating.RatingRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body().getStatus());
+                    } else {
+                        Log.i(TAG, response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Rating.RatingRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void addComment(final CommentCallback callback, long bookId, String text) {
+        if (callback != null) {
+            Comment.CommentRequest comment = new Comment.CommentRequest(tokenUtils.readToken(), bookId, text);
+            Call<Comment.CommentRespond> request = apiUtils.initializePlamberAPI().addComment(comment);
+            request.enqueue(new Callback<Comment.CommentRespond>() {
+                @Override
+                public void onResponse(Call<Comment.CommentRespond> call, Response<Comment.CommentRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        Log.i(TAG, response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Comment.CommentRespond> call, Throwable t) {
                     callback.onError(t);
                 }
             });

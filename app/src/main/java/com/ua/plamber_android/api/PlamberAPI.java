@@ -3,11 +3,13 @@ package com.ua.plamber_android.api;
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Password;
+import com.ua.plamber_android.model.Rating;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.model.User;
 
@@ -117,4 +119,12 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/generate-languages/")
     Call<Language.LanguageRespond> getLanguage(@Body Language.LanguageRequest languages);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/comment-add/")
+    Call<Comment.CommentRespond> addComment(@Body Comment.CommentRequest commentRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/change-rating")
+    Call<Rating.RatingRespond> addRating(@Body Rating.RatingRequest ratingRequest);
 }

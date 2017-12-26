@@ -40,7 +40,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.github.barteksc:android-pdf-viewer:2.8.2'
     compile 'de.hdodenhof:circleimageview:2.2.0'
-    compile 'com.uncopt:android.justified:1.0'
+    compile 'me.zhanghai.android.materialratingbar:library:1.2.0'
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

@@ -67,8 +67,8 @@
     <string name="valid_book_file">Please select book file</string>
     <string name="valid_book_language">Please select book language</string>
     <string name="valid_book_about">Please write about this book</string>
-    <string name="download_progress">Download progress: </string>
-    <string name="upload_progress">Upload progress: </string>
+    <string name="download_progress">Download progress:\ </string>
+    <string name="upload_progress">Upload progress:\ </string>
     <string name="file_is_being_prepared">File is being prepared</string>
     <string name="upload_book_btn">Upload book</string>
     <string name="make_book_is_private">Make book is private</string>
@@ -81,8 +81,18 @@
     <string name="date_added">Date added:\ </string>
     <string name="description_book">Description book</string>
     <string name="download_book">Download Book</string>
-    <string name="view_all_comments">View all comments</string>
+    <string name="view_all_comments">All comments</string>
     <string name="this_book_has_no_comments">This book has no comments</string>
+    <string name="reviews">Reviews\ </string>
+    <string name="add_comment">Add comment</string>
+    <string name="add_rated">Add rated</string>
+    <string name="please_rated_book">Please rated book</string>
+    <string name="your_rating_is">Thanks, your rating is\ </string>
+    <string name="rating_must_be_greater_0">Rating must be greater than 0</string>
+    <string name="thank_you_for_your_opinion">Thank you for your opinion</string>
+    <string name="error_has_occurred">Sorry, error has occurred</string>
+    <string name="write_comment_here">Write comment here</string>
+    <string name="please_enter_comment">Please enter comment</string>
 
 
 </resources>

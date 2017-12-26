@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.EditText">
+
                 <EditText
                     android:id="@+id/et_sing_up_username"
                     android:layout_width="match_parent"
@@ -45,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/top_margin"
                 android:theme="@style/AppTheme.EditText">
+
                 <EditText
                     android:id="@+id/et_sing_up_email"
                     android:layout_width="match_parent"
@@ -85,7 +87,7 @@
                     android:hint="@string/password_agian" />
             </android.support.design.widget.TextInputLayout>
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_sing_up_connected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,6 +95,7 @@
                 android:textAllCaps="false"
                 android:padding="@dimen/top_margin"
                 android:layout_marginTop="@dimen/top_margin"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:theme="@style/AppTheme.GreenButton"/>
 
             <TextView
