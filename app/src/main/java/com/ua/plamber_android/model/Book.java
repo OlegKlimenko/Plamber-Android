@@ -124,7 +124,7 @@ public class Book {
         }
     }
 
-    public class BookData {
+    public static class BookData {
         @SerializedName("id")
         private long idBook;
 
@@ -211,6 +211,54 @@ public class Book {
 
         public boolean isPrivatBook() {
             return isPrivatBook;
+        }
+
+        public void setIdBook(long idBook) {
+            this.idBook = idBook;
+        }
+
+        public void setBookName(String bookName) {
+            this.bookName = bookName;
+        }
+
+        public void setIdAuthor(String idAuthor) {
+            this.idAuthor = idAuthor;
+        }
+
+        public void setIdCategory(String idCategory) {
+            this.idCategory = idCategory;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setLanguage(String language) {
+            this.language = language;
+        }
+
+        public void setPhoto(String photo) {
+            this.photo = photo;
+        }
+
+        public void setBookFile(String bookFile) {
+            this.bookFile = bookFile;
+        }
+
+        public void setWhoAdded(String whoAdded) {
+            this.whoAdded = whoAdded;
+        }
+
+        public void setUploadDate(String uploadDate) {
+            this.uploadDate = uploadDate;
+        }
+
+        public void setPrivatBook(boolean privatBook) {
+            isPrivatBook = privatBook;
+        }
+
+        public void setBookUrl(String bookUrl) {
+            this.bookUrl = bookUrl;
         }
 
         @Override

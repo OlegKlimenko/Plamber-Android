@@ -30,6 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class LibraryFragment extends Fragment {
 
@@ -67,6 +68,14 @@ public class LibraryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragmnet_library, container, false);
         ButterKnife.bind(this, v);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -77,18 +86,14 @@ public class LibraryFragment extends Fragment {
             }
         });
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-
         if (preferenceUtils.readStatusOffline())
             viewCategoryOffline();
         else
             viewCategory();
-        return v;
     }
 
     private void viewCategoryOffline() {
-      offlineMessage();
+        offlineMessage();
     }
 
     private void offlineMessage() {

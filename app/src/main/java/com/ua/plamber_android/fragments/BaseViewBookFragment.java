@@ -39,7 +39,6 @@ public abstract class BaseViewBookFragment extends Fragment {
     private PreferenceUtils preferenceUtils;
     public static final String BOOKKEY = "BOOKKEY";
     public static final int ADDEDREQUEST = 142;
-    public static boolean isUpdate = false;
 
     @BindView(R.id.user_book_recycler)
     RecyclerView recyclerView;
@@ -67,16 +66,6 @@ public abstract class BaseViewBookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.base_view_book_fragment, container, false);
         ButterKnife.bind(this, v);
-
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (preferenceUtils.readStatusOffline())
-                    viewBookOffline();
-                else
-                    viewUserBook();
-            }
-        });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -89,12 +78,26 @@ public abstract class BaseViewBookFragment extends Fragment {
             }
         });
         recyclerView.setLayoutManager(gridLayoutManager);
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (preferenceUtils.readStatusOffline())
+                    viewBookOffline();
+                else
+                    viewUserBook();
+            }
+        });
 
         if (preferenceUtils.readStatusOffline())
             viewBookOffline();
-         else
+        else
             viewUserBook();
-        return v;
     }
 
     public void viewBookOffline() {
@@ -142,7 +145,6 @@ public abstract class BaseViewBookFragment extends Fragment {
                 Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
                 intent.putExtra(BOOKKEY, books.get(position).getIdBook());
                 startActivityForResult(intent, ADDEDREQUEST);
-                isUpdate = false;
             }
         };
         mAdapter = new RecyclerBookAdapter(recyclerView, books, listener);
@@ -154,13 +156,6 @@ public abstract class BaseViewBookFragment extends Fragment {
             v.setVisibility(View.VISIBLE);
         } else {
             v.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADDEDREQUEST && resultCode == Activity.RESULT_OK) {
-            isUpdate = true;
         }
     }
 

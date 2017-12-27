@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
+import com.ua.plamber_android.utils.DataBaseUtils;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
@@ -65,8 +67,6 @@ public class DetailBookActivity extends AppCompatActivity {
     public static final String TAG = "DetailBookActivity";
     public static final String URL_ADDED_BOOK = "api/v1/add-book-home/";
     public static final String URL_REMOVE_BOOK = "api/v1/remove-book-home/";
-    private static final int REQUEST_WRITE_STORAGE = 101;
-
 
     @BindView(R.id.iv_detail_book_image)
     ImageView mImageBook;
@@ -108,12 +108,21 @@ public class DetailBookActivity extends AppCompatActivity {
     LinearLayout mFrameAddRated;
     @BindView(R.id.detail_main_layout)
     LinearLayout mMainLayout;
+    @BindView(R.id.share_book_btn)
+    ImageView mShareBook;
+    @BindView(R.id.frame_gray_line_first)
+    FrameLayout mFrameGreyLineFirst;
+    @BindView(R.id.frame_gray_line_second)
+    FrameLayout mFrameGreyLineSecond;
+    @BindView(R.id.frame_review_count_text)
+    LinearLayout mFrameReviewCountText;
 
     private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
     private Utils utils;
     private PreferenceUtils preferenceUtils;
     private WorkAPI workAPI;
+    DataBaseUtils dataBaseUtils;
     private RecyclerCommentAdapter commentAdapter;
 
     @Override
@@ -126,13 +135,28 @@ public class DetailBookActivity extends AppCompatActivity {
         utils = new Utils(this);
         preferenceUtils = new PreferenceUtils(this);
         workAPI = new WorkAPI(this);
+        dataBaseUtils = new DataBaseUtils(getApplicationContext());
+        if (preferenceUtils.readStatusOffline())
+            viewDetailFromDataBase();
+        else
+            viewDetailBook();
+    }
+
+    private void viewDetailFromDataBase() {
+        Book.BookData bookData = dataBaseUtils.readBookFromDataBase(getIntent().getLongExtra(BaseViewBookFragment.BOOKKEY, 0));
+        initDetailBook(bookData);
+        hideInOffline();
+    }
+
+    private void viewDetailBook() {
         getBookDetail(new BookDetailCallback() {
             @Override
             public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
                 bookDataDetail = bookDetail.getData();
                 Collections.reverse(bookDataDetail.getCommentData());
                 viewProgress(false);
-                initDetailBook();
+                initDetailBook(bookDataDetail.getBookData());
+                initDetailAdditionally(bookDataDetail);
                 checkBook();
                 initCommentsPreview();
             }
@@ -144,31 +168,46 @@ public class DetailBookActivity extends AppCompatActivity {
         }, getIntent().getLongExtra(BaseViewBookFragment.BOOKKEY, 0));
     }
 
-    private void initDetailBook() {
-        Book.BookData bookData = bookDataDetail.getBookData();
+    private void initDetailBook(Book.BookData book) {
         setSupportActionBar(mToolbarDeatil);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(bookData.getBookName());
+            getSupportActionBar().setTitle(book.getBookName());
             getSupportActionBar().setElevation(10);
         }
 
         String url = PlamberAPI.ENDPOINT;
-        String currentUrl = url.substring(0, url.length() - 1) + bookData.getPhoto();
+        String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
 
         Glide.with(getApplicationContext()).load(currentUrl).into(mImageBook);
 
-        mBookName.setText(bookData.getBookName());
-        mAuthorBook.setText(bookData.getIdAuthor());
-        mLanguageBook.setText(bookData.getLanguage());
-        mGenreBook.setText(bookData.getIdCategory());
-        mAboutBook.setText(bookData.getDescription());
-        mRatingBook.setText(String.valueOf(bookDataDetail.getBookRating() + " "));
-        mCountRatingBook.setText(String.valueOf("(" + bookDataDetail.getCountBookRated() + ")"));
-        mNowReading.setText(String.valueOf(bookDataDetail.getCountUserReading()));
-        mWhoAddedBook.setText(bookData.getWhoAdded());
-        mDateAddedBook.setText(dateUpload(bookData.getUploadDate()));
+        mBookName.setText(book.getBookName());
+        mAuthorBook.setText(book.getIdAuthor());
+        mLanguageBook.setText(book.getLanguage());
+        mGenreBook.setText(book.getIdCategory());
+        mAboutBook.setText(book.getDescription());
+        mWhoAddedBook.setText(book.getWhoAdded());
+        mDateAddedBook.setText(dateUpload(book.getUploadDate()));
         mDetailButton.setTag("Download");
+    }
+
+    private void hideInOffline() {
+        mRatingBook.setVisibility(View.GONE);
+        mCountRatingBook.setVisibility(View.GONE);
+        mNowReading.setVisibility(View.GONE);
+        mShareBook.setVisibility(View.GONE);
+        mFrameAddComment.setVisibility(View.GONE);
+        mFrameAddRated.setVisibility(View.GONE);
+        mFrameGreyLineFirst.setVisibility(View.GONE);
+        mFrameGreyLineSecond.setVisibility(View.GONE);
+        mFrameViewAllComments.setVisibility(View.GONE);
+        mFrameReviewCountText.setVisibility(View.GONE);
+    }
+
+    private void initDetailAdditionally(Book.BookDetailData book) {
+        mRatingBook.setText(String.valueOf(book.getBookRating() + " "));
+        mCountRatingBook.setText(String.valueOf("(" + book.getCountBookRated() + ")"));
+        mNowReading.setText(String.valueOf(book.getCountUserReading()));
     }
 
     public void initCommentsPreview() {
@@ -209,7 +248,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
     @OnClick(R.id.comments_preview_frame)
     public void viewAllCommentsRecycler() {
-        openAllcoments();
+        openAllcomments();
     }
 
     @OnClick(R.id.frame_add_comment)
@@ -234,7 +273,7 @@ public class DetailBookActivity extends AppCompatActivity {
         ratedFragment.show(getSupportFragmentManager(), AddRatedFragment.TAG);
     }
 
-    private void openAllcoments() {
+    private void openAllcomments() {
         Bundle args = new Bundle();
         args.putString(AllCommentsFragment.BOOK_COMMENTS, new Gson().toJson(bookDataDetail.getCommentData()));
         AllCommentsFragment dialogComments = new AllCommentsFragment();
@@ -245,37 +284,19 @@ public class DetailBookActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
-        if (checkPermission()) {
-            if (mDetailButton.getTag() == "Download" && apiUtils.isOnline()) {
-                runDownloadDialog();
-            } else if (mDetailButton.getTag() == "Added") {
+        if (mDetailButton.getTag() == "Download" && apiUtils.isOnline()) {
+            runDownloadDialog();
+        } else if (mDetailButton.getTag() == "Added") {
 
-                addBookToLibrary(bookDataDetail.getBookData().getIdBook());
-            } else {
-                Intent intent = BookReaderActivity.startReaderActivity(this);
-                intent.putExtra(PDFPATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
-                intent.putExtra(BOOKID, bookDataDetail.getBookData().getIdBook());
-                startActivity(intent);
-            }
+            addBookToLibrary(bookDataDetail.getBookData().getIdBook());
         } else {
-            runQuestionPermissions();
+            Intent intent = BookReaderActivity.startReaderActivity(this);
+            intent.putExtra(PDFPATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
+            intent.putExtra(BOOKID, bookDataDetail.getBookData().getIdBook());
+            startActivity(intent);
         }
     }
 
-    private void runQuestionPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_WRITE_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Don`t have write permission", Toast.LENGTH_SHORT).show();
-                }
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -322,6 +343,7 @@ public class DetailBookActivity extends AppCompatActivity {
                 mDetailButton.setText("Read Book");
                 mDetailButton.setTag("Read");
             } else {
+                dataBaseUtils.removeFromDatabase(bookDataDetail.getBookData().getIdBook());
                 mDetailButton.setText("Download Book");
                 mDetailButton.setTag("Download");
             }
@@ -335,10 +357,6 @@ public class DetailBookActivity extends AppCompatActivity {
     public static Intent startDetailActivity(Context context) {
         Intent intent = new Intent(context, DetailBookActivity.class);
         return intent;
-    }
-
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void runDownloadDialog() {
@@ -465,4 +483,7 @@ public class DetailBookActivity extends AppCompatActivity {
         bookDataDetail.getCommentData().add(comment);
     }
 
+    public void addToDataBase() {
+        dataBaseUtils.writeBookToDataBase(bookDataDetail.getBookData());
+    }
 }

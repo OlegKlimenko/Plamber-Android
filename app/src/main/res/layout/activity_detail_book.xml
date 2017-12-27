@@ -137,7 +137,13 @@
 
             </LinearLayout>
 
-            <include layout="@layout/grey_line" />
+            <FrameLayout
+                android:id="@+id/frame_gray_line_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <include layout="@layout/grey_line" />
+            </FrameLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -389,9 +395,16 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <include layout="@layout/grey_line" />
+            <FrameLayout
+                android:id="@+id/frame_gray_line_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <include layout="@layout/grey_line" />
+            </FrameLayout>
+
 
             <LinearLayout
+                android:id="@+id/frame_review_count_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_nav_header"

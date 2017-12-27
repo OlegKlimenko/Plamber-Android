@@ -9,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -201,6 +202,16 @@ public class BaseDrawerActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public SwitchCompat getOfflineSwitcher() {
+        SwitchCompat offlineModeSwitch = (SwitchCompat) getNavigationView().getMenu().findItem(R.id.nav_mode_switch).getActionView().findViewById(R.id.offline_mode_switch);
+        if (!preferenceUtils.checkPreference(PreferenceUtils.OFFLINE_MODE)) {
+            preferenceUtils.writeOfflineMode(false);
+        } else {
+            offlineModeSwitch.setChecked(preferenceUtils.readStatusOffline());
+        }
+        return offlineModeSwitch;
     }
 }
 

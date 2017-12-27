@@ -19,6 +19,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.model.BookDataBase;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.BufferedInputStream;
@@ -28,6 +29,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -145,6 +147,7 @@ public class DownloadDialogFragmant extends DialogFragment {
             dismiss();
             if (status) {
                 Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
+                ((DetailBookActivity)getActivity()).addToDataBase();
                 ((DetailBookActivity)getActivity()).checkBook();
             } else {
                 file.delete();

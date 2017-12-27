@@ -121,7 +121,6 @@ public class UploadDialogFragment extends DialogFragment {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                     getActivity().finish();
-                    BaseViewBookFragment.isUpdate = true;
                     dismiss();
 
                 } else {

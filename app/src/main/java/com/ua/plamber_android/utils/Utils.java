@@ -64,6 +64,10 @@ public class Utils {
         return getPlamberPath() + bookName + ".pdf";
     }
 
+    public String getNamePDF(String bookName) {
+        return bookName + ".pdf";
+    }
+
     public static void messageSnack(View view, String mes) {
         final Snackbar snackbar = Snackbar.make(view, mes, Snackbar.LENGTH_LONG);
         snackbar.setAction("OK", new View.OnClickListener() {

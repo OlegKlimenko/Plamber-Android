@@ -3,27 +3,24 @@ package com.ua.plamber_android.activitys;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
-import com.ua.plamber_android.fragments.BaseViewBookFragment;
 import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
@@ -34,6 +31,7 @@ import com.ua.plamber_android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class LibraryActivity extends BaseDrawerActivity {
 
@@ -47,6 +45,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     FloatingActionButton mFabUpload;
 
     public static final String TAG = "LibraryActivity";
+    private static final int REQUEST_WRITE_STORAGE = 101;
     private Utils utils;
     private PreferenceUtils preferenceUtils;
     private static long timeExit;
@@ -70,7 +69,9 @@ public class LibraryActivity extends BaseDrawerActivity {
         }
         //view fab on start in offline mode
         initFabButton(0);
-        initOfflineModeSwitch();
+
+        if (!checkPermission())
+            runQuestionPermissions();
     }
 
     @Override
@@ -81,6 +82,12 @@ public class LibraryActivity extends BaseDrawerActivity {
                 setPage(data.getIntExtra(BACK_WITH_MENU, 0));
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initOfflineModeSwitch();
     }
 
     @OnClick(R.id.fab_upload)
@@ -207,13 +214,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     private void initOfflineModeSwitch() {
-        SwitchCompat offlineModeSwitch = (SwitchCompat) getNavigationView().getMenu().findItem(R.id.nav_mode_switch).getActionView().findViewById(R.id.offline_mode_switch);
-        if (!preferenceUtils.checkPreference(PreferenceUtils.OFFLINE_MODE)) {
-            preferenceUtils.writeOfflineMode(false);
-        } else {
-            offlineModeSwitch.setChecked(preferenceUtils.readStatusOffline());
-        }
-        offlineModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        getOfflineSwitcher().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 preferenceUtils.writeOfflineMode(b);
@@ -221,6 +222,27 @@ public class LibraryActivity extends BaseDrawerActivity {
                 setPage(currentPosition);
             }
         });
+    }
+
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+    private void runQuestionPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_WRITE_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Don`t have write permission", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 
 }

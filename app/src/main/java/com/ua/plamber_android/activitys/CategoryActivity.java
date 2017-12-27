@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.fragments.CategoryFragment;
 import com.ua.plamber_android.fragments.LibraryFragment;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,12 +19,15 @@ public class CategoryActivity extends BaseDrawerActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+    PreferenceUtils preferenceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
         ButterKnife.bind(this);
+
+        preferenceUtils = new PreferenceUtils(this);
 
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
@@ -44,6 +49,7 @@ public class CategoryActivity extends BaseDrawerActivity {
 
         getNavigationView().getMenu().getItem(1).setChecked(true);
         backToLibrary();
+        iniOfflineSwitch();
     }
 
     @Override
@@ -56,5 +62,14 @@ public class CategoryActivity extends BaseDrawerActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void iniOfflineSwitch() {
+        getOfflineSwitcher().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                preferenceUtils.writeOfflineMode(b);
+                finish();
+            }
+        });
+    }
 
 }
