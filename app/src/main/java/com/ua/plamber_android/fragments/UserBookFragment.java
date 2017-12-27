@@ -27,5 +27,11 @@ public class UserBookFragment extends BaseViewBookFragment {
             isUpdate = false;
         }
     }
+
+    @Override
+    public void viewBookOffline() {
+        offlineMessage();
+        mMessageAgain.setText("Books will be here");
+    }
 }
 

@@ -25,6 +25,7 @@ import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public abstract class BaseViewBookFragment extends Fragment {
 
     private RecyclerBookAdapter mAdapter;
     private WorkAPI workAPI;
+    private PreferenceUtils preferenceUtils;
     public static final String BOOKKEY = "BOOKKEY";
     public static final int ADDEDREQUEST = 142;
     public static boolean isUpdate = false;
@@ -57,6 +59,7 @@ public abstract class BaseViewBookFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         workAPI = new WorkAPI(getActivity());
+        preferenceUtils = new PreferenceUtils(getActivity());
     }
 
     @Nullable
@@ -65,11 +68,13 @@ public abstract class BaseViewBookFragment extends Fragment {
         View v = inflater.inflate(R.layout.base_view_book_fragment, container, false);
         ButterKnife.bind(this, v);
 
-
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                viewUserBook();
+                if (preferenceUtils.readStatusOffline())
+                    viewBookOffline();
+                else
+                    viewUserBook();
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -84,11 +89,25 @@ public abstract class BaseViewBookFragment extends Fragment {
             }
         });
         recyclerView.setLayoutManager(gridLayoutManager);
-            viewUserBook();
 
+        if (preferenceUtils.readStatusOffline())
+            viewBookOffline();
+         else
+            viewUserBook();
         return v;
     }
 
+    public void viewBookOffline() {
+        offlineMessage();
+    }
+
+    public void offlineMessage() {
+        visible(recyclerView, false);
+        visible(mUserBookProgress, false);
+        visible(mMessageAgain, true);
+        mSwipeRefresh.setRefreshing(false);
+        mMessageAgain.setText("Now in offline mode");
+    }
 
     public void viewUserBook() {
         workAPI.getUserBook(new BooksCallback() {

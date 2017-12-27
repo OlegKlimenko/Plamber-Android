@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.callbacks.CommentCallback;
 import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
@@ -14,6 +15,7 @@ import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.model.Language;
+import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Rating;
 import com.ua.plamber_android.model.User;
@@ -240,5 +242,21 @@ public class WorkAPI {
                 }
             });
         }
+    }
+
+    public void getAllCategory(final CategoryCallback callback) {
+        Library.LibraryRequest library = new Library.LibraryRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
+        Call<Library.LibraryRespond> request = apiUtils.initializePlamberAPI().getAllCategory(library);
+        request.enqueue(new Callback<Library.LibraryRespond>() {
+            @Override
+            public void onResponse(Call<Library.LibraryRespond> call, Response<Library.LibraryRespond> response) {
+                callback.onSuccess(response.body().getLibraryData());
+            }
+
+            @Override
+            public void onFailure(Call<Library.LibraryRespond> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
     }
 }

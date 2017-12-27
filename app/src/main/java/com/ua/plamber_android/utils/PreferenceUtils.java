@@ -39,13 +39,13 @@ public class PreferenceUtils {
         return getPreference().getString(preference, "default");
     }
 
-    public void setOfflineMode(boolean status) {
+    public void writeOfflineMode(boolean status) {
         SharedPreferences.Editor editor = getPreference().edit();
         editor.putBoolean(OFFLINE_MODE, status);
         editor.apply();
     }
 
-    public boolean getStatusOffline() {
+    public boolean readStatusOffline() {
         return getPreference().getBoolean(OFFLINE_MODE, false);
     }
 

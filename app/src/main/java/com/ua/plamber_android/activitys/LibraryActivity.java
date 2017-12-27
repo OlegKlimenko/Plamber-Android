@@ -12,10 +12,12 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
@@ -45,6 +48,7 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     public static final String TAG = "LibraryActivity";
     private Utils utils;
+    private PreferenceUtils preferenceUtils;
     private static long timeExit;
     public static int currentPosition;
 
@@ -54,6 +58,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         setContentView(R.layout.activity_library);
         ButterKnife.bind(this);
         utils = new Utils(this);
+        preferenceUtils = new PreferenceUtils(this);
         setSupportActionBar(mToolbar);
         setupPager();
         setPagerSwipe();
@@ -65,6 +70,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         }
         //view fab on start in offline mode
         initFabButton(0);
+        initOfflineModeSwitch();
     }
 
     @Override
@@ -199,4 +205,22 @@ public class LibraryActivity extends BaseDrawerActivity {
         Intent intent = new Intent(context, LibraryActivity.class);
         return intent;
     }
+
+    private void initOfflineModeSwitch() {
+        SwitchCompat offlineModeSwitch = (SwitchCompat) getNavigationView().getMenu().findItem(R.id.nav_mode_switch).getActionView().findViewById(R.id.offline_mode_switch);
+        if (!preferenceUtils.checkPreference(PreferenceUtils.OFFLINE_MODE)) {
+            preferenceUtils.writeOfflineMode(false);
+        } else {
+            offlineModeSwitch.setChecked(preferenceUtils.readStatusOffline());
+        }
+        offlineModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                preferenceUtils.writeOfflineMode(b);
+                setupPager();
+                setPage(currentPosition);
+            }
+        });
+    }
+
 }

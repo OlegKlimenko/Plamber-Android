@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/library_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-   <android.support.v7.widget.RecyclerView
-       android:id="@+id/library_recycler_view"
+   <FrameLayout
        android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:visibility="gone">
-   </android.support.v7.widget.RecyclerView>
+       android:layout_height="match_parent">
 
-   <ProgressBar
-       android:id="@+id/progress_library"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_gravity="center_vertical|center_horizontal"/>
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/library_recycler_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:visibility="gone">
+      </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+      <ProgressBar
+          android:id="@+id/progress_library"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|center_horizontal"/>
+
+      <TextView
+          android:id="@+id/tv_library_book_again"
+          android:visibility="gone"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|center_horizontal"
+          android:gravity="center"
+          android:text="@string/error_recycler"
+          android:textSize="19sp"/>
+
+   </FrameLayout>
+
+
+</android.support.v4.widget.SwipeRefreshLayout>

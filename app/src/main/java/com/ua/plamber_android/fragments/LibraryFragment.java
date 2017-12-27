@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
-import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Library;
@@ -28,9 +30,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LibraryFragment extends Fragment {
 
@@ -39,11 +38,15 @@ public class LibraryFragment extends Fragment {
     RecyclerView mRecyclerView;
     @BindView(R.id.progress_library)
     ProgressBar mProgressLibrary;
+    @BindView(R.id.library_refresh_layout)
+    SwipeRefreshLayout mSwipeRefresh;
+    @BindView(R.id.tv_library_book_again)
+    TextView mMessageAgain;
 
     private RecyclerSimpleAdapter mLibraryAdapter;
 
     PreferenceUtils preferenceUtils;
-    APIUtils apiUtils;
+    WorkAPI workAPI;
 
     private static final String TAG = "LibraryFragment";
     public static final String IDCATEGORI = "IdCategory";
@@ -55,7 +58,7 @@ public class LibraryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferenceUtils = new PreferenceUtils(getActivity());
-        apiUtils = new APIUtils(getActivity());
+        workAPI = new WorkAPI(getActivity());
         categoriesList = new ArrayList<>();
     }
 
@@ -63,10 +66,41 @@ public class LibraryFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragmnet_library, container, false);
         ButterKnife.bind(this, v);
+
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (preferenceUtils.readStatusOffline())
+                    viewCategoryOffline();
+                else
+                    viewCategory();
+            }
+        });
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        visibleProgress(mProgressLibrary, true);
-        getAllCategory(new CategoryCallback() {
+
+        if (preferenceUtils.readStatusOffline())
+            viewCategoryOffline();
+        else
+            viewCategory();
+        return v;
+    }
+
+    private void viewCategoryOffline() {
+      offlineMessage();
+    }
+
+    private void offlineMessage() {
+        viewElement(mProgressLibrary, false);
+        viewElement(mRecyclerView, false);
+        viewElement(mMessageAgain, true);
+        mSwipeRefresh.setRefreshing(false);
+        mMessageAgain.setText("Now in offline mode");
+    }
+
+    private void viewCategory() {
+        workAPI.getAllCategory(new CategoryCallback() {
             @Override
             public void onSuccess(@NonNull List<Library.LibraryData> categories) {
                 categoriesList.clear();
@@ -76,10 +110,13 @@ public class LibraryFragment extends Fragment {
 
             @Override
             public void onError(@NonNull Throwable t) {
-
+                Log.i(TAG, t.getLocalizedMessage());
+                viewElement(mProgressLibrary, false);
+                viewElement(mRecyclerView, false);
+                viewElement(mMessageAgain, true);
+                mSwipeRefresh.setRefreshing(false);
             }
         });
-        return v;
     }
 
     public void actionSelectCategory() {
@@ -96,38 +133,21 @@ public class LibraryFragment extends Fragment {
     }
 
     public void setAdapter(RecyclerViewClickListener listener) {
-        if (mLibraryAdapter == null) {
-            List<String> items = new ArrayList<>();
-            for (Library.LibraryData libraryData : categoriesList) {
-                items.add(libraryData.getCategoryName());
-            }
-            mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
+
+        List<String> items = new ArrayList<>();
+        for (Library.LibraryData libraryData : categoriesList) {
+            items.add(libraryData.getCategoryName());
         }
+        mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
+
         mRecyclerView.setAdapter(mLibraryAdapter);
-        visibleProgress(mProgressLibrary, false);
-        visibleProgress(mRecyclerView, true);
+        viewElement(mProgressLibrary, false);
+        viewElement(mMessageAgain, false);
+        viewElement(mRecyclerView, true);
+        mSwipeRefresh.setRefreshing(false);
     }
 
-    private void getAllCategory(final CategoryCallback callback) {
-        Library.LibraryRequest library = new Library.LibraryRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
-        Call<Library.LibraryRespond> request = apiUtils.initializePlamberAPI().getAllCategory(library);
-        request.enqueue(new Callback<Library.LibraryRespond>() {
-            @Override
-            public void onResponse(Call<Library.LibraryRespond> call, Response<Library.LibraryRespond> response) {
-                callback.onSuccess(response.body().getLibraryData());
-            }
-
-            @Override
-            public void onFailure(Call<Library.LibraryRespond> call, Throwable t) {
-                Log.i(TAG, t.getLocalizedMessage());
-                callback.onError(t);
-                visibleProgress(mProgressLibrary, false);
-                visibleProgress(mRecyclerView, true);
-            }
-        });
-    }
-
-    private void visibleProgress(View v, boolean status) {
+    private void viewElement(View v, boolean status) {
         if (status) {
             v.setVisibility(View.VISIBLE);
         } else {
