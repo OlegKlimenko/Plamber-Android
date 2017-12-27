@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.User;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
 
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private static long timeExit;
 
 
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
 
     @Override
@@ -60,12 +60,12 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Utils utils = new Utils(getApplicationContext());
-        tokenUtils = new TokenUtils(getApplicationContext());
+        preferenceUtils = new PreferenceUtils(getApplicationContext());
         apiUtils = new APIUtils(getApplicationContext());
 
         utils.initBackgroundImage(mBackgroundLogin);
 
-        if (tokenUtils.checkUserToken()) {
+        if (preferenceUtils.checkPreference(PreferenceUtils.TOKEN)) {
             Intent intent = LibraryActivity.startLibraryActivity(this);
             startActivity(intent);
             finish();
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User.UserRespond> call, Response<User.UserRespond> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getStatus() == 200) {
-                        tokenUtils.writeToken(response.body().getData().getToken());
+                        preferenceUtils.writePreference(PreferenceUtils.TOKEN, response.body().getData().getToken());
                         visibleProgressBar(false);
                         Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
                         startActivity(intent);

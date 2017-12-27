@@ -15,7 +15,7 @@ import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.interfaces.callbacks.AccountCallback;
 import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.User;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
 
@@ -53,7 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private final static String TAG = "SignUpActivity";
     APIUtils apiUtils;
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         apiUtils = new APIUtils(getApplicationContext());
-        tokenUtils = new TokenUtils(getApplicationContext());
+        preferenceUtils = new PreferenceUtils(getApplicationContext());
         Utils utils = new Utils(getApplicationContext());
         utils.initBackgroundImage(backgroundSing);
     }
@@ -176,8 +176,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User.UserRespond> call, Response<User.UserRespond> response) {
                 if (response.isSuccessful()) {
-                    tokenUtils.removeToken();
-                    tokenUtils.writeToken(response.body().getData().getToken());
+                    preferenceUtils.removePreference();
+                    preferenceUtils.writePreference(PreferenceUtils.TOKEN, response.body().getData().getToken());
                     Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
                     startActivity(intent);
                     finish();

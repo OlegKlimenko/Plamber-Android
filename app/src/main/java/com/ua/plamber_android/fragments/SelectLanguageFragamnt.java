@@ -17,11 +17,10 @@ import android.widget.ProgressBar;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.UploadActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
-import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +39,13 @@ public class SelectLanguageFragamnt extends Fragment {
     private RecyclerSimpleAdapter mLanguageAdapter;
 
     WorkAPI workAPI;
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         workAPI = new WorkAPI(getActivity());
-        tokenUtils = new TokenUtils(getActivity());
+        preferenceUtils = new PreferenceUtils(getActivity());
         languages = new ArrayList<>();
     }
 

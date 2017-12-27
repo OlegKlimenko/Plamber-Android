@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.interfaces.callbacks.CommentCallback;
+import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
@@ -15,10 +16,8 @@ import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Rating;
-import com.ua.plamber_android.utils.TokenUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.ua.plamber_android.model.User;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,19 +26,19 @@ import retrofit2.Response;
 public class WorkAPI {
 
     private Context context;
-    private TokenUtils tokenUtils;
+    private PreferenceUtils preferenceUtils;
     private APIUtils apiUtils;
     private static final String TAG = "WorkAPI";
 
     public WorkAPI(Context context) {
         this.context = context;
-        tokenUtils = new TokenUtils(context);
+        preferenceUtils = new PreferenceUtils(context);
         apiUtils = new APIUtils(context);
     }
 
     public void getUserBook(final BooksCallback callback, String url) {
         if (callback != null) {
-            final Book.BookRequest book = new Book.BookRequest(tokenUtils.readToken());
+            final Book.BookRequest book = new Book.BookRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
             Call<Book.BookRespond> request = apiUtils.initializePlamberAPI().getBooks(book, url);
             request.enqueue(new Callback<Book.BookRespond>() {
                 @Override
@@ -58,7 +57,7 @@ public class WorkAPI {
     }
 
     public void getBooksFromCategory(final LoadMoreCallback callback, int pageNumber, long idCategory) {
-        LoadMoreBook.LoadMoreRequestCategory category = new LoadMoreBook.LoadMoreRequestCategory(tokenUtils.readToken(), pageNumber, idCategory);
+        LoadMoreBook.LoadMoreRequestCategory category = new LoadMoreBook.LoadMoreRequestCategory(preferenceUtils.readPreference(PreferenceUtils.TOKEN), pageNumber, idCategory);
         final Call<LoadMoreBook.LoadMoreBookRespond> request = apiUtils.initializePlamberAPI().getCurrentCategory(category);
 
         request.enqueue(new Callback<LoadMoreBook.LoadMoreBookRespond>() {
@@ -77,7 +76,7 @@ public class WorkAPI {
     }
 
     public void searchBook(final LoadMoreCallback callback, int pageNumber, String term) {
-        LoadMoreBook.LoadMoreRequestSearch search = new LoadMoreBook.LoadMoreRequestSearch(tokenUtils.readToken(), term, pageNumber);
+        LoadMoreBook.LoadMoreRequestSearch search = new LoadMoreBook.LoadMoreRequestSearch(preferenceUtils.readPreference(PreferenceUtils.TOKEN), term, pageNumber);
         final Call<LoadMoreBook.LoadMoreBookRespond> request = apiUtils.initializePlamberAPI().searchBook(search);
         request.enqueue(new Callback<LoadMoreBook.LoadMoreBookRespond>() {
             @Override
@@ -96,7 +95,7 @@ public class WorkAPI {
 
     public void manageBookInLibrary(final ManageBookCallback callback, long bookId, String manageUrl) {
         if (callback != null) {
-            Book.BookDetailRequest book = new Book.BookDetailRequest(tokenUtils.readToken(), bookId);
+            Book.BookDetailRequest book = new Book.BookDetailRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), bookId);
             Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().manageBookInLibrary(book, manageUrl);
             request.enqueue(new Callback<Book.BookDetailRespond>() {
                 @Override
@@ -118,7 +117,7 @@ public class WorkAPI {
 
     public void autoCompleteAuthor(final StringListCallback callback, String part) {
         if (callback != null) {
-            final AutoComplete.AuthorRequest complete = new AutoComplete.AuthorRequest(tokenUtils.readToken(), part);
+            final AutoComplete.AuthorRequest complete = new AutoComplete.AuthorRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), part);
             Call<AutoComplete.AuthorRespond> request = apiUtils.initializePlamberAPI().generateAuthor(complete);
             request.enqueue(new Callback<AutoComplete.AuthorRespond>() {
                 @Override
@@ -138,7 +137,7 @@ public class WorkAPI {
 
     public void autoCompleteBook(final BooksCallback callback, String part) {
         if (callback != null) {
-            final AutoComplete.BookRequest complete = new AutoComplete.BookRequest(tokenUtils.readToken(), part);
+            final AutoComplete.BookRequest complete = new AutoComplete.BookRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), part);
             Call<Book.BookRespond> request = apiUtils.initializePlamberAPI().generateBooks(complete);
             request.enqueue(new Callback<Book.BookRespond>() {
                 @Override
@@ -159,7 +158,7 @@ public class WorkAPI {
 
     public void getAllLanguage(final StringListCallback callback) {
         if (callback != null) {
-            final Language.LanguageRequest language = new Language.LanguageRequest(tokenUtils.readToken());
+            final Language.LanguageRequest language = new Language.LanguageRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
             final Call<Language.LanguageRespond> request = apiUtils.initializePlamberAPI().getLanguage(language);
             request.enqueue(new Callback<Language.LanguageRespond>() {
                 @Override
@@ -181,7 +180,7 @@ public class WorkAPI {
 
     public void addRated(final StatusCallback callback, long bookId, int rated) {
         if (callback != null) {
-            Rating.RatingRequest rating = new Rating.RatingRequest(tokenUtils.readToken(), bookId, rated);
+            Rating.RatingRequest rating = new Rating.RatingRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), bookId, rated);
             Call<Rating.RatingRespond> request = apiUtils.initializePlamberAPI().addRating(rating);
             request.enqueue(new Callback<Rating.RatingRespond>() {
                 @Override
@@ -203,7 +202,7 @@ public class WorkAPI {
 
     public void addComment(final CommentCallback callback, long bookId, String text) {
         if (callback != null) {
-            Comment.CommentRequest comment = new Comment.CommentRequest(tokenUtils.readToken(), bookId, text);
+            Comment.CommentRequest comment = new Comment.CommentRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), bookId, text);
             Call<Comment.CommentRespond> request = apiUtils.initializePlamberAPI().addComment(comment);
             request.enqueue(new Callback<Comment.CommentRespond>() {
                 @Override
@@ -217,6 +216,26 @@ public class WorkAPI {
 
                 @Override
                 public void onFailure(Call<Comment.CommentRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void getProfileData(final ProfileCallback callback) {
+        if (callback != null) {
+            final User.ProfileRequest profile = new User.ProfileRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
+            Call<User.ProfileRespond> request = apiUtils.initializePlamberAPI().getProfileData(profile);
+            request.enqueue(new Callback<User.ProfileRespond>() {
+                @Override
+                public void onResponse(Call<User.ProfileRespond> call, Response<User.ProfileRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body().getData().getProfile());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User.ProfileRespond> call, Throwable t) {
                     callback.onError(t);
                 }
             });

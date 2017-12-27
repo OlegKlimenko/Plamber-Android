@@ -13,7 +13,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.model.Page;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import java.io.File;
 
@@ -32,7 +32,7 @@ public class BookReaderActivity extends AppCompatActivity {
     private static final String TAG = "BookReaderActivity";
     private long bookId;
 
-    private TokenUtils tokenUtils;
+    private PreferenceUtils preferenceUtils;
     private APIUtils apiUtils;
 
     @Override
@@ -47,7 +47,7 @@ public class BookReaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_reader);
         ButterKnife.bind(this);
-        tokenUtils = new TokenUtils(this);
+        preferenceUtils = new PreferenceUtils(this);
         apiUtils = new APIUtils(this);
         Intent intent = getIntent();
 
@@ -118,7 +118,7 @@ public class BookReaderActivity extends AppCompatActivity {
 
     private void getLastPage(final PageCallback callback, long id) {
         if (callback != null) {
-            final Page.GetPageRequest page = new Page.GetPageRequest(tokenUtils.readToken(), id);
+            final Page.GetPageRequest page = new Page.GetPageRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), id);
             Call<Page.GetPageRespond> request = apiUtils.initializePlamberAPI().getPage(page);
             request.enqueue(new Callback<Page.GetPageRespond>() {
                 @Override
@@ -138,7 +138,7 @@ public class BookReaderActivity extends AppCompatActivity {
 
     private void setLastPage(final PageCallback callback, long id, int currentPage) {
         if (callback != null) {
-            final Page.SetPageRequest page = new Page.SetPageRequest(tokenUtils.readToken(), id, currentPage);
+            final Page.SetPageRequest page = new Page.SetPageRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), id, currentPage);
             Call<Page.SetPageRespond> request = apiUtils.initializePlamberAPI().setPage(page);
             request.enqueue(new Callback<Page.SetPageRespond>() {
                 @Override

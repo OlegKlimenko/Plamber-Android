@@ -21,7 +21,7 @@ import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Library;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class LibraryFragment extends Fragment {
 
     private RecyclerSimpleAdapter mLibraryAdapter;
 
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
 
     private static final String TAG = "LibraryFragment";
@@ -54,7 +54,7 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tokenUtils = new TokenUtils(getActivity());
+        preferenceUtils = new PreferenceUtils(getActivity());
         apiUtils = new APIUtils(getActivity());
         categoriesList = new ArrayList<>();
     }
@@ -109,7 +109,7 @@ public class LibraryFragment extends Fragment {
     }
 
     private void getAllCategory(final CategoryCallback callback) {
-        Library.LibraryRequest library = new Library.LibraryRequest(tokenUtils.readToken());
+        Library.LibraryRequest library = new Library.LibraryRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
         Call<Library.LibraryRespond> request = apiUtils.initializePlamberAPI().getAllCategory(library);
         request.enqueue(new Callback<Library.LibraryRespond>() {
             @Override

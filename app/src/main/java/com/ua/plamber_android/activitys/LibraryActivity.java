@@ -151,7 +151,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        if (utils.getWidthDeviceDP() > 360) {
+        if (utils.getWidthDeviceDP() > 400) {
             mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         } else {
             mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);

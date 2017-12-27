@@ -38,7 +38,7 @@ import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
@@ -112,7 +112,7 @@ public class DetailBookActivity extends AppCompatActivity {
     private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
     private Utils utils;
-    private TokenUtils tokenUtils;
+    private PreferenceUtils preferenceUtils;
     private WorkAPI workAPI;
     private RecyclerCommentAdapter commentAdapter;
 
@@ -124,7 +124,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
         apiUtils = new APIUtils(this);
         utils = new Utils(this);
-        tokenUtils = new TokenUtils(this);
+        preferenceUtils = new PreferenceUtils(this);
         workAPI = new WorkAPI(this);
         getBookDetail(new BookDetailCallback() {
             @Override
@@ -353,7 +353,7 @@ public class DetailBookActivity extends AppCompatActivity {
     private void getBookDetail(final BookDetailCallback callback, long bookId) {
         if (callback != null) {
             viewProgress(true);
-            Book.BookDetailRequest book = new Book.BookDetailRequest(tokenUtils.readToken(), bookId);
+            Book.BookDetailRequest book = new Book.BookDetailRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), bookId);
             Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().getBookDetail(book);
             request.enqueue(new Callback<Book.BookDetailRespond>() {
                 @Override

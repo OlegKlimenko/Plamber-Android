@@ -17,14 +17,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.PlamberAPI;
+import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
 import com.ua.plamber_android.model.User;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,14 +45,14 @@ public class BaseDrawerActivity extends AppCompatActivity {
     public static final String START_WITH_MENU = "SartWithMenu";
     private static final String TAG = "BaseDrawerActivity";
 
-    private TokenUtils tokenUtils;
-    private APIUtils apiUtils;
+    private PreferenceUtils preferenceUtils;
+    private WorkAPI workAPI;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tokenUtils = new TokenUtils(this);
-        apiUtils = new APIUtils(this);
+        preferenceUtils = new PreferenceUtils(this);
+        workAPI = new WorkAPI(this);
     }
 
 
@@ -62,12 +64,12 @@ public class BaseDrawerActivity extends AppCompatActivity {
         super.setContentView(fullView);
         ButterKnife.bind(this);
         setHeadrBackground();
-        setProfile();
+        saveProfileData();
     }
 
     public void logoutApplication() {
-        TokenUtils tokenUtils = new TokenUtils(getApplicationContext());
-        tokenUtils.removeToken();
+        PreferenceUtils preferenceUtils = new PreferenceUtils(getApplicationContext());
+        preferenceUtils.removePreference();
         finish();
         Intent intent = LoginActivity.startLoginActivity(getApplicationContext());
         startActivity(intent);
@@ -146,7 +148,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
     private void setAvatar(int drawable) {
         ImageView profileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
         profileImage.setColorFilter(getResources().getColor(R.color.colorAccent));
-        Glide.with(getApplicationContext()).load(drawable).into(profileImage);
+        Glide.with(getApplicationContext()).load(drawable).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)).into(profileImage);
     }
 
     private void setProfileName(String name) {
@@ -154,42 +156,51 @@ public class BaseDrawerActivity extends AppCompatActivity {
         profileName.setText(name);
     }
 
-    private void getProfileData(final ProfileCallback callback) {
-        if (callback != null) {
-            final User.ProfileRequest profile = new User.ProfileRequest(tokenUtils.readToken());
-            Call<User.ProfileRespond> request = apiUtils.initializePlamberAPI().getProfileData(profile);
-            request.enqueue(new Callback<User.ProfileRespond>() {
+    private void setEmail(String email) {
+        TextView userEmail = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_email);
+        userEmail.setText(email);
+    }
+
+    private void setProfile(String name, String email, String photo) {
+        if (!preferenceUtils.checkPreference(PreferenceUtils.USER_PHOTO)) {
+            setAvatar(R.drawable.ic_account_circle_black_48dp);
+        } else {
+            setAvatar(photo);
+        }
+        setEmail(email);
+    }
+
+    private void setProfile(User.ProfileData profileData) {
+        if (profileData.getUserPhotoUrl() == null) {
+            setAvatar(R.drawable.ic_account_circle_black_48dp);
+        } else {
+            setAvatar(profileData.getUserPhotoUrl());
+        }
+        setEmail(profileData.getUserEmail());
+    }
+
+    private void saveProfileData() {
+        if (preferenceUtils.checkPreference(PreferenceUtils.USER_NAME)) {
+            String name = preferenceUtils.readPreference(PreferenceUtils.USER_NAME);
+            String email = preferenceUtils.readPreference(PreferenceUtils.USER_EMAIL);
+            String photo = preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
+            setProfile(name, email, photo);
+        } else {
+            workAPI.getProfileData(new ProfileCallback() {
                 @Override
-                public void onResponse(Call<User.ProfileRespond> call, Response<User.ProfileRespond> response) {
-                    if (response.isSuccessful()) {
-                        callback.onSuccess(response.body().getData().getProfile());
-                    }
+                public void onSuccess(@NonNull User.ProfileData profileData) {
+                    preferenceUtils.writePreference(PreferenceUtils.USER_NAME, profileData.getUserName());
+                    preferenceUtils.writePreference(PreferenceUtils.USER_EMAIL, profileData.getUserEmail());
+                    preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl());
+                    setProfile(profileData);
                 }
 
                 @Override
-                public void onFailure(Call<User.ProfileRespond> call, Throwable t) {
-                    callback.onError(t);
+                public void onError(@NonNull Throwable t) {
+                    Log.i(TAG, t.getLocalizedMessage());
                 }
             });
         }
-    }
-
-    private void setProfile() {
-        getProfileData(new ProfileCallback() {
-            @Override
-            public void onSuccess(@NonNull User.ProfileData profileData) {
-                if (profileData.getUserPhotoUrl() == null) {
-                    setAvatar(R.drawable.ic_account_circle_black_48dp);
-                } else
-                setAvatar(profileData.getUserPhotoUrl());
-                setProfileName(profileData.getUserName());
-            }
-
-            @Override
-            public void onError(@NonNull Throwable t) {
-                Log.i(TAG, t.getLocalizedMessage());
-            }
-        });
     }
 }
 

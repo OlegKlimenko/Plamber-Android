@@ -4,41 +4,52 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-public class TokenUtils {
+public class PreferenceUtils {
 
-    private final static String TOKEN = "Token";
+    public final static String VERSION = "Version";
+    public final static String TOKEN = "Token";
+    public final static String USER_NAME = "User_name";
+    public final static String USER_EMAIL = "User_email";
+    public final static String USER_PHOTO = "User_photo";
+    public final static String OFFLINE_MODE = "Offline_mode";
 
     private Context context;
 
-    public TokenUtils(Context context) {
+    public PreferenceUtils(Context context) {
         this.context = context;
     }
 
-    public boolean checkUserToken() {
-        SharedPreferences sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.contains(TOKEN);
+    public boolean checkPreference(String preference) {
+        return getPreference().contains(preference);
     }
 
-    public void writeToken(String token) {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(TOKEN, token);
+    public void writePreference(String preference, String data) {
+        SharedPreferences.Editor editor = getPreference().edit();
+        editor.putString(preference, data);
         editor.apply();
     }
 
-    public void removeToken() {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
+    public void removePreference() {
+        SharedPreferences.Editor editor = getPreference().edit();
         editor.clear();
         editor.apply();
     }
 
-    public String readToken() {
-        SharedPreferences sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString(TOKEN, "default");
+    public String readPreference(String preference) {
+        return getPreference().getString(preference, "default");
+    }
+
+    public void setOfflineMode(boolean status) {
+        SharedPreferences.Editor editor = getPreference().edit();
+        editor.putBoolean(OFFLINE_MODE, status);
+        editor.apply();
+    }
+
+    public boolean getStatusOffline() {
+        return getPreference().getBoolean(OFFLINE_MODE, false);
+    }
+
+    private SharedPreferences getPreference() {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 }

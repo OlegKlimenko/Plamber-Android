@@ -26,7 +26,7 @@ import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.utils.FileUploadProgress;
 import com.ua.plamber_android.utils.FileUtils;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
@@ -61,7 +61,7 @@ public class UploadDialogFragment extends DialogFragment {
     private Upload.UploadRequest uploadData;
 
     Utils utils;
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
     UploadFile uploadFile;
 
@@ -71,7 +71,7 @@ public class UploadDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         utils = new Utils(getActivity());
-        tokenUtils = new TokenUtils(getActivity());
+        preferenceUtils = new PreferenceUtils(getActivity());
         apiUtils = new APIUtils(getActivity());
         uploadData = new Gson().fromJson(getArguments().getString(UPLOAD_BOOK), Upload.UploadRequest.class);
         setRetainInstance(true);

@@ -31,7 +31,7 @@ import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Upload;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
 
@@ -85,7 +85,7 @@ public class UploadActivity extends AppCompatActivity {
     String title;
 
     Utils utils;
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
     WorkAPI workAPI;
     Validate validate;
@@ -108,7 +108,7 @@ public class UploadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload);
         ButterKnife.bind(this);
         utils = new Utils(this);
-        tokenUtils = new TokenUtils(this);
+        preferenceUtils = new PreferenceUtils(this);
         apiUtils = new APIUtils(this);
         workAPI = new WorkAPI(this);
         validate = new Validate(this);
@@ -142,7 +142,7 @@ public class UploadActivity extends AppCompatActivity {
     @OnClick(R.id.btn_upload_file)
     public void uploadFile() {
         if (validateFields()) {
-            Upload.UploadRequest uploadRequest = new Upload.UploadRequest(tokenUtils.readToken(), getText(mBookName), getText(mBookAuthor), getText(mBookCategory), mFile.getPath(), getText(mBookAbout), getText(mBookLanguage), mBookIsPrivate.isChecked());
+            Upload.UploadRequest uploadRequest = new Upload.UploadRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), getText(mBookName), getText(mBookAuthor), getText(mBookCategory), mFile.getPath(), getText(mBookAbout), getText(mBookLanguage), mBookIsPrivate.isChecked());
 
             Bundle args = new Bundle();
             args.putString(UploadDialogFragment.UPLOAD_BOOK, new Gson().toJson(uploadRequest, Upload.UploadRequest.class));

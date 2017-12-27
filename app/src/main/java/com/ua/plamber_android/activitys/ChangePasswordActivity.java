@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Password;
-import com.ua.plamber_android.utils.TokenUtils;
+import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Validate;
 
 import butterknife.BindView;
@@ -41,7 +41,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     @BindView(R.id.til_change_again_password)
     TextInputLayout mTilChangeAgainPassword;
 
-    TokenUtils tokenUtils;
+    PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
 
     private static final String TAG = "ChangePasswordActivity";
@@ -58,7 +58,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(10);
         getSupportActionBar().setTitle(getResources().getString(R.string.change_password));
-        tokenUtils = new TokenUtils(this);
+        preferenceUtils = new PreferenceUtils(this);
         apiUtils = new APIUtils(this);
     }
 
@@ -83,7 +83,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private void changeCurrentPassword() {
         String oldPassword = mChangeOldPassword.getText().toString().trim();
         String newPassword = mChangeNewPassword.getText().toString().trim();
-        Password.PasswordRequest password = new Password.PasswordRequest(tokenUtils.readToken(), oldPassword, newPassword);
+        Password.PasswordRequest password = new Password.PasswordRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), oldPassword, newPassword);
         Call<Password.PasswordRespond> request = apiUtils.initializePlamberAPI().changePassword(password);
         request.enqueue(new Callback<Password.PasswordRespond>() {
             @Override
