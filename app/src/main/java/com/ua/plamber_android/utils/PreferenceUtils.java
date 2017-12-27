@@ -7,6 +7,9 @@ import android.preference.PreferenceManager;
 public class TokenUtils {
 
     private final static String TOKEN = "Token";
+    private final static String VERSION = "Version";
+    private final static String USER_NAME = "UserName";
+    private final static String EMAIL = "Email0";
 
     private Context context;
 
