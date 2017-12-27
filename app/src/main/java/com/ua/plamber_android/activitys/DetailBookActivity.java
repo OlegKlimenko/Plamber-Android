@@ -116,7 +116,12 @@ public class DetailBookActivity extends AppCompatActivity {
     FrameLayout mFrameGreyLineSecond;
     @BindView(R.id.frame_review_count_text)
     LinearLayout mFrameReviewCountText;
+    @BindView(R.id.tv_rating_book)
+    LinearLayout mRatingBookTextView;
+    @BindView(R.id.tv_now_reading)
+    LinearLayout mNowReadingTextView;
 
+    private Book.BookData bookData;
     private Book.BookDetailData bookDataDetail;
     private APIUtils apiUtils;
     private Utils utils;
@@ -143,7 +148,7 @@ public class DetailBookActivity extends AppCompatActivity {
     }
 
     private void viewDetailFromDataBase() {
-        Book.BookData bookData = dataBaseUtils.readBookFromDataBase(getIntent().getLongExtra(BaseViewBookFragment.BOOKKEY, 0));
+        bookData = dataBaseUtils.readBookFromDataBase(getIntent().getLongExtra(BaseViewBookFragment.BOOKKEY, 0));
         initDetailBook(bookData);
         hideInOffline();
     }
@@ -152,7 +157,9 @@ public class DetailBookActivity extends AppCompatActivity {
         getBookDetail(new BookDetailCallback() {
             @Override
             public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
+                bookData = bookDetail.getData().getBookData();
                 bookDataDetail = bookDetail.getData();
+                Book.BookDetailData bookDataDetail = bookDetail.getData();
                 Collections.reverse(bookDataDetail.getCommentData());
                 viewProgress(false);
                 initDetailBook(bookDataDetail.getBookData());
@@ -202,6 +209,8 @@ public class DetailBookActivity extends AppCompatActivity {
         mFrameGreyLineSecond.setVisibility(View.GONE);
         mFrameViewAllComments.setVisibility(View.GONE);
         mFrameReviewCountText.setVisibility(View.GONE);
+        mRatingBookTextView.setVisibility(View.GONE);
+        mNowReadingTextView.setVisibility(View.GONE);
     }
 
     private void initDetailAdditionally(Book.BookDetailData book) {
@@ -236,13 +245,16 @@ public class DetailBookActivity extends AppCompatActivity {
         super.onResume();
         if (bookDataDetail != null)
             checkBook();
+
+        if (preferenceUtils.readStatusOffline() && bookData != null)
+            checkBook(bookData);
     }
 
     @OnClick(R.id.share_book_btn)
     public void shareBook() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdBook());
+        intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookData.getIdBook());
         startActivity(intent);
     }
 
@@ -261,7 +273,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private Bundle bundleBookId(String id) {
         Bundle args = new Bundle();
-        args.putLong(id, bookDataDetail.getBookData().getIdBook());
+        args.putLong(id, bookData.getIdBook());
         return args;
     }
 
@@ -288,11 +300,11 @@ public class DetailBookActivity extends AppCompatActivity {
             runDownloadDialog();
         } else if (mDetailButton.getTag() == "Added") {
 
-            addBookToLibrary(bookDataDetail.getBookData().getIdBook());
+            addBookToLibrary(bookData.getIdBook());
         } else {
             Intent intent = BookReaderActivity.startReaderActivity(this);
-            intent.putExtra(PDFPATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
-            intent.putExtra(BOOKID, bookDataDetail.getBookData().getIdBook());
+            intent.putExtra(PDFPATH, utils.getFullFileName(bookData.getBookName()));
+            intent.putExtra(BOOKID,bookData.getIdBook());
             startActivity(intent);
         }
     }
@@ -351,6 +363,16 @@ public class DetailBookActivity extends AppCompatActivity {
             mDetailButton.setText("Added Book");
             mDetailButton.setTag("Added");
         }
+    }
+
+    public void checkBook(Book.BookData book) {
+        File file = new File(utils.getFullFileName(book.getBookName()));
+        if (file.exists()) {
+            mDetailButton.setText("Read Book");
+            mDetailButton.setTag("Read");
+        } else {
+            dataBaseUtils.removeFromDatabase(book.getIdBook());
+        }
 
     }
 
@@ -361,7 +383,7 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private void runDownloadDialog() {
         Bundle args = new Bundle();
-        args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
+        args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookData));
         DownloadDialogFragmant dialogFragmant = new DownloadDialogFragmant();
         dialogFragmant.setArguments(args);
         dialogFragmant.setCancelable(false);
@@ -420,7 +442,7 @@ public class DetailBookActivity extends AppCompatActivity {
                     bookDataDetail.setAddedBook(false);
                     Intent intentResult = new Intent();
                     setResult(Activity.RESULT_OK, intentResult);
-                    removeBookFromDevice(bookDataDetail.getBookData().getBookName());
+                    removeBookFromDevice(bookData.getBookName());
                 } else {
                     message("Boor remove error");
                 }
@@ -484,6 +506,6 @@ public class DetailBookActivity extends AppCompatActivity {
     }
 
     public void addToDataBase() {
-        dataBaseUtils.writeBookToDataBase(bookDataDetail.getBookData());
+        dataBaseUtils.writeBookToDataBase(bookData);
     }
 }

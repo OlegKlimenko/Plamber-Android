@@ -8,14 +8,22 @@ import android.support.v7.widget.RecyclerView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.LibraryActivity;
+import com.ua.plamber_android.utils.PreferenceUtils;
 
 public class UploadFragment extends BaseViewBookFragment {
 
     private final static String UPLOAD_BOOK_API = "api/v1/uploaded/";
+    private PreferenceUtils preferenceUtils;
 
     @Override
     public String getBookAPI() {
         return UPLOAD_BOOK_API;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferenceUtils = new PreferenceUtils(getActivity());
     }
 
     @Override
@@ -27,7 +35,7 @@ public class UploadFragment extends BaseViewBookFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (!preferenceUtils.readStatusOffline())
         viewUserBook();
-
     }
 }
