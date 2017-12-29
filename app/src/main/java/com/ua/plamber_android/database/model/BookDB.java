@@ -1,11 +1,9 @@
-package com.ua.plamber_android.model;
-
-import com.google.gson.annotations.SerializedName;
+package com.ua.plamber_android.database.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class BookDataBase extends RealmObject {
+public class BookDB extends RealmObject {
     @PrimaryKey
     private long idBook;
 

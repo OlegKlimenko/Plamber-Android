@@ -72,13 +72,11 @@ public class AddCommentFragment extends DialogFragment {
                         @Override
                         public void onSuccess(@NonNull Comment.CommentRespond comment) {
                             if (comment.getStatus() == 200) {
-                                ((DetailBookActivity) getActivity()).addNewCommentToList(comment.getCommentData());
+                                getDetailBookFragment().updateComment(comment.getCommentData(), getString(R.string.thank_you_for_your_opinion));
                                 dismiss();
-                                ((DetailBookActivity) getActivity()).viewMessage(getString(R.string.thank_you_for_your_opinion));
-                                ((DetailBookActivity) getActivity()).initCommentsPreview();
                             } else {
                                 dismiss();
-                                ((DetailBookActivity)getActivity()).viewMessage(getString(R.string.error_has_occurred));
+                                getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
                             }
                         }
 
@@ -92,5 +90,9 @@ public class AddCommentFragment extends DialogFragment {
                 }
             }
         });
+    }
+
+    private DetailBookFragment getDetailBookFragment() {
+        return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
     }
 }

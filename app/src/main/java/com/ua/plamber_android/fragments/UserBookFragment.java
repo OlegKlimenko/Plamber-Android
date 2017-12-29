@@ -3,25 +3,16 @@ package com.ua.plamber_android.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
-import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.BookDataBase;
-import com.ua.plamber_android.utils.DataBaseUtils;
+import com.ua.plamber_android.R;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.utils.PreferenceUtils;
-import com.ua.plamber_android.utils.Utils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
 
 public class UserBookFragment extends BaseViewBookFragment {
 
     private final static String TAG = "UserBookFragment";
     private final static String HOME_BOOK_API = "api/v1/home/";
-    DataBaseUtils dataBaseUtils;
+    BookUtilsDB bookUtilsDB;
     PreferenceUtils preferenceUtils;
 
     @Override
@@ -32,7 +23,7 @@ public class UserBookFragment extends BaseViewBookFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataBaseUtils = new DataBaseUtils(getActivity());
+        bookUtilsDB = new BookUtilsDB(getActivity());
         preferenceUtils = new PreferenceUtils(getActivity());
     }
 
@@ -59,7 +50,7 @@ public class UserBookFragment extends BaseViewBookFragment {
     @Override
     public void viewBookOffline() {
         offlineMessage();
-        initAdapter(dataBaseUtils.getBookDataList());
+        initAdapter(bookUtilsDB.getListBookFromDB());
     }
 }
 

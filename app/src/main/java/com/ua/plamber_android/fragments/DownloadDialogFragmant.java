@@ -19,7 +19,6 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.BookDataBase;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.BufferedInputStream;
@@ -29,7 +28,6 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -146,12 +144,12 @@ public class DownloadDialogFragmant extends DialogFragment {
         protected void onPostExecute(Boolean status) {
             dismiss();
             if (status) {
-                Toast.makeText(getActivity(), "Download complete", Toast.LENGTH_SHORT).show();
-                ((DetailBookActivity)getActivity()).addToDataBase();
-                ((DetailBookActivity)getActivity()).checkBook();
+                getDetailBookFragment().writeBookToDB();
+                getDetailBookFragment().checkBook();
+                Utils.messageSnack(getDetailBookFragment().getView(), "Download complete");
             } else {
                 file.delete();
-                Toast.makeText(getActivity(), "Download error", Toast.LENGTH_SHORT).show();
+                Utils.messageSnack(getDetailBookFragment().getView(), "Download error");
             }
         }
 
@@ -190,6 +188,10 @@ public class DownloadDialogFragmant extends DialogFragment {
             }
             return checkFile;
         }
+    }
+
+    private DetailBookFragment getDetailBookFragment() {
+        return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
     }
 
 }

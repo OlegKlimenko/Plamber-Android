@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dialog_padding"
+    android:paddingRight="@dimen/dialog_padding">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_checkbox">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/rb_cloud_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cloud page: "
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/rb_local_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/margin_checkbox"
+                        android:text="Local page: "
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/cloud_page_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/black"
+                    android:text="0"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/local_page_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/margin_checkbox"
+                    android:textColor="@android:color/black"
+                    android:text="1"
+                    android:textSize="18sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+</LinearLayout>

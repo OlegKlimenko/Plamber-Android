@@ -94,6 +94,13 @@
     <string name="error_has_occurred">Sorry, error has occurred</string>
     <string name="write_comment_here">Write comment here</string>
     <string name="please_enter_comment">Please enter comment</string>
+    <string name="about_book_detail">About book</string>
+    <string name="description_book_detail">Description book</string>
+    <string name="read_book_detail_btn">Read Book</string>
+    <string name="download_book_detail_btn">Download Book</string>
+    <string name="added_book_detail_btn">Added Book</string>
+    <string name="no_connection_error">No connection to server enable download only mod?</string>
+    <string name="connetion_error_title">Connection error</string>
 
 
 </resources>

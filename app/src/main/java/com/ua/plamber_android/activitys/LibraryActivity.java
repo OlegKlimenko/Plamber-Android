@@ -7,8 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,10 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
+import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.fragments.ConnectionErrorDialog;
 import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
@@ -43,8 +48,11 @@ public class LibraryActivity extends BaseDrawerActivity {
     TabLayout mTabLayout;
     @BindView(R.id.fab_upload)
     FloatingActionButton mFabUpload;
+    @BindView(R.id.parentLibraryLayout)
+    CoordinatorLayout mParentLayout;
 
     public static final String TAG = "LibraryActivity";
+    public static final String ERROR_MESSAGE = "ERROR_MESSAGE";
     private static final int REQUEST_WRITE_STORAGE = 101;
     private Utils utils;
     private PreferenceUtils preferenceUtils;
@@ -105,9 +113,13 @@ public class LibraryActivity extends BaseDrawerActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_search_library:
-                Intent intent = SearchActivity.startSearchActivity(this);
-                intent.putExtra(START_WITH_MENU, mViewPager.getCurrentItem());
-                startActivityForResult(intent, LibraryFragment.MENU_REQUEST);
+                if (preferenceUtils.readStatusOffline()) {
+                    Utils.messageSnack(mParentLayout, "Search not access in offline");
+                } else {
+                    Intent intent = SearchActivity.startSearchActivity(this);
+                    intent.putExtra(START_WITH_MENU, mViewPager.getCurrentItem());
+                    startActivityForResult(intent, LibraryFragment.MENU_REQUEST);
+                }
                 break;
         }
         return true;
@@ -207,7 +219,6 @@ public class LibraryActivity extends BaseDrawerActivity {
         }
     }
 
-
     public static Intent startLibraryActivity(Context context) {
         Intent intent = new Intent(context, LibraryActivity.class);
         return intent;
@@ -218,10 +229,29 @@ public class LibraryActivity extends BaseDrawerActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 preferenceUtils.writeOfflineMode(b);
-                setupPager();
-                setPage(currentPosition);
+                updateView();
             }
         });
+    }
+
+    public void updateView() {
+        setupPager();
+        setPage(currentPosition);
+    }
+
+    public void switchToOffline() {
+        getOfflineSwitcher().setChecked(true);
+    }
+
+    public void runErrorDialog(String message) {
+        if (!preferenceUtils.readStatusOffline()) {
+            ConnectionErrorDialog dialog = new ConnectionErrorDialog();
+            dialog.setCancelable(false);
+            Bundle args = new Bundle();
+            args.putString(ERROR_MESSAGE, message);
+            dialog.setArguments(args);
+            dialog.show(getSupportFragmentManager(), ConnectionErrorDialog.TAG);
+        }
     }
 
     private boolean checkPermission() {

@@ -13,6 +13,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
 
@@ -77,5 +82,17 @@ public class Utils {
             }
         });
         snackbar.show();
+    }
+
+    public static String dateUpload(String date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat plamberFormat = new SimpleDateFormat("dd.MM.yy", Locale.US);
+        Date newDate = null;
+        try {
+            newDate = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return plamberFormat.format(newDate);
     }
 }

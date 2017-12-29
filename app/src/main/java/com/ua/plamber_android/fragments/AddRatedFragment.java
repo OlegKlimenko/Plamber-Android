@@ -75,10 +75,10 @@ public class AddRatedFragment extends DialogFragment {
                         public void onSuccess(@NonNull int status) {
                             if (status == 200) {
                                 dismiss();
-                                ((DetailBookActivity)getActivity()).viewMessage(getString(R.string.thank_you_for_your_opinion));
+                                getDetailBookFragment().viewMessage(getString(R.string.thank_you_for_your_opinion));
                             } else {
                                 dismiss();
-                                ((DetailBookActivity)getActivity()).viewMessage(getString(R.string.error_has_occurred));
+                                getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
                             }
                         }
 
@@ -108,5 +108,9 @@ public class AddRatedFragment extends DialogFragment {
                 }
             }
         });
+    }
+
+    private DetailBookFragment getDetailBookFragment() {
+        return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
     }
 }

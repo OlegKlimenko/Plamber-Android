@@ -43,7 +43,6 @@ public class APIUtils {
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         } else {
-            Toast.makeText(context, "Please check yor interner connection", Toast.LENGTH_SHORT).show();
             return false;
         }
     }

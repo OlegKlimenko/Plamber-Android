@@ -1,10 +1,10 @@
-package com.ua.plamber_android.utils;
+package com.ua.plamber_android.database.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.model.BookDataBase;
+import com.ua.plamber_android.database.model.BookDB;
+import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class DataBaseUtils {
-    Context context;
-    Utils utils;
-    public static final String TAG = "DataBaseUtils";
+public class BookUtilsDB {
+    private Context context;
+    private Utils utils;
+    public static final String TAG = "BookUtilsDB";
 
-    public DataBaseUtils(Context context) {
+    public BookUtilsDB(Context context) {
         this.context = context;
         Realm.init(context);
         utils = new Utils(context);
@@ -27,7 +27,7 @@ public class DataBaseUtils {
     public void writeBookToDataBase(Book.BookData book) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        BookDataBase data = realm.createObject(BookDataBase.class, book.getIdBook());
+        BookDB data = realm.createObject(BookDB.class, book.getIdBook());
         data.setBookName(book.getBookName());
         data.setIdAuthor(book.getIdAuthor());
         data.setIdCategory(book.getIdCategory());
@@ -39,76 +39,76 @@ public class DataBaseUtils {
         realm.commitTransaction();
     }
 
-    public Book.BookData readBookFromDataBase(long id) {
-        BookDataBase book;
+    public Book.BookData readBookFromDB(long id) {
+
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        RealmResults<BookDataBase> results = realm.where(BookDataBase.class).equalTo("idBook", id).findAll();
-        book = results.first();
+        RealmResults<BookDB> results = realm.where(BookDB.class).equalTo("idBook", id).findAll();
+        BookDB book = results.first();
         realm.commitTransaction();
-        return convertOffline(book);
+        return convertBookForDB(book);
     }
 
-    public void removeFromDatabase(long id) {
+    public void removeBookFromDatabase(long id) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        RealmResults<BookDataBase> results = realm.where(BookDataBase.class).equalTo("idBook", id).findAll();
+        RealmResults<BookDB> results = realm.where(BookDB.class).equalTo("idBook", id).findAll();
         results.deleteAllFromRealm();
         realm.commitTransaction();
     }
 
-    public List<Book.BookData> getBookDataList() {
+    public List<Book.BookData> getListBookFromDB() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        List<BookDataBase> offlineBooks = new ArrayList<>();
-        offlineBooks.addAll(realm.where(BookDataBase.class).findAll());
+        List<BookDB> offlineBooks = new ArrayList<>();
+        offlineBooks.addAll(realm.where(BookDB.class).findAll());
         realm.commitTransaction();
-        return deleteExistBooks(convertOfflineList(offlineBooks));
+        return deleteBookFromDBFileExist(convertBookListForDB(offlineBooks));
     }
 
-    private List<Book.BookData> convertOfflineList(List<BookDataBase> books) {
+    private List<Book.BookData> convertBookListForDB(List<BookDB> books) {
         List<Book.BookData> modelBooks = new ArrayList<>();
         for (int i = 0; i < books.size(); i++) {
-            modelBooks.add(convertOffline(books.get(i)));
+            modelBooks.add(convertBookForDB(books.get(i)));
         }
         return modelBooks;
     }
 
-    private Book.BookData convertOffline(BookDataBase bookDataBase) {
+    private Book.BookData convertBookForDB(BookDB bookDB) {
         Book.BookData bookData = new Book.BookData();
-        bookData.setIdBook(bookDataBase.getIdBook());
-        bookData.setBookName(bookDataBase.getBookName());
-        bookData.setIdAuthor(bookDataBase.getIdAuthor());
-        bookData.setIdCategory(bookDataBase.getIdCategory());
-        bookData.setDescription(bookDataBase.getDescription());
-        bookData.setLanguage(bookDataBase.getLanguage());
-        bookData.setPhoto(bookDataBase.getPhoto());
-        bookData.setWhoAdded(bookDataBase.getWhoAdded());
-        bookData.setUploadDate(bookDataBase.getUploadDate());
+        bookData.setIdBook(bookDB.getIdBook());
+        bookData.setBookName(bookDB.getBookName());
+        bookData.setIdAuthor(bookDB.getIdAuthor());
+        bookData.setIdCategory(bookDB.getIdCategory());
+        bookData.setDescription(bookDB.getDescription());
+        bookData.setLanguage(bookDB.getLanguage());
+        bookData.setPhoto(bookDB.getPhoto());
+        bookData.setWhoAdded(bookDB.getWhoAdded());
+        bookData.setUploadDate(bookDB.getUploadDate());
         return bookData;
     }
 
-    private List<Book.BookData> deleteExistBooks(List<Book.BookData> books) {
+    private List<Book.BookData> deleteBookFromDBFileExist(List<Book.BookData> books) {
         List<Book.BookData> booksBase = new ArrayList<>(books);
         for (int i = 0; i < booksBase.size(); i++) {
             File file = new File(utils.getFullFileName(booksBase.get(i).getBookName()));
             if (!file.exists()) {
-                removeFromDatabase(booksBase.get(i).getIdBook());
+                removeBookFromDatabase(booksBase.get(i).getIdBook());
                 booksBase.remove(i);
             }
         }
-        deleteFile(books);
+
         return booksBase;
     }
 
-    private void deleteFile(List<Book.BookData> books) {
+    private void deleteFileFromFolderExistDB(List<Book.BookData> books) {
         File plamberPath = new File(utils.getPlamberPath() + File.separator);
         File[] files = plamberPath.listFiles();
         List<String> bookName = new ArrayList<>();
         for (Book.BookData book : books) {
             bookName.add(utils.getNamePDF(book.getBookName()));
         }
-        if (books.size() == 0 && files.length != 0) {
+        if (books.isEmpty() && files.length != 0) {
             for (File file : files) {
                 file.delete();
             }

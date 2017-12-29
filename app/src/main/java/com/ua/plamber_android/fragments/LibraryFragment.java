@@ -85,7 +85,6 @@ public class LibraryFragment extends Fragment {
                     viewCategory();
             }
         });
-
         if (preferenceUtils.readStatusOffline())
             viewCategoryOffline();
         else

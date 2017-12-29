@@ -43,7 +43,7 @@ public class SearchFragment extends BaseViewBookFragment {
                 public void onSuccess(@NonNull LoadMoreBook.LoadMoreBookData data) {
                     final List<Book.BookData> books = new ArrayList<>();
                     books.addAll(data.getBookData());
-                    if (books.size() != 0) {
+                    if (!books.isEmpty()) {
                         page = data.getNextPageNumber();
                         initAdapter(books);
                         getmAdapter().setOnLoadMoreListener(new OnLoadMoreListener() {

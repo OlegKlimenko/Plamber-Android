@@ -329,8 +329,8 @@ public class UploadActivity extends AppCompatActivity {
                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                    currentAutoComplete = bookNames.get(i);
                                                    Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
-                                                   intent.putExtra(BaseViewBookFragment.BOOKKEY, books.get(i).getIdBook());
-                                                   startActivityForResult(intent, BaseViewBookFragment.ADDEDREQUEST);
+                                                   intent.putExtra(DetailBookActivity.BOOK_ID, books.get(i).getIdBook());
+                                                   startActivityForResult(intent, BaseViewBookFragment.ADDED_REQUEST);
                                                }
                                            });
                                        }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +27,7 @@ import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Utils;
 
 import java.util.List;
 
@@ -37,18 +39,15 @@ public abstract class BaseViewBookFragment extends Fragment {
     private RecyclerBookAdapter mAdapter;
     private WorkAPI workAPI;
     private PreferenceUtils preferenceUtils;
-    public static final String BOOKKEY = "BOOKKEY";
-    public static final int ADDEDREQUEST = 142;
+    public static final int ADDED_REQUEST = 142;
+    public static boolean isShowError;
 
     @BindView(R.id.user_book_recycler)
     RecyclerView recyclerView;
-
     @BindView(R.id.user_book_progress)
     ProgressBar mUserBookProgress;
-
     @BindView(R.id.tv_user_book_again)
     TextView mMessageAgain;
-
     @BindView(R.id.user_book_refresh_layout)
     SwipeRefreshLayout mSwipeRefresh;
 
@@ -87,10 +86,12 @@ public abstract class BaseViewBookFragment extends Fragment {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (preferenceUtils.readStatusOffline())
+                if (preferenceUtils.readStatusOffline()) {
                     viewBookOffline();
-                else
+                } else {
+                    isShowError = false;
                     viewUserBook();
+                }
             }
         });
 
@@ -131,7 +132,10 @@ public abstract class BaseViewBookFragment extends Fragment {
         visible(mUserBookProgress, false);
         visible(mMessageAgain, true);
         mSwipeRefresh.setRefreshing(false);
-        Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        if (!isShowError) {
+            getLibraryActivity().runErrorDialog(getString(R.string.no_connection_error));
+            isShowError = true;
+        }
     }
 
     public void initAdapter(final List<Book.BookData> books) {
@@ -143,8 +147,9 @@ public abstract class BaseViewBookFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
-                intent.putExtra(BOOKKEY, books.get(position).getIdBook());
-                startActivityForResult(intent, ADDEDREQUEST);
+                intent.putExtra(DetailBookActivity.BOOK_ID, books.get(position).getIdBook());
+                intent.putExtra(DetailBookActivity.BOOK_NAME, books.get(position).getBookName());
+                startActivity(intent);
             }
         };
         mAdapter = new RecyclerBookAdapter(recyclerView, books, listener);
@@ -195,5 +200,9 @@ public abstract class BaseViewBookFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public LibraryActivity getLibraryActivity() {
+        return ((LibraryActivity) getActivity());
     }
 }

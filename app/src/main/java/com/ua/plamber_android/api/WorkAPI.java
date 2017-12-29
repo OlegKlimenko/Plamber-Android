@@ -3,9 +3,11 @@ package com.ua.plamber_android.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.callbacks.CommentCallback;
+import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
@@ -17,6 +19,7 @@ import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.LoadMoreBook;
+import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Rating;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.PreferenceUtils;
@@ -258,5 +261,65 @@ public class WorkAPI {
                 callback.onError(t);
             }
         });
+    }
+
+    public void getBookDetail(final BookDetailCallback callback, long bookId) {
+        if (callback != null) {
+            Book.BookDetailRequest book = new Book.BookDetailRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), bookId);
+            Call<Book.BookDetailRespond> request = apiUtils.initializePlamberAPI().getBookDetail(book);
+            request.enqueue(new Callback<Book.BookDetailRespond>() {
+                @Override
+                public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Book.BookDetailRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void getLastPageFromCloud(final PageCallback callback, long id) {
+        if (callback != null) {
+            final Page.GetPageRequest page = new Page.GetPageRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), id);
+            Call<Page.GetPageRespond> request = apiUtils.initializePlamberAPI().getPage(page);
+            request.enqueue(new Callback<Page.GetPageRespond>() {
+                @Override
+                public void onResponse(Call<Page.GetPageRespond> call, Response<Page.GetPageRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body().getStatus(), response.body().getData().getLastPage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Page.GetPageRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void setLastPage(final StatusCallback callback, long id, int currentPage) {
+        if (callback != null) {
+            final Page.SetPageRequest page = new Page.SetPageRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), id, currentPage);
+            Call<Page.SetPageRespond> request = apiUtils.initializePlamberAPI().setPage(page);
+            request.enqueue(new Callback<Page.SetPageRespond>() {
+                @Override
+                public void onResponse(Call<Page.SetPageRespond> call, Response<Page.SetPageRespond> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body().getStatus());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Page.SetPageRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
     }
 }
