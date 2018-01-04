@@ -190,7 +190,7 @@ public class DetailBookFragment extends Fragment {
         } else {
             mFrameViewAllComments.setVisibility(View.VISIBLE);
             if (bookDataDetail.getCommentData().size() > COMMENT_LENGTH) {
-                List<Comment.CommentData> previewComments = bookDataDetail.getCommentData().subList(0, 2);
+                List<Comment.CommentData> previewComments = bookDataDetail.getCommentData().subList(0, 3);
                 commentAdapter = new RecyclerCommentAdapter(previewComments);
             } else {
                 commentAdapter = new RecyclerCommentAdapter(bookDataDetail.getCommentData());

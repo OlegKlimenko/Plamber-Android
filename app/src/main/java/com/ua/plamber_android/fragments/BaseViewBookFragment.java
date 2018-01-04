@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.model.Book;
+import com.ua.plamber_android.utils.AutoFitGridLayoutManager;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
@@ -39,8 +42,11 @@ public abstract class BaseViewBookFragment extends Fragment {
     private RecyclerBookAdapter mAdapter;
     private WorkAPI workAPI;
     private PreferenceUtils preferenceUtils;
+    private Utils utils;
     public static final int ADDED_REQUEST = 142;
     public static boolean isShowError;
+    private static final String TAG = "BaseViewBookFragment";
+    private static final int HALF_STANDARD_WIDTH_DP = 180;
 
     @BindView(R.id.user_book_recycler)
     RecyclerView recyclerView;
@@ -58,6 +64,7 @@ public abstract class BaseViewBookFragment extends Fragment {
         super.onCreate(savedInstanceState);
         workAPI = new WorkAPI(getActivity());
         preferenceUtils = new PreferenceUtils(getActivity());
+        utils = new Utils(getActivity());
     }
 
     @Nullable
@@ -65,12 +72,13 @@ public abstract class BaseViewBookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.base_view_book_fragment, container, false);
         ButterKnife.bind(this, v);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), (int) (utils.getWidthDeviceDP() / HALF_STANDARD_WIDTH_DP));
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if (mAdapter.getItemViewType(position) == mAdapter.VIEW_TYPE_LOADING) {
-                    return 2;
+                    return gridLayoutManager.getSpanCount();
                 } else {
                     return 1;
                 }

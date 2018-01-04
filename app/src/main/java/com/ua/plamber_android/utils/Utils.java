@@ -1,10 +1,14 @@
 package com.ua.plamber_android.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +27,7 @@ import java.util.TimeZone;
 public class Utils {
 
     private Context context;
+    private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     public Utils(Context context) {
         this.context = context;
@@ -98,13 +103,13 @@ public class Utils {
     }
 
     public static String getCurrentTime() {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+        DateFormat format = new SimpleDateFormat(datePattern, Locale.US);
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format.format(new Date());
     }
 
     public static Date convertStringToDate(String date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+        DateFormat format = new SimpleDateFormat(datePattern, Locale.US);
         Date newDate = null;
         try {
             newDate = format.parse(date);
@@ -115,7 +120,7 @@ public class Utils {
     }
 
     public static String convertDateToString(Date date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+        DateFormat format = new SimpleDateFormat(datePattern, Locale.US);
         return format.format(date);
     }
 }

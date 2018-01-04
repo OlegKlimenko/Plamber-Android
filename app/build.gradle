@@ -42,7 +42,6 @@ dependencies {
     compile 'com.github.barteksc:android-pdf-viewer:2.8.2'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'me.zhanghai.android.materialratingbar:library:1.2.0'
-
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
