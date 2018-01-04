@@ -101,6 +101,20 @@
     <string name="added_book_detail_btn">Added Book</string>
     <string name="no_connection_error">No connection to server enable download only mod?</string>
     <string name="connetion_error_title">Connection error</string>
+    <string name="no_added_book_in_library">You have not added any books yet</string>
+    <string name="no_upload_book_in_library">You have not upload any books yet</string>
+    <string name="no_book_in_category_message">No books int this categoryt</string>
+    <string name="detail_book_added">Book added</string>
+    <string name="detail_book_removed">Book removed</string>
+    <string name="detail_error_added">Error added</string>
+    <string name="detail_remove_error">Remove error</string>
+    <string name="password_or_account_is_incorrect">Password or account is incorrect</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="an_error_has_occurred">An error has occurred</string>
+    <string name="send_message_support">Send message</string>
+    <string name="write_your_message_here">Write your message here</string>
+    <string name="support_message">Support message</string>
+    <string name="the_support_message_not_empty">The message text can not be empty</string>
 
 
 </resources>

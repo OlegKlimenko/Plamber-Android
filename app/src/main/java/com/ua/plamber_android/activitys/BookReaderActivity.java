@@ -12,10 +12,11 @@ import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.PageUtilsDB;
-import com.ua.plamber_android.fragments.ContinueReadingDialog;
 import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
+import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 
@@ -28,8 +29,6 @@ public class BookReaderActivity extends AppCompatActivity {
     PDFView mPdfView;
 
     private static final String TAG = "BookReaderActivity";
-    public static final String CLOUD_PAGE = "CLOUD_PAGE";
-    public static final String LOCAL_PAGE = "LOCAL_PAGE";
     private long bookId;
 
     private PreferenceUtils preferenceUtils;
@@ -52,25 +51,26 @@ public class BookReaderActivity extends AppCompatActivity {
         pageUtilsDB = new PageUtilsDB(this, bookId);
 
         if (!preferenceUtils.readStatusOffline()) {
-            viewFromCloud(file);
+            viewFromCloud();
         } else {
-            viewFromDB(file);
+            viewFromDB();
         }
     }
 
-    private void viewFromCloud(final File file) {
+    private void viewFromCloud() {
         workAPI.getLastPageFromCloud(new PageCallback() {
             @Override
-            public void onSuccess(@NonNull int status, @NonNull int page) {
-                if (!pageUtilsDB.isBookCreate()) {
-                    pageUtilsDB.createPageData(page);
-                    viewPdf(file, page - 1);
+            public void onSuccess(@NonNull Page.PageData page) {
+                                if (!pageUtilsDB.isBookCreate()) {
+                    pageUtilsDB.createPageData(page.getLastPage(), page.getLastReadData());
+                    viewPdf(page.getLastPage() - 1);
                 } else {
-                    if (pageUtilsDB.readPageData().isReadOffline() &&
-                            pageUtilsDB.readPageData().getBookPage() != page) {
-                            runContinueDialog(page);
+                    if (Utils.convertStringToDate(page.getLastReadData()).getTime() > Utils.convertStringToDate(pageUtilsDB.readPageDate().getLastRead()).getTime()) {
+                            pageUtilsDB.updateLastReadDate(page.getLastReadData());
+                            pageUtilsDB.updatePage(page.getLastPage());
+                            viewFromDB();
                     } else {
-                        continueRead(page);
+                        viewFromDB();
                     }
 
                 }
@@ -78,26 +78,15 @@ public class BookReaderActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull Throwable t) {
-                Log.i(TAG, t.getLocalizedMessage());
+
             }
         }, bookId);
     }
 
-    private void runContinueDialog(int cloudPage) {
-        ContinueReadingDialog dialog = new ContinueReadingDialog();
-        Bundle args = new Bundle();
-        args.putInt(CLOUD_PAGE, cloudPage);
-        args.putInt(LOCAL_PAGE, pageUtilsDB.readPageData().getBookPage());
-        dialog.setArguments(args);
-        dialog.setCancelable(false);
-        dialog.show(getSupportFragmentManager(), ContinueReadingDialog.TAG);
-    }
-
-    private void viewFromDB(File file) {
+    private void viewFromDB() {
         if (!pageUtilsDB.isBookCreate())
-            pageUtilsDB.createPageData(0);
-        pageUtilsDB.updateReadStatus(true);
-        viewPdf(file, pageUtilsDB.readPageData().getBookPage() - 1);
+            pageUtilsDB.createPageData(0, Utils.getCurrentTime());
+        viewPdf(pageUtilsDB.readPageDate().getBookPage() - 1);
     }
 
     @Override
@@ -108,6 +97,7 @@ public class BookReaderActivity extends AppCompatActivity {
 
     private void saveCurrentPage() {
         pageUtilsDB.updatePage(getCurrentPage());
+        pageUtilsDB.updateLastReadDate(Utils.getCurrentTime());
         if (!preferenceUtils.readStatusOffline())
         workAPI.setLastPage(new StatusCallback() {
             @Override
@@ -126,7 +116,7 @@ public class BookReaderActivity extends AppCompatActivity {
         return mPdfView.getCurrentPage() + 1;
     }
 
-    private void viewPdf(File file, final int currentPage) {
+    private void viewPdf(final int currentPage) {
         mPdfView.fromFile(file)
                 .onRender(new OnRenderListener() {
                     @Override
@@ -141,9 +131,4 @@ public class BookReaderActivity extends AppCompatActivity {
         return new Intent(context, BookReaderActivity.class);
     }
 
-    public void continueRead(int page) {
-        pageUtilsDB.updatePage(page);
-        pageUtilsDB.updateReadStatus(false);
-        viewPdf(file, page - 1);
-    }
 }

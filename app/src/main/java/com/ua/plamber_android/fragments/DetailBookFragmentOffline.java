@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
@@ -72,6 +73,13 @@ public class DetailBookFragmentOffline extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bookData != null)
+            checkBook();
+    }
+
     private void viewDetailBook() {
         bookData = bookUtilsDB.readBookFromDB(getArguments().getLong(DetailBookActivity.BOOK_ID));
         String url = PlamberAPI.ENDPOINT;
@@ -119,5 +127,13 @@ public class DetailBookFragmentOffline extends Fragment {
         file.delete();
         bookUtilsDB.removeBookFromDatabase(bookData.getIdBook());
         getActivity().finish();
+    }
+
+    private void checkBook() {
+        File file = new File(utils.getFullFileName(bookData.getBookName()));
+        if (!file.exists()) {
+            getActivity().finish();
+            Toast.makeText(getActivity(), "This book dont`t access in offline", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -139,10 +139,14 @@ public abstract class BaseViewBookFragment extends Fragment {
     }
 
     public void initAdapter(final List<Book.BookData> books) {
-        visible(mMessageAgain, false);
-        visible(mUserBookProgress, false);
-        visible(recyclerView, true);
-        mSwipeRefresh.setRefreshing(false);
+        if (books.isEmpty()) {
+            viewMessageListEmpty(getString(R.string.no_added_book_in_library));
+        } else {
+            visible(mMessageAgain, false);
+            visible(mUserBookProgress, false);
+            visible(recyclerView, true);
+            mSwipeRefresh.setRefreshing(false);
+        }
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -154,6 +158,14 @@ public abstract class BaseViewBookFragment extends Fragment {
         };
         mAdapter = new RecyclerBookAdapter(recyclerView, books, listener);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    public void viewMessageListEmpty(String message) {
+        visible(mMessageAgain, true);
+        mMessageAgain.setText(message);
+        visible(mUserBookProgress, false);
+        visible(recyclerView, false);
+        mSwipeRefresh.setRefreshing(false);
     }
 
     public void visible(View v, boolean status) {

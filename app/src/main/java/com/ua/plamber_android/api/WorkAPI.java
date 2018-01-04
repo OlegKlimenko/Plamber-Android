@@ -21,6 +21,7 @@ import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Rating;
+import com.ua.plamber_android.model.Support;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.PreferenceUtils;
 
@@ -291,7 +292,7 @@ public class WorkAPI {
                 @Override
                 public void onResponse(Call<Page.GetPageRespond> call, Response<Page.GetPageRespond> response) {
                     if (response.isSuccessful()) {
-                        callback.onSuccess(response.body().getStatus(), response.body().getData().getLastPage());
+                        callback.onSuccess( response.body().getData());
                     }
                 }
 
@@ -317,6 +318,25 @@ public class WorkAPI {
 
                 @Override
                 public void onFailure(Call<Page.SetPageRespond> call, Throwable t) {
+                    callback.onError(t);
+                }
+            });
+        }
+    }
+
+    public void sendSupportMessage(final StatusCallback callback, String email, String message) {
+        if (callback != null) {
+            final Support.SupportRequest support = new Support.SupportRequest(email, message);
+            Call<Support.SupportRespond> request = apiUtils.initializePlamberAPI().sendSupport(support);
+            request.enqueue(new Callback<Support.SupportRespond>() {
+                @Override
+                public void onResponse(Call<Support.SupportRespond> call, Response<Support.SupportRespond> response) {
+                    if (response.isSuccessful())
+                    callback.onSuccess(response.body().getStatus());
+                }
+
+                @Override
+                public void onFailure(Call<Support.SupportRespond> call, Throwable t) {
                     callback.onError(t);
                 }
             });

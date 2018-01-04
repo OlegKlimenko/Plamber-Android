@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
@@ -31,21 +32,18 @@ public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.iv_login_background)
     ImageView mBackgroundLogin;
-
     @BindView(R.id.login_progress_bar)
     LinearLayout mLoginProgressBar;
-
     @BindView(R.id.et_login_email)
     EditText mUsername;
-
     @BindView(R.id.et_login_password)
     EditText mPasswordLoginEdit;
-
     @BindView(R.id.til_login_email)
     TextInputLayout mTilUsername;
-
     @BindView(R.id.til_login_password)
     TextInputLayout mTilPasswordLoginEdit;
+    @BindView(R.id.parent_login_layout)
+    RelativeLayout mParentLayout;
 
     private static long timeExit;
 
@@ -90,6 +88,8 @@ public class LoginActivity extends AppCompatActivity {
             if (valid.userNameValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
                 userLoginInSystem();
             }
+        } else {
+            Utils.messageSnack(mParentLayout, getString(R.string.no_internet_connection));
         }
     }
 
@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(getBaseContext(), "Incorrect!!!", Toast.LENGTH_SHORT).show();
+                        Utils.messageSnack(mParentLayout, getString(R.string.password_or_account_is_incorrect));
                         visibleProgressBar(false);
                     }
                 }
@@ -135,8 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User.UserRespond> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),
-                        t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Utils.messageSnack(mParentLayout, "Connection error");
                 visibleProgressBar(false);
             }
         });

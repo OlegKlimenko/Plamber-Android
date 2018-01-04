@@ -97,7 +97,7 @@ public class BookUtilsDB {
                 booksBase.remove(i);
             }
         }
-
+        deleteFileFromFolderExistDB(books);
         return booksBase;
     }
 

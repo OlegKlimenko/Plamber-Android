@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Utils {
 
@@ -94,5 +95,27 @@ public class Utils {
             e.printStackTrace();
         }
         return plamberFormat.format(newDate);
+    }
+
+    public static String getCurrentTime() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format.format(new Date());
+    }
+
+    public static Date convertStringToDate(String date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+        Date newDate = null;
+        try {
+            newDate = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
+    }
+
+    public static String convertDateToString(Date date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
+        return format.format(date);
     }
 }

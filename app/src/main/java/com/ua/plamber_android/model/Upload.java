@@ -81,7 +81,7 @@ public class Upload {
         String detail;
 
         @SerializedName("data")
-       UploadData data;
+        UploadData data;
 
         public int getStatus() {
             return status;

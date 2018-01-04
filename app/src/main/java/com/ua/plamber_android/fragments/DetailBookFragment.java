@@ -287,17 +287,17 @@ public class DetailBookFragment extends Fragment {
             @Override
             public void onSuccess(@NonNull boolean result) {
                 if (result) {
-                    message("Book added");
+                    Utils.messageSnack(mParentLayout, getString(R.string.detail_book_added));
                     bookDataDetail.setAddedBook(true);
                     checkBook();
                 } else {
-                    message("Book added error");
+                    Utils.messageSnack(mParentLayout, getString(R.string.detail_error_added));
                 }
             }
 
             @Override
             public void onError(@NonNull Throwable t) {
-                message(t.getLocalizedMessage());
+                Utils.messageSnack(mParentLayout, getString(R.string.detail_error_added));
             }
         }, id, URL_ADDED_BOOK);
     }
@@ -307,18 +307,18 @@ public class DetailBookFragment extends Fragment {
             @Override
             public void onSuccess(@NonNull boolean result) {
                 if (result) {
-                    Utils.messageSnack(mParentLayout, "Book was removed");
+                    Utils.messageSnack(mParentLayout, getString(R.string.detail_book_removed));
                     bookDataDetail.setAddedBook(false);
                     pageUtilsDB.removePageData();
                     removeBookFromDevice(bookDataDetail.getBookData().getBookName());
                 } else {
-                    message("Book remove error");
+                    Utils.messageSnack(mParentLayout, getString(R.string.detail_remove_error));
                 }
             }
 
             @Override
             public void onError(@NonNull Throwable t) {
-                message(t.getLocalizedMessage());
+                Utils.messageSnack(mParentLayout, getString(R.string.detail_remove_error));
             }
         }, id, URL_REMOVE_BOOK);
     }
@@ -338,10 +338,6 @@ public class DetailBookFragment extends Fragment {
             mLoadDetailProgress.setVisibility(View.GONE);
             mMainDetailLayout.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void message(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     public void viewMessage(String message) {

@@ -47,13 +47,9 @@ public class SearchActivity extends BaseDrawerActivity {
                 mSearch.clearFocus();
                 Bundle args = new Bundle();
                 args.putString(SEARCH_KEY, query);
-                FragmentManager fm = getSupportFragmentManager();
-                Fragment fragment = fm.findFragmentById(R.id.container_fragment_category);
-                if (fragment == null) {
-                    fragment = new SearchFragment();
-                    fragment.setArguments(args);
-                    fm.beginTransaction().replace(R.id.search_container, fragment).commit();
-                }
+                SearchFragment fragment = new SearchFragment();
+                fragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.search_container, fragment).commit();
                 return true;
             }
 

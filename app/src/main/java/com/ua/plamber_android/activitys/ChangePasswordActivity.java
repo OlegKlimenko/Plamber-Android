@@ -54,10 +54,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null)
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setElevation(10);
-        getSupportActionBar().setTitle(getResources().getString(R.string.change_password));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setElevation(10);
+            getSupportActionBar().setTitle(getResources().getString(R.string.change_password));
+        }
         preferenceUtils = new PreferenceUtils(this);
         apiUtils = new APIUtils(this);
     }

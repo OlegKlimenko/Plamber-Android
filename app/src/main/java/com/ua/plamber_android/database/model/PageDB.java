@@ -9,7 +9,7 @@ public class PageDB extends RealmObject {
 
     private int bookPage;
 
-    private boolean readOffline;
+    private String lastRead;
 
     public long getIdBook() {
         return idBook;
@@ -27,11 +27,11 @@ public class PageDB extends RealmObject {
         this.bookPage = bookPage;
     }
 
-    public boolean isReadOffline() {
-        return readOffline;
+    public String getLastRead() {
+        return lastRead;
     }
 
-    public void setReadOffline(boolean readOffline) {
-        this.readOffline = readOffline;
+    public void setLastRead(String lastRead) {
+        this.lastRead = lastRead;
     }
 }

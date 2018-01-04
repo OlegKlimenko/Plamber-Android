@@ -100,7 +100,10 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     @OnClick(R.id.fab_upload)
     public void openUploadActivity() {
-        startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
+        if (!preferenceUtils.readStatusOffline())
+            startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
+        else
+            Utils.messageSnack(mParentLayout, "Upload is not available in offline mode");
     }
 
     @Override

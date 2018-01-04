@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
@@ -32,7 +33,6 @@ public class SignUpActivity extends AppCompatActivity {
     ImageView backgroundSing;
     @BindView(R.id.singup_progress_bar)
     LinearLayout mSingUpProgressBar;
-
     @BindView(R.id.et_sing_up_password_again)
     EditText mPasswordAgainSingUpEdit;
     @BindView(R.id.et_sing_up_username)
@@ -41,7 +41,6 @@ public class SignUpActivity extends AppCompatActivity {
     EditText mEmailSingUpEdit;
     @BindView(R.id.et_sing_up_password)
     EditText mPasswordSingUpEdit;
-
     @BindView(R.id.til_sing_up_username)
     TextInputLayout mTilUserNameSingUpEdit;
     @BindView(R.id.til_sing_up_email)
@@ -50,6 +49,8 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout mTilPasswordSingUpEdit;
     @BindView(R.id.til_sing_up_password_again)
     TextInputLayout mTilPasswordAgainSingUpEdit;
+    @BindView(R.id.sing_up_parent_layout)
+    RelativeLayout mParentLayout;
 
     private final static String TAG = "SignUpActivity";
     APIUtils apiUtils;
@@ -86,26 +87,26 @@ public class SignUpActivity extends AppCompatActivity {
                                         registerUser();
                                         visibleProgressBar(false);
                                     } else {
-                                        mEmailSingUpEdit.setError("Email already use");
+                                        mTilEmailSingUpEdit.setError("Email already use");
                                         visibleProgressBar(false);
                                     }
                                 }
 
                                 @Override
                                 public void onError(@NonNull Throwable t) {
-                                    errorMessage(t);
+                                    messageError();
                                     visibleProgressBar(false);
                                 }
                             });
                         } else {
-                            mUserNameSingUpEdit.setError("Login already use");
+                            mTilUserNameSingUpEdit.setError("Login already use");
                             visibleProgressBar(false);
                         }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable t) {
-                        errorMessage(t);
+                       messageError();
                     }
                 });
             }
@@ -186,7 +187,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User.UserRespond> call, Throwable t) {
-                errorMessage(t);
+                messageError();
             }
         });
     }
@@ -199,8 +200,9 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void errorMessage(Throwable t) {
-        Toast.makeText(getApplicationContext(),
-                t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+    private void messageError() {
+        Utils.messageSnack(mParentLayout, getString(R.string.an_error_has_occurred));
+        visibleProgressBar(false);
     }
+
 }

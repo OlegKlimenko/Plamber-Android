@@ -18,16 +18,16 @@ public class PageUtilsDB {
         Realm.init(context);
     }
 
-    public void createPageData(int page) {
+    public void createPageData(int page, String date) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         PageDB data = realm.createObject(PageDB.class, bookId);
         data.setBookPage(page);
-        data.setReadOffline(false);
+        data.setLastRead(date);
         realm.commitTransaction();
     }
 
-    public PageDB readPageData() {
+    public PageDB readPageDate() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmResults<PageDB> result = realm.where(PageDB.class).equalTo("idBook", bookId).findAll();
@@ -53,12 +53,12 @@ public class PageUtilsDB {
         realm.commitTransaction();
     }
 
-    public void updateReadStatus(boolean status) {
+    public void updateLastReadDate(String date) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         PageDB result = realm.where(PageDB.class).equalTo("idBook", bookId).findFirst();
         if (result != null)
-            result.setReadOffline(status);
+            result.setLastRead(date);
         realm.commitTransaction();
     }
 

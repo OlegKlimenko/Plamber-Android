@@ -57,7 +57,7 @@ public class Page {
         private String detail;
 
         @SerializedName("data")
-        GetPageData data;
+        PageData data;
 
         public int getStatus() {
             return status;
@@ -67,17 +67,24 @@ public class Page {
             return detail;
         }
 
-        public GetPageData getData() {
+        public PageData getData() {
             return data;
         }
     }
 
-    public class GetPageData {
+    public class PageData {
         @SerializedName("last_page")
         private int lastPage;
 
+        @SerializedName("last_read")
+        private String lastReadData;
+
         public int getLastPage() {
             return lastPage;
+        }
+
+        public String getLastReadData() {
+            return lastReadData;
         }
     }
 

@@ -31,8 +31,6 @@
             android:key="support"
             android:title="Email support"
             android:summary="Find errors or have questions? Write to us">
-            <intent android:action="android.intent.action.VIEW"
-                android:data="mailto:plamber.reading@gmail.com" />
         </Preference>
 
         <Preference android:title="Home page"

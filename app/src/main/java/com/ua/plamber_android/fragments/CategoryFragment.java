@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ua.plamber_android.R;
 import com.ua.plamber_android.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.model.Book;
@@ -30,6 +31,10 @@ public class CategoryFragment extends BaseViewBookFragment {
         idCategory = getArguments().getLong(LibraryFragment.IDCATEGORI);
     }
 
+    @Override
+    public void viewMessageListEmpty(String message) {
+        super.viewMessageListEmpty(getString(R.string.no_book_in_category_message));
+    }
 
     @Override
     public void viewUserBook() {

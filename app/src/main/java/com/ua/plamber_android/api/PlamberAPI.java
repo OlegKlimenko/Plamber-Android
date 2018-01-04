@@ -10,6 +10,7 @@ import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Password;
 import com.ua.plamber_android.model.Rating;
+import com.ua.plamber_android.model.Support;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.model.User;
 
@@ -127,4 +128,8 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/change-rating")
     Call<Rating.RatingRespond> addRating(@Body Rating.RatingRequest ratingRequest);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/send-support-message/")
+    Call<Support.SupportRespond> sendSupport(@Body Support.SupportRequest supportRequest);
 }
