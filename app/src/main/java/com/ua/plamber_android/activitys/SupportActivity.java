@@ -12,57 +12,25 @@ import android.widget.LinearLayout;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.fragments.SupportFragment;
+import com.ua.plamber_android.utils.SingleFragmentActivity;
 import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SupportActivity extends AppCompatActivity {
+public class SupportActivity extends SingleFragmentActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.support_parent_layout)
-    LinearLayout mParentLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_support);
-        ButterKnife.bind(this);
-        initToolbar();
-        setSupportFragment();
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setElevation(10);
-            getSupportActionBar().setTitle(R.string.support_message);
-        }
-    }
-
-    private void setSupportFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.container_support_fragment);
-        if (fragment == null) {
-            fragment = new SupportFragment();
-            fm.beginTransaction().replace(R.id.container_support_fragment, fragment).commit();
-        }
+    protected Fragment createFragment() {
+        return new SupportFragment();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void viewMessage(String message) {
-        Utils.messageSnack(mParentLayout, message);
+    protected int setToolbarTitle() {
+        return R.string.support_message;
     }
 
     public static Intent startSupportActivity(Context context) {

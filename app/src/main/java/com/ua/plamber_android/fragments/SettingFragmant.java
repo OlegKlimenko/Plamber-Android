@@ -2,24 +2,38 @@ package com.ua.plamber_android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.ChangePasswordActivity;
-import com.ua.plamber_android.activitys.LoginActivity;
 import com.ua.plamber_android.activitys.SupportActivity;
 
-public class SettingFragmant extends PreferenceFragment {
+public class SettingFragmant extends PreferenceFragmentCompat {
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
-        getPreference("change_avatar").setWidgetLayoutResource(R.layout.avatar_change);
         setSupport();
         setChangePassword();
+        setAvatar();
+    }
+
+    private void setAvatar() {
+        getPreference("change_avatar").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ChangeAvatarDialog changeAvatarDialog = new ChangeAvatarDialog();
+                changeAvatarDialog.setCancelable(false);
+                changeAvatarDialog.show(getFragmentManager(), ChangeAvatarDialog.TAG);
+                return true;
+            }
+        });
+
     }
 
     private void setSupport() {
@@ -44,7 +58,7 @@ public class SettingFragmant extends PreferenceFragment {
         });
     }
 
-    private Preference getPreference(String key) {
+    private  Preference getPreference(String key) {
         return findPreference(key);
     }
 }

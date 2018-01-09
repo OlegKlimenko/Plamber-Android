@@ -1,13 +1,12 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="Profile Setting">
 
         <Preference
             android:key="change_avatar"
-            android:enabled="false"
-            android:title="Change avatar"
-            android:summary="Change user avatar"
-            >
+            android:title="Account information"
+            android:summary="Information about current user">
         </Preference>
 
         <Preference

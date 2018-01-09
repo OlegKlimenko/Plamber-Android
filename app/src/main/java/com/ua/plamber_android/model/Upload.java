@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Upload {
 
-    public static class UploadRequest {
+    public static class UploadBookRequest {
         @SerializedName("user_token")
         String userToken;
 
@@ -29,7 +29,7 @@ public class Upload {
         @SerializedName("private_book")
         boolean isPrivateBook;
 
-        public UploadRequest(String userToken, String bookName, String authorName, String categoryName, String bookPath, String aboutBook, String languageBook, boolean isPrivateBook) {
+        public UploadBookRequest(String userToken, String bookName, String authorName, String categoryName, String bookPath, String aboutBook, String languageBook, boolean isPrivateBook) {
             this.userToken = userToken;
             this.bookName = bookName;
             this.authorName = authorName;
@@ -73,7 +73,7 @@ public class Upload {
         }
     }
 
-    public static class UploadRespond {
+    public static class UploadBookRespond {
         @SerializedName("status")
         int status;
 
@@ -81,7 +81,7 @@ public class Upload {
         String detail;
 
         @SerializedName("data")
-        UploadData data;
+        UploadBookData data;
 
         public int getStatus() {
             return status;
@@ -91,14 +91,50 @@ public class Upload {
             return detail;
         }
 
-        public UploadData getData() {
+        public UploadBookData getData() {
             return data;
         }
     }
 
-    private class UploadData {
+    private class UploadBookData {
 
     }
 
+    public static class UploadAvatarRequest {
+        @SerializedName("user_token")
+        String userToken;
+    }
+
+    public static class UploadAvatarRespond {
+        @SerializedName("status")
+        int status;
+
+        @SerializedName("detail")
+        String detail;
+
+        @SerializedName("data")
+        UploadAvatarData data;
+
+        public int getStatus() {
+            return status;
+        }
+
+        public String getDetail() {
+            return detail;
+        }
+
+        public UploadAvatarData getData() {
+            return data;
+        }
+    }
+
+    public class UploadAvatarData {
+        @SerializedName("profile_image")
+        String avatarUrl;
+
+        public String getAvatarUrl() {
+            return avatarUrl;
+        }
+    }
 
 }

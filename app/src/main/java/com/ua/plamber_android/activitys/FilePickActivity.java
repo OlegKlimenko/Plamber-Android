@@ -9,7 +9,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BookFilePickActivity extends AppCompatActivity {
+public class FilePickActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -42,7 +41,9 @@ public class BookFilePickActivity extends AppCompatActivity {
     File currentFolder;
     Utils utils;
     boolean isHidden;
-    public static final String TAG = "BookFilePickActivity";
+    public static final String TAG = "FilePickActivity";
+    public static final String FILE_PATH = "FILEPATH";
+    public static final String[] BOOK_FORMAT = {"pdf"};
 
 
     @Override
@@ -52,15 +53,10 @@ public class BookFilePickActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         utils = new Utils(getApplicationContext());
         mFiles = new ArrayList<>();
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setElevation(10);
-            getSupportActionBar().setTitle("Select PDF file");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar();
 
         currentFolder = new File(utils.getRootDirectory());
-        mFiles = FileUtils.getPdfFileInDirectory(currentFolder.getPath(), isHidden);
+        mFiles = searchFileInDirectory(currentFolder.getPath());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration((new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)));
@@ -72,7 +68,7 @@ public class BookFilePickActivity extends AppCompatActivity {
                     openCurrentFolder(position);
                 } else {
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra(UploadActivity.FILE_PATH, mFiles.get(position).getPath());
+                    returnIntent.putExtra(FILE_PATH, mFiles.get(position).getPath());
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 }
@@ -82,15 +78,29 @@ public class BookFilePickActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    public void initToolbar() {
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setElevation(10);
+            getSupportActionBar().setTitle(setToolbarTitle());
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    public int setToolbarTitle() {
+        return R.string.select_pdf_file;
+    }
+
     public static Intent startBookFilePickActivity(Context context) {
-        return new Intent(context, BookFilePickActivity.class);
+        return new Intent(context, FilePickActivity.class);
     }
 
     private void openCurrentFolder(int position) {
         currentFolder = mFiles.get(position);
         String path = currentFolder.getPath();
-        if (searchPdfFile(FileUtils.getPdfFileInDirectory(path, isHidden)))
-        mAdapter.updateList(FileUtils.getPdfFileInDirectory(path, isHidden));
+        if (checkEmptyFiles(searchFileInDirectory(path)))
+        mAdapter.updateList(searchFileInDirectory(path));
+        mRecyclerView.scrollToPosition(0);
     }
 
     private void backDirectory() {
@@ -98,8 +108,8 @@ public class BookFilePickActivity extends AppCompatActivity {
             finish();
         } else {
             String path = currentFolder.getParent();
-            if (searchPdfFile(FileUtils.getPdfFileInDirectory(path, isHidden)))
-            mAdapter.updateList(FileUtils.getPdfFileInDirectory(path, isHidden));
+            if (checkEmptyFiles(searchFileInDirectory(path)))
+            mAdapter.updateList(searchFileInDirectory(path));
             currentFolder = new File(path);
         }
     }
@@ -115,9 +125,9 @@ public class BookFilePickActivity extends AppCompatActivity {
                 break;
             case R.id.item_show_hidden:
                 isHidden = !isHidden;
-                mAdapter.updateList((FileUtils.getPdfFileInDirectory(currentFolder.getPath(), isHidden)));
-
+                mAdapter.updateList((searchFileInDirectory(currentFolder.getPath())));
         }
+
         return true;
     }
 
@@ -142,8 +152,8 @@ public class BookFilePickActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean searchPdfFile(List<File> files) {
-        if (files.size() == 0) {
+    private boolean checkEmptyFiles(List<File> files) {
+        if (files.isEmpty()) {
             mMessageNoFile.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
             return false;
@@ -152,5 +162,17 @@ public class BookFilePickActivity extends AppCompatActivity {
             mRecyclerView.setVisibility(View.VISIBLE);
             return true;
         }
+    }
+
+    private List<File> searchFileInDirectory(String path) {
+        return FileUtils.getFileInDirectory(path, isHidden, searchFileType());
+    }
+
+    public String[] searchFileType() {
+        return BOOK_FORMAT;
+    }
+
+    public TextView getmMessageNoFile() {
+        return mMessageNoFile;
     }
 }

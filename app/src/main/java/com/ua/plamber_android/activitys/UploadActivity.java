@@ -26,7 +26,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.fragments.BaseViewBookFragment;
-import com.ua.plamber_android.fragments.UploadDialogFragment;
+import com.ua.plamber_android.fragments.UploadBookDialog;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.model.Book;
@@ -97,7 +97,6 @@ public class UploadActivity extends AppCompatActivity {
     private static final int REQUEST_SELECT_FILE = 205;
     private static final int REQUEST_SELECT_CATEGORY = 105;
     private static final int REQUEST_SELECT_LANGUAGE = 123;
-    public static final String FILE_PATH = "FILEPATH";
     public static final String CATEGORY_NAME = "CATEGORY_NAME";
     public static final String BOOK_LANGUAGE = "BOOK_LANGUAGE";
     private Timer timer;
@@ -142,14 +141,14 @@ public class UploadActivity extends AppCompatActivity {
     @OnClick(R.id.btn_upload_file)
     public void uploadFile() {
         if (validateFields()) {
-            Upload.UploadRequest uploadRequest = new Upload.UploadRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), getText(mBookName), getText(mBookAuthor), getText(mBookCategory), mFile.getPath(), getText(mBookAbout), getText(mBookLanguage), mBookIsPrivate.isChecked());
+            Upload.UploadBookRequest uploadBookRequest = new Upload.UploadBookRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), getText(mBookName), getText(mBookAuthor), getText(mBookCategory), mFile.getPath(), getText(mBookAbout), getText(mBookLanguage), mBookIsPrivate.isChecked());
 
             Bundle args = new Bundle();
-            args.putString(UploadDialogFragment.UPLOAD_BOOK, new Gson().toJson(uploadRequest, Upload.UploadRequest.class));
-            UploadDialogFragment uploadDialogFragment = new UploadDialogFragment();
-            uploadDialogFragment.setArguments(args);
-            uploadDialogFragment.setCancelable(false);
-            uploadDialogFragment.show(getSupportFragmentManager(), "UploadDialog");
+            args.putString(UploadBookDialog.UPLOAD_BOOK, new Gson().toJson(uploadBookRequest, Upload.UploadBookRequest.class));
+            UploadBookDialog uploadBookDialog = new UploadBookDialog();
+            uploadBookDialog.setArguments(args);
+            uploadBookDialog.setCancelable(false);
+            uploadBookDialog.show(getSupportFragmentManager(), "UploadDialog");
         }
     }
 
@@ -173,7 +172,7 @@ public class UploadActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_upload_select_file)
     public void selectBookFile() {
-        startActivityForResult(BookFilePickActivity.startBookFilePickActivity(this), REQUEST_SELECT_FILE);
+        startActivityForResult(FilePickActivity.startBookFilePickActivity(this), REQUEST_SELECT_FILE);
     }
 
     @OnClick(R.id.btn_upload_select_category)
@@ -200,7 +199,7 @@ public class UploadActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SELECT_FILE) {
             if (resultCode == Activity.RESULT_OK) {
-                mFile = new File(data.getStringExtra(FILE_PATH));
+                mFile = new File(data.getStringExtra(FilePickActivity.FILE_PATH));
                 mBookFile.setText(mFile.getName());
             }
         } else if (requestCode == REQUEST_SELECT_CATEGORY) {

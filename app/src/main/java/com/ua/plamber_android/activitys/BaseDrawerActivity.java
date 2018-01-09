@@ -13,27 +13,26 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.fragments.ChangeAvatarDialog;
+import com.ua.plamber_android.fragments.UploadAvatarDialog;
 import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.PreferenceUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BaseDrawerActivity extends AppCompatActivity {
 
@@ -41,6 +40,9 @@ public class BaseDrawerActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation_view)
     NavigationView mNavigationView;
+
+    ImageView mProfileImage;
+    LinearLayout mHeaderContainer;
 
     public static final String BACK_WITH_MENU = "BackWithMenu";
     public static final String START_WITH_MENU = "SartWithMenu";
@@ -64,8 +66,27 @@ public class BaseDrawerActivity extends AppCompatActivity {
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
         super.setContentView(fullView);
         ButterKnife.bind(this);
-        setHeadrBackground();
+        mProfileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
+        mHeaderContainer = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_container);
+        setHeaderBackground();
+        initAccountDetailListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         saveProfileData();
+    }
+
+    private void initAccountDetailListener() {
+        mHeaderContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangeAvatarDialog changeAvatarDialog = new ChangeAvatarDialog();
+                changeAvatarDialog.setCancelable(false);
+                changeAvatarDialog.show(getSupportFragmentManager(), ChangeAvatarDialog.TAG);
+            }
+        });
     }
 
     public void logoutApplication() {
@@ -134,22 +155,27 @@ public class BaseDrawerActivity extends AppCompatActivity {
         return mNavigationView;
     }
 
-    private void setHeadrBackground() {
+    private void setHeaderBackground() {
         ImageView headerImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
         Glide.with(getApplicationContext()).load(R.drawable.main_background).apply(new RequestOptions().transform(new CenterCrop())).into(headerImage);
     }
 
+
     private void setAvatar(String urlAvatar) {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + urlAvatar;
-        ImageView profileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
-        Glide.with(getApplicationContext()).load(currentUrl).into(profileImage);
+        Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
+    }
+
+    public void updateAvatar() {
+        String url = PlamberAPI.ENDPOINT;
+        String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
+        Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
     }
 
     private void setAvatar(int drawable) {
-        ImageView profileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_avatar);
-        profileImage.setColorFilter(getResources().getColor(R.color.colorAccent));
-        Glide.with(getApplicationContext()).load(drawable).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)).into(profileImage);
+        mProfileImage.setColorFilter(getResources().getColor(R.color.colorAccent));
+        Glide.with(getApplicationContext()).load(drawable).into(mProfileImage);
     }
 
     private void setProfileName(String name) {
@@ -212,6 +238,18 @@ public class BaseDrawerActivity extends AppCompatActivity {
             offlineModeSwitch.setChecked(preferenceUtils.readStatusOffline());
         }
         return offlineModeSwitch;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SettingActivity.REQUEST_SELECT_IMAGE && resultCode == Activity.RESULT_OK) {
+            Bundle args = new Bundle();
+            args.putString(UploadAvatarDialog.UPLOAD_AVATAR, data.getStringExtra(FilePickActivity.FILE_PATH));
+            UploadAvatarDialog uploadAvatar = new UploadAvatarDialog();
+            uploadAvatar.setArguments(args);
+            uploadAvatar.setCancelable(false);
+            uploadAvatar.show(getSupportFragmentManager(), UploadAvatarDialog.TAG);
+        }
     }
 }
 

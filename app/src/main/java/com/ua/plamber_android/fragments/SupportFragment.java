@@ -17,6 +17,7 @@ import com.ua.plamber_android.activitys.SupportActivity;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Utils;
 import com.ua.plamber_android.utils.Validate;
 
 import butterknife.BindView;
@@ -77,7 +78,7 @@ public class SupportFragment extends Fragment {
                     }
                 }, mEmail.getText().toString().trim(), mSupportText.getText().toString().trim());
             } else {
-                getSupportActivity().viewMessage(getString(R.string.the_support_message_not_empty));
+                Utils.messageSnack(getView(), getString(R.string.the_support_message_not_empty));
             }
         }
     }

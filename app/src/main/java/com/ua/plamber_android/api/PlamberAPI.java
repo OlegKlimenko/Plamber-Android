@@ -99,15 +99,15 @@ public interface PlamberAPI {
 
     @Multipart
     @POST("api/v1/upload-book/")
-    Call<Upload.UploadRespond> uploadFile(@Part("user_token") RequestBody userToken,
-                                          @Part("book_name") RequestBody bookName,
-                                          @Part("author") RequestBody authorName,
-                                          @Part("category") RequestBody categoryName,
-                                          @Part("about") RequestBody aboutBook,
-                                          @Part("language") RequestBody languageBook,
-                                          @Part("private_book") boolean private_book,
-                                          @Part MultipartBody.Part file,
-                                          @Part MultipartBody.Part cover);
+    Call<Upload.UploadBookRespond> uploadFile(@Part("user_token") RequestBody userToken,
+                                              @Part("book_name") RequestBody bookName,
+                                              @Part("author") RequestBody authorName,
+                                              @Part("category") RequestBody categoryName,
+                                              @Part("about") RequestBody aboutBook,
+                                              @Part("language") RequestBody languageBook,
+                                              @Part("private_book") boolean private_book,
+                                              @Part MultipartBody.Part file,
+                                              @Part MultipartBody.Part cover);
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/generate-authors/")
@@ -132,4 +132,9 @@ public interface PlamberAPI {
     @Headers("Content-Type: application/json")
     @POST("api/v1/send-support-message/")
     Call<Support.SupportRespond> sendSupport(@Body Support.SupportRequest supportRequest);
+
+    @Multipart
+    @POST("api/v1/upload-avatar/")
+    Call<Upload.UploadAvatarRespond> uploadAvatar(@Part("user_token") RequestBody userToken,
+                                                  @Part MultipartBody.Part file);
 }

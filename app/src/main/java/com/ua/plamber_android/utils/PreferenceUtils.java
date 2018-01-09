@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 public class PreferenceUtils {
 
-    public final static String VERSION = "Version";
     public final static String TOKEN = "Token";
     public final static String USER_NAME = "User_name";
     public final static String USER_EMAIL = "User_email";
@@ -45,9 +44,11 @@ public class PreferenceUtils {
         editor.apply();
     }
 
+
     public boolean readStatusOffline() {
         return getPreference().getBoolean(OFFLINE_MODE, false);
     }
+
 
     private SharedPreferences getPreference() {
         return PreferenceManager.getDefaultSharedPreferences(context);

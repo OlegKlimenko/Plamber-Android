@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.utils.FileUtils;
 
@@ -76,8 +77,10 @@ public class RecyclerFileAdapter extends RecyclerView.Adapter<RecyclerFileAdapte
             holder.fileSizeType.setText(null);
         }
 
-        if (FileUtils.getFileType(file).equals("pdf")) {
+        if (FileUtils.isCorrectType(file, FilePickActivity.BOOK_FORMAT)) {
             Glide.with(holder.view).load(R.drawable.pdf).into(holder.fileImage);
+        } else if (FileUtils.isCorrectType(file, "png")) {
+            Glide.with(holder.view).load(file.getPath()).into(holder.fileImage);
         } else {
             Glide.with(holder.view).load(R.drawable.folder).into(holder.fileImage);
         }

@@ -41,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UploadDialogFragment extends DialogFragment {
+public class UploadBookDialog extends DialogFragment {
 
     @BindView(R.id.tv_loading_file)
     TextView titleLoad;
@@ -58,14 +58,14 @@ public class UploadDialogFragment extends DialogFragment {
 
     public static final String UPLOAD_BOOK = "UPLOAD_BOOK";
 
-    private Upload.UploadRequest uploadData;
+    private Upload.UploadBookRequest uploadData;
 
     Utils utils;
     PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
     UploadFile uploadFile;
 
-    private static final String TAG = "UploadDialogFragment";
+    private static final String TAG = "UploadBookDialog";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class UploadDialogFragment extends DialogFragment {
         utils = new Utils(getActivity());
         preferenceUtils = new PreferenceUtils(getActivity());
         apiUtils = new APIUtils(getActivity());
-        uploadData = new Gson().fromJson(getArguments().getString(UPLOAD_BOOK), Upload.UploadRequest.class);
+        uploadData = new Gson().fromJson(getArguments().getString(UPLOAD_BOOK), Upload.UploadBookRequest.class);
         setRetainInstance(true);
     }
 
@@ -113,11 +113,11 @@ public class UploadDialogFragment extends DialogFragment {
     private void uploadFileToServer(final File file, MultipartBody.Part photo) {
 
         MultipartBody.Part fileBody = prepareFilePart(file);
-        Call<Upload.UploadRespond> request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
+        Call<Upload.UploadBookRespond> request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
 
-        request.enqueue(new Callback<Upload.UploadRespond>() {
+        request.enqueue(new Callback<Upload.UploadBookRespond>() {
             @Override
-            public void onResponse(Call<Upload.UploadRespond> call, Response<Upload.UploadRespond> response) {
+            public void onResponse(Call<Upload.UploadBookRespond> call, Response<Upload.UploadBookRespond> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                     getActivity().finish();
@@ -132,7 +132,7 @@ public class UploadDialogFragment extends DialogFragment {
             }
 
             @Override
-            public void onFailure(Call<Upload.UploadRespond> call, Throwable t) {
+            public void onFailure(Call<Upload.UploadBookRespond> call, Throwable t) {
                 dismiss();
                 Log.i(TAG, t.getLocalizedMessage());
             }
@@ -198,7 +198,7 @@ public class UploadDialogFragment extends DialogFragment {
         protected MultipartBody.Part doInBackground(File... files) {
             file = files[0];
             RequestBody requestCover = RequestBody.create(MultipartBody.FORM, getFirstPageAsByte(files[0]));
-            return MultipartBody.Part.createFormData("photo", FileUtils.removeSymbol(files[0].getName(), 4) + ".png", requestCover);
+            return MultipartBody.Part.createFormData("photo", FileUtils.removeType(files[0].getName()) + ".png", requestCover);
         }
 
         @Override
