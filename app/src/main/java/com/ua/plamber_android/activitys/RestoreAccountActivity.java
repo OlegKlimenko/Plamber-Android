@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
@@ -35,6 +36,8 @@ public class RestoreAccountActivity extends AppCompatActivity {
     EditText mRestoreAccountEdit;
     @BindView(R.id.til_email_restore)
     TextInputLayout mTilRestoreAccountEdit;
+    @BindView(R.id.restore_account_parent)
+    RelativeLayout mRestoreParentLayout;
 
     APIUtils apiUtils;
 
@@ -78,12 +81,10 @@ public class RestoreAccountActivity extends AppCompatActivity {
             public void onResponse(Call<Account.EmailRespond> call, Response<Account.EmailRespond> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getStatus() == 200) {
-                        Toast.makeText(getApplicationContext(),
-                                "Instruction was send to your email", Toast.LENGTH_LONG).show();
+                        Utils.messageSnack(mRestoreParentLayout, getString(R.string.instruction_was_send_to_your_email));
                         visibleProgressBar(false);
                     } else if (response.body().getStatus() == 404) {
-                        Toast.makeText(getApplicationContext(),
-                                "This email don`t register", Toast.LENGTH_LONG).show();
+                        Utils.messageSnack(mRestoreParentLayout, getString(R.string.this_email_not_register));
                         visibleProgressBar(false);
                     }
                 }
@@ -91,8 +92,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Account.EmailRespond> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),
-                        t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, t.getLocalizedMessage());
                 visibleProgressBar(false);
             }
         });
@@ -104,6 +104,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
         } else {
             mRestoreProgressBar.setVisibility(LinearLayout.INVISIBLE);
         }
+        Utils.hideKeyboard(mRestoreParentLayout);
     }
 
     public static Intent startRestoreActivity(Context context) {

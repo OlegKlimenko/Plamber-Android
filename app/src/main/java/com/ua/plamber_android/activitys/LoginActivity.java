@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.til_login_password)
     TextInputLayout mTilPasswordLoginEdit;
     @BindView(R.id.parent_login_layout)
-    RelativeLayout mParentLayout;
+    LinearLayout mParentLayout;
 
     private static long timeExit;
 
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User.UserRespond> call, Throwable t) {
-                Utils.messageSnack(mParentLayout, "Connection error");
+                Utils.messageSnack(mParentLayout, getString(R.string.connetion_error_title));
                 visibleProgressBar(false);
             }
         });
@@ -148,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             mLoginProgressBar.setVisibility(LinearLayout.INVISIBLE);
         }
+        Utils.hideKeyboard(mParentLayout);
     }
 }
 

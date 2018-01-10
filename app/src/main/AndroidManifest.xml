@@ -16,7 +16,6 @@
         <activity android:name=".activitys.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,7 +35,8 @@
         <activity android:name=".activitys.SelectCategoryActivity" />
         <activity android:name=".activitys.SelectLanguageActivity" />
         <activity android:name=".activitys.SupportActivity" />
-        <activity android:name=".activitys.ImagePickActivity"></activity>
+        <activity android:name=".activitys.ImagePickActivity">
+        </activity>
     </application>
 
 </manifest>

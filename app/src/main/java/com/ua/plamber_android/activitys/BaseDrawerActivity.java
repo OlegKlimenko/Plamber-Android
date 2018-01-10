@@ -171,6 +171,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
         Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
+        mProfileImage.setColorFilter(null);
     }
 
     private void setAvatar(int drawable) {
@@ -197,15 +198,6 @@ public class BaseDrawerActivity extends AppCompatActivity {
         setEmail(email);
     }
 
-    private void setProfile(User.ProfileData profileData) {
-        if (profileData.getUserPhotoUrl() == null) {
-            setAvatar(R.drawable.ic_account_circle_black_48dp);
-        } else {
-            setAvatar(profileData.getUserPhotoUrl());
-        }
-        setEmail(profileData.getUserEmail());
-    }
-
     private void saveProfileData() {
         if (preferenceUtils.checkPreference(PreferenceUtils.USER_NAME)) {
             String name = preferenceUtils.readPreference(PreferenceUtils.USER_NAME);
@@ -218,8 +210,9 @@ public class BaseDrawerActivity extends AppCompatActivity {
                 public void onSuccess(@NonNull User.ProfileData profileData) {
                     preferenceUtils.writePreference(PreferenceUtils.USER_NAME, profileData.getUserName());
                     preferenceUtils.writePreference(PreferenceUtils.USER_EMAIL, profileData.getUserEmail());
-                    preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl());
-                    setProfile(profileData);
+                    preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl() + "?" + String.valueOf(System.currentTimeMillis()));
+                    String photo = preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
+                    setProfile(profileData.getUserName(), profileData.getUserEmail(), photo);
                 }
 
                 @Override

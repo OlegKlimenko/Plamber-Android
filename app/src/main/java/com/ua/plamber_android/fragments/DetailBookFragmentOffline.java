@@ -133,7 +133,7 @@ public class DetailBookFragmentOffline extends Fragment {
         File file = new File(utils.getFullFileName(bookData.getBookName()));
         if (!file.exists()) {
             getActivity().finish();
-            Toast.makeText(getActivity(), "This book dont`t access in offline", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.this_book_not_access_in_offline, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -2,7 +2,6 @@
 
     <!--no localization-->
     <string name="plamber_version">1.0</string>
-    <string name="preference_version">1.0</string>
     <string name="plamber_web_page">http://ec2-52-201-246-230.compute-1.amazonaws.com/</string>
     <string name="plamber_page_about">http://ec2-52-201-246-230.compute-1.amazonaws.com/about</string>
 
@@ -26,7 +25,7 @@
     <string name="drawer_close">Close</string>
     <string name="restore_title">Restore account</string>
     <string name="restore_send">Send</string>
-    <string name="restore_cancel">Cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="back_to_login_page">Back to login page?</string>
     <string name="restore_account">Restore account</string>
     <string name="error_recycler">Please pull to update</string>
@@ -119,7 +118,46 @@
     <string name="select_pdf_file">Select PDF file</string>
     <string name="select_image_file">Select image file</string>
     <string name="no_image_file">Image file don`t search</string>
-    <string name="upload_avatar">Upload avatar...</string>
+    <string name="upload_avatar">Upload avatar</string>
+    <string name="upload_not_available_in_offline_mode">Upload is not available in offline mode</string>
+    <string name="search_not_access_in_offline">Search not access in offline</string>
+    <string name="all_comments_title">Comments</string>
+    <string name="download_book_title">Download book</string>
+    <string name="download_complete_message">Download complete</string>
+    <string name="download_error_message">Download error</string>
+    <string name="upload_avatar_title">Upload avatar</string>
+    <string name="avatar_uploaded_message">Avatar uploaded</string>
+    <string name="error_update_avatar">Error updated avatr</string>
+    <string name="upload_book_title">Upload book</string>
+    <string name="book_uploaded_success">Book uploaded success</string>
+    <string name="download_was_interrupted">Download was interrupted</string>
+    <string name="enable_btn">Enable</string>
+    <string name="ok_btn">OK</string>
+    <string name="change_avatar_btn">Change avatar</string>
+    <string name="email_already_use">Email already use</string>
+    <string name="login_already_use">Login already use</string>
+    <string name="current_password_is_incorrect">Current password is incorrect</string>
+    <string name="password_was_change">Password was change</string>
+    <string name="not_have_write_permission">Don`t have write permission</string>
+    <string name="instruction_was_send_to_your_email">Instruction was send to your email</string>
+    <string name="this_email_not_register">This email don`t register</string>
+    <string name="setting_title">Setting</string>
+    <string name="add_comment_btn">Add comment</string>
+    <string name="add_rated_btn">Add rated</string>
+    <string name="this_book_not_access_in_offline">This book dont`t access in offline</string>
+    <string name="thanks_for_your_message">Thanks for your message</string>
+    <string name="upload_was_interrupted">Upload was interrupted</string>
+    <string name="profile_setting">Profile setting</string>
+    <string name="account_information">Account information</string>
+    <string name="information_about_current_user">Information about current user</string>
+    <string name="change_user_password">Change user password</string>
+    <string name="about_setting">About</string>
+    <string name="email_spport">Email support</string>
+    <string name="find_errors_or_have_questions">Find errors or have questions? Write to us</string>
+    <string name="home_page">Home page</string>
+    <string name="about_plamber_setting">About plamber</string>
+    <string name="version_setting">Version</string>
+    <string name="information_about_plamber">Information about plamber</string>
 
 
 </resources>

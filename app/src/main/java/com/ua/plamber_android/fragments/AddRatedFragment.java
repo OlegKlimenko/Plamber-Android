@@ -51,8 +51,8 @@ public class AddRatedFragment extends DialogFragment {
         ButterKnife.bind(this, view);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
-                .setPositiveButton("Add rated", null)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.add_rated_btn, null)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();

@@ -91,9 +91,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
             public void onResponse(Call<Password.PasswordRespond> call, Response<Password.PasswordRespond> response) {
                 if (response.isSuccessful()) {
                     if (!response.body().getDetail().equals("successful")) {
-                       mTilChangeOldPassword.setError("Current password is incorrect");
+                       mTilChangeOldPassword.setError(getString(R.string.current_password_is_incorrect));
                     } else {
-                        Toast.makeText(getApplicationContext(), "Password was change", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.password_was_change, Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }
                 }

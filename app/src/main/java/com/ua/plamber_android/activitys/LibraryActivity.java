@@ -103,7 +103,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         if (!preferenceUtils.readStatusOffline())
             startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
         else
-            Utils.messageSnack(mParentLayout, "Upload is not available in offline mode");
+            Utils.messageSnack(mParentLayout, getString(R.string.upload_not_available_in_offline_mode));
     }
 
     @Override
@@ -117,7 +117,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         switch (item.getItemId()) {
             case R.id.item_search_library:
                 if (preferenceUtils.readStatusOffline()) {
-                    Utils.messageSnack(mParentLayout, "Search not access in offline");
+                    Utils.messageSnack(mParentLayout, getString(R.string.search_not_access_in_offline));
                 } else {
                     Intent intent = SearchActivity.startSearchActivity(this);
                     intent.putExtra(START_WITH_MENU, mViewPager.getCurrentItem());
@@ -172,10 +172,10 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     public void setupPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new UserBookFragment(), "My books");
-        adapter.addFragment(new LibraryFragment(), "Library");
-        adapter.addFragment(new RecommendedFragmnet(), "Recommended");
-        adapter.addFragment(new UploadFragment(), "Uploaded");
+        adapter.addFragment(new UserBookFragment(), getString(R.string.my_books));
+        adapter.addFragment(new LibraryFragment(), getString(R.string.library));
+        adapter.addFragment(new RecommendedFragmnet(), getString(R.string.recommended));
+        adapter.addFragment(new UploadFragment(), getString(R.string.upload));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
@@ -273,7 +273,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         switch (requestCode) {
             case REQUEST_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Don`t have write permission", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.not_have_write_permission, Toast.LENGTH_SHORT).show();
                 }
         }
     }

@@ -14,10 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:queryHint="Search"
+        app:queryHint="@string/search_menu"
         app:queryBackground="@android:color/transparent"
         app:searchIcon="@null"
-        app:iconifiedByDefault="false"
-        />
+        app:iconifiedByDefault="false" />
 
 </android.support.v7.widget.Toolbar>

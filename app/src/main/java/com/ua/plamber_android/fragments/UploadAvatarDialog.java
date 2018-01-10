@@ -12,15 +12,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BaseDrawerActivity;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
@@ -64,8 +59,8 @@ public class UploadAvatarDialog extends DialogFragment {
         uploadAvatar(file);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
-                .setTitle("Upload avatar")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.upload_avatar_title)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();
@@ -85,18 +80,20 @@ public class UploadAvatarDialog extends DialogFragment {
             public void onResponse(Call<Upload.UploadAvatarRespond> call, Response<Upload.UploadAvatarRespond> response) {
                 if (response.isSuccessful()) {
                     preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, response.body().getData().getAvatarUrl() + "?" + String.valueOf(System.currentTimeMillis()));
-                    Utils.messageSnack(getActivity().getCurrentFocus(), "Avatar updated");
-                    dismiss();
                     if (getActivity() instanceof BaseDrawerActivity) {
                         getBaseDrawerActivty().updateAvatar();
+                        Utils.messageSnack(getBaseDrawerActivty().getDrawerLayout(), getString(R.string.avatar_uploaded_message));
+                    } else {
+                        Utils.messageSnack(getActivity().getCurrentFocus(), getString(R.string.avatar_uploaded_message));
                     }
+                    dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<Upload.UploadAvatarRespond> call, Throwable t) {
                 dismiss();
-                Utils.messageSnack(getActivity().getCurrentFocus(), "Error");
+                Utils.messageSnack(getActivity().getCurrentFocus(), getString(R.string.error_update_avatar));
                 Log.i(TAG, t.getLocalizedMessage());
             }
         });

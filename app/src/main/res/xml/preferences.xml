@@ -1,38 +1,31 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="Profile Setting">
+        android:title="@string/profile_setting">
 
         <Preference
             android:key="change_avatar"
-            android:title="Account information"
-            android:summary="Information about current user">
+            android:title="@string/account_information"
+            android:summary="@string/information_about_current_user">
         </Preference>
 
         <Preference
             android:key="change_password"
-            android:title="Change password"
-            android:summary="Change user password">
-        </Preference>
-
-        <Preference
-            android:key="switch_language"
-            android:enabled="false"
-            android:title="Switch language"
-            android:summary="Switch user lanuage">
+            android:title="@string/change_password"
+            android:summary="@string/change_user_password">
         </Preference>
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="About">
+    <PreferenceCategory android:title="@string/about_setting">
 
         <Preference
             android:key="support"
-            android:title="Email support"
-            android:summary="Find errors or have questions? Write to us">
+            android:title="@string/email_spport"
+            android:summary="@string/find_errors_or_have_questions">
         </Preference>
 
-        <Preference android:title="Home page"
+        <Preference android:title="@string/home_page"
             android:summary="Plamber.com.ua">
             <intent android:action="android.intent.action.VIEW"
                 android:data="@string/plamber_web_page" />
@@ -40,19 +33,17 @@
 
         <Preference
             android:key="about_plamber"
-            android:title="About plamber"
-            android:summary="Information about plamber">
+            android:title="@string/about_plamber_setting"
+            android:summary="@string/information_about_plamber">
             <intent android:action="android.intent.action.VIEW"
                 android:data="@string/plamber_page_about" />
         </Preference>
 
         <Preference
             android:key="version"
-            android:title="Version"
+            android:title="@string/version_setting"
             android:summary="@string/plamber_version">
         </Preference>
-
-
 
     </PreferenceCategory>
 

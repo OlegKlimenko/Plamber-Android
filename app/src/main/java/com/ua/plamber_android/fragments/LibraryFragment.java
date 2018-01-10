@@ -100,7 +100,7 @@ public class LibraryFragment extends Fragment {
         viewElement(mRecyclerView, false);
         viewElement(mMessageAgain, true);
         mSwipeRefresh.setRefreshing(false);
-        mMessageAgain.setText("Now in offline mode");
+        mMessageAgain.setText(R.string.now_in_offlane_mode);
     }
 
     private void viewCategory() {

@@ -148,7 +148,7 @@ public class UploadActivity extends AppCompatActivity {
             UploadBookDialog uploadBookDialog = new UploadBookDialog();
             uploadBookDialog.setArguments(args);
             uploadBookDialog.setCancelable(false);
-            uploadBookDialog.show(getSupportFragmentManager(), "UploadDialog");
+            uploadBookDialog.show(getSupportFragmentManager(), UploadBookDialog.TAG);
         }
     }
 

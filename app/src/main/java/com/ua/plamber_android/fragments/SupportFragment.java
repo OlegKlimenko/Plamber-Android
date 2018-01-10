@@ -67,7 +67,7 @@ public class SupportFragment extends Fragment {
                     @Override
                     public void onSuccess(@NonNull int status) {
                         if (status == 200) {
-                            Toast.makeText(getActivity(), "Thanks for your message", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.thanks_for_your_message, Toast.LENGTH_SHORT).show();
                             getSupportActivity().finish();
                         }
                     }

@@ -50,8 +50,8 @@ public class AddCommentFragment extends DialogFragment {
         ButterKnife.bind(this, v);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
-                .setPositiveButton("Add Comment", null)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.add_comment_btn, null)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();

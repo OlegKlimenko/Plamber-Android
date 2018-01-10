@@ -63,7 +63,7 @@ public class AllCommentsFragment extends DialogFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragament_all_comments, container, false);
         ButterKnife.bind(this, view);
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        getToolbar().setTitle("Comments");
+        getToolbar().setTitle(R.string.all_comments_title);
         getToolbar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
         getToolbar().setDisplayHomeAsUpEnabled(true);
         getToolbar().setElevation(10);

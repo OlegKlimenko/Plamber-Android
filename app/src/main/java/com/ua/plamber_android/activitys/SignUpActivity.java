@@ -87,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         registerUser();
                                         visibleProgressBar(false);
                                     } else {
-                                        mTilEmailSingUpEdit.setError("Email already use");
+                                        mTilEmailSingUpEdit.setError(getString(R.string.email_already_use));
                                         visibleProgressBar(false);
                                     }
                                 }
@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            mTilUserNameSingUpEdit.setError("Login already use");
+                            mTilUserNameSingUpEdit.setError(getString(R.string.login_already_use));
                             visibleProgressBar(false);
                         }
                     }
@@ -196,8 +196,10 @@ public class SignUpActivity extends AppCompatActivity {
         if (status) {
             mSingUpProgressBar.setVisibility(LinearLayout.VISIBLE);
         } else {
+
             mSingUpProgressBar.setVisibility(LinearLayout.INVISIBLE);
         }
+        Utils.hideKeyboard(mParentLayout);
     }
 
     private void messageError() {

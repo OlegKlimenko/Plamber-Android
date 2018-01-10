@@ -60,12 +60,12 @@ public class ChangeAvatarDialog extends DialogFragment {
         loadData(v);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.ok_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();
                     }
-                }).setPositiveButton("Change avatar", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(R.string.change_avatar_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = ImagePickActivity.startImagePickActivity(getActivity());
@@ -90,9 +90,7 @@ public class ChangeAvatarDialog extends DialogFragment {
     private void updateAvatar(View v) {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
-        Glide.with(v).load(currentUrl).apply(RequestOptions.skipMemoryCacheOf(true))
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
-                .into(mCurrentAvatar);
+        Glide.with(v).load(currentUrl).into(mCurrentAvatar);
         mCurrentAvatar.setColorFilter(null);
     }
 }

@@ -39,7 +39,7 @@ public class SettingActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        getSupportActionBar().setTitle("Setting");
+        getSupportActionBar().setTitle(R.string.setting_title);
         getSupportActionBar().setElevation(10);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.setting_container, new SettingFragmant()).commit();

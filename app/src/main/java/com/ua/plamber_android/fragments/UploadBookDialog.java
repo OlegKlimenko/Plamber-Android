@@ -57,15 +57,14 @@ public class UploadBookDialog extends DialogFragment {
     LinearLayout linearWait;
 
     public static final String UPLOAD_BOOK = "UPLOAD_BOOK";
-
+    public static final String TAG = "UploadBookDialog";
     private Upload.UploadBookRequest uploadData;
 
     Utils utils;
     PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
     UploadFile uploadFile;
-
-    private static final String TAG = "UploadBookDialog";
+    Call<Upload.UploadBookRespond> request;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,12 +97,16 @@ public class UploadBookDialog extends DialogFragment {
         titleLoad.setText(R.string.upload_progress);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
-                .setTitle("Upload book")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.upload_book_title)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (uploadFile != null)
+                        if (uploadFile != null && request != null) {
                             uploadFile.cancel(true);
+                            request.cancel();
+                            Utils.messageSnack(getActivity().getCurrentFocus(), getString(R.string.upload_was_interrupted));
+                        }
+
                     }
                 });
 
@@ -113,13 +116,13 @@ public class UploadBookDialog extends DialogFragment {
     private void uploadFileToServer(final File file, MultipartBody.Part photo) {
 
         MultipartBody.Part fileBody = prepareFilePart(file);
-        Call<Upload.UploadBookRespond> request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
+        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
 
         request.enqueue(new Callback<Upload.UploadBookRespond>() {
             @Override
             public void onResponse(Call<Upload.UploadBookRespond> call, Response<Upload.UploadBookRespond> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.book_uploaded_success, Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                     dismiss();
 

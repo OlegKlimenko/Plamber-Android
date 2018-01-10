@@ -76,15 +76,15 @@ public class DownloadDialogFragmant extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
-                .setTitle("Download book")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.download_book_title)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (asyncDownload != null) {
                             asyncDownload.cancel(true);
                         }
                         file.delete();
-                        Toast.makeText(getActivity(), "Download was interrupted", Toast.LENGTH_SHORT).show();
+                        Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_was_interrupted));
                     }
                 });
         return builder.create();
@@ -99,7 +99,7 @@ public class DownloadDialogFragmant extends DialogFragment {
                    asyncDownload = new AsyncDownloadBook(file);
                    asyncDownload.execute(response);
                 } else {
-                    Log.d("BookReaderActivity", "Error");
+                    Log.d("BookReaderActivity", "Download error");
                 }
             }
 
@@ -146,10 +146,10 @@ public class DownloadDialogFragmant extends DialogFragment {
             if (status) {
                 getDetailBookFragment().writeBookToDB();
                 getDetailBookFragment().checkBook();
-                Utils.messageSnack(getDetailBookFragment().getView(), "Download complete");
+                Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_complete_message));
             } else {
                 file.delete();
-                Utils.messageSnack(getDetailBookFragment().getView(), "Download error");
+                Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_error_message));
             }
         }
 

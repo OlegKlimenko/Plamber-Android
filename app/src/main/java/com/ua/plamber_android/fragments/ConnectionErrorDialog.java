@@ -41,13 +41,13 @@ public class ConnectionErrorDialog extends DialogFragment {
         mConnectionError.setText(errorMessage);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
-                .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.enable_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         getLibraryActivity().switchToOffline();
                         dismiss();
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dismiss();
