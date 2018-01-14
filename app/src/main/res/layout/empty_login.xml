@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.EditText">
                 <EditText
-                    android:text="admin"
                     android:id="@+id/et_login_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -50,7 +49,6 @@
                 android:theme="@style/AppTheme.EditText">
 
                 <EditText
-                    android:text="admin"
                     android:id="@+id/et_login_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

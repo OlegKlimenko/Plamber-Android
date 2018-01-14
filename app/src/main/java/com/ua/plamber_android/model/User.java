@@ -27,18 +27,11 @@ public class User {
     }
 
     public static class ProfileRespond {
-        @SerializedName("status")
-        private int status;
-
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private Profile data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;
@@ -50,18 +43,11 @@ public class User {
     }
 
     public static class UserRespond {
-        @SerializedName("status")
-        private int status;
-
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private UserData data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

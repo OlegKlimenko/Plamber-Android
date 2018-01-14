@@ -6,8 +6,10 @@ public class Comment {
     public static class CommentRequest {
         @SerializedName("user_token")
         private String userToken;
+
         @SerializedName("book_id")
         private long bookId;
+
         @SerializedName("text")
         private String commentText;
 
@@ -19,16 +21,10 @@ public class Comment {
     }
 
     public class CommentRespond {
-        @SerializedName("status")
-        private int status;
-        @SerializedName("detail")
+               @SerializedName("detail")
         private String detail;
         @SerializedName("data")
         CommentData commentData;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

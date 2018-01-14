@@ -15,7 +15,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.utils.Utils;
@@ -73,20 +72,17 @@ public class AddRatedFragment extends DialogFragment {
                     workAPI.addRated(new StatusCallback() {
                         @Override
                         public void onSuccess(@NonNull int status) {
-                            if (status == 200) {
-                                dismiss();
-                                getDetailBookFragment().viewMessage(getString(R.string.thank_you_for_your_opinion));
-                            } else {
-                                dismiss();
-                                getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
-                            }
+                            dismiss();
+                            getDetailBookFragment().viewMessage(getString(R.string.thank_you_for_your_opinion));
                         }
 
                         @Override
                         public void onError(@NonNull Throwable t) {
+                            dismiss();
+                            getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
                             Log.i(TAG, t.getLocalizedMessage());
                         }
-                    }, bookId, (int)mRatingBar.getRating());
+                    }, bookId, (int) mRatingBar.getRating());
                 } else {
                     Utils.messageSnack(view, getString(R.string.rating_must_be_greater_0));
                 }

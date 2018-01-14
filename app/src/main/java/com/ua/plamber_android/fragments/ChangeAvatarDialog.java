@@ -76,13 +76,7 @@ public class ChangeAvatarDialog extends DialogFragment {
     }
 
     private void loadData(View v) {
-        if (preferenceUtils.checkPreference(PreferenceUtils.USER_PHOTO)) {
-            updateAvatar(v);
-        } else {
-            mCurrentAvatar.setColorFilter(getResources().getColor(R.color.colorAccent));
-            Glide.with(v).load(R.drawable.ic_account_circle_black_48dp).into(mCurrentAvatar);
-        }
-
+        updateAvatar(v);
         mCurrentName.setText(preferenceUtils.readPreference(PreferenceUtils.USER_NAME));
         mCurrentEmail.setText(preferenceUtils.readPreference(PreferenceUtils.USER_EMAIL));
     }
@@ -91,6 +85,5 @@ public class ChangeAvatarDialog extends DialogFragment {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
         Glide.with(v).load(currentUrl).into(mCurrentAvatar);
-        mCurrentAvatar.setColorFilter(null);
     }
 }

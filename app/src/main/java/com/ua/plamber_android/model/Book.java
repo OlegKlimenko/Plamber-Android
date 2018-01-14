@@ -18,18 +18,12 @@ public class Book {
 
 
     public class BookRespond {
-        @SerializedName("status")
-        private int status;
 
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private List<BookData> bookData;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;
@@ -54,18 +48,11 @@ public class Book {
     }
 
     public class BookDetailRespond {
-        @SerializedName("status")
-        private int status;
-
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private BookDetailData data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

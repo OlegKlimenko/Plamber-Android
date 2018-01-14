@@ -16,18 +16,12 @@ public class Support {
     }
 
     public static class SupportRespond {
-        @SerializedName("status")
-        int status;
 
         @SerializedName("detail")
         String detail;
 
         @SerializedName("data")
         SupportData data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

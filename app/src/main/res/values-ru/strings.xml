@@ -36,7 +36,7 @@
     <string name="remove_book_from_library">Удалить книгу из библиотеки</string>
     <string name="remove_book_from_device">Удалить книгу c устройства</string>
     <string name="nothing_found">По вашему запросу ничего не найдено</string>
-    <string name="download_only">Только скаченные</string>
+    <string name="download_only">Только скачанные</string>
     <string name="setting">Настройки</string>
     <string name="logout">Выйти</string>
     <string name="upload">Загруженные</string>
@@ -154,5 +154,6 @@
     <string name="about_plamber_setting">О Plamber</string>
     <string name="information_about_plamber">Узнайте больше про PLamber</string>
     <string name="version_setting">Версия</string>
+    <string name="not_allowed_user_name">Недопустимое имя пользователя</string>
 
 </resources>

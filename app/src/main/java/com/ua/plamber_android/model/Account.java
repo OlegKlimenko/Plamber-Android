@@ -14,18 +14,11 @@ public class Account {
     }
 
     public static class LoginRespond {
-        @SerializedName("status")
-        private int status;
-
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private LoginData data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;
@@ -55,8 +48,6 @@ public class Account {
     }
 
     public static class EmailRespond {
-        @SerializedName("status")
-        private int status;
 
         @SerializedName("detail")
         private String detail;
@@ -64,9 +55,6 @@ public class Account {
         @SerializedName("data")
         private EmailData data;
 
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

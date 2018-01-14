@@ -18,7 +18,6 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.callbacks.CommentCallback;
-import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.model.Comment;
 import com.ua.plamber_android.utils.Utils;
 
@@ -71,18 +70,16 @@ public class AddCommentFragment extends DialogFragment {
                     workAPI.addComment(new CommentCallback() {
                         @Override
                         public void onSuccess(@NonNull Comment.CommentRespond comment) {
-                            if (comment.getStatus() == 200) {
                                 getDetailBookFragment().updateComment(comment.getCommentData(), getString(R.string.thank_you_for_your_opinion));
                                 dismiss();
-                            } else {
-                                dismiss();
-                                getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
-                            }
+
                         }
 
                         @Override
                         public void onError(@NonNull Throwable t) {
                             Log.i(TAG, t.getLocalizedMessage());
+                            dismiss();
+                            getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
                         }
                     }, bookId, mCommentText.getText().toString().trim());
                 } else {

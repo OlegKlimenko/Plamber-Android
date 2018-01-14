@@ -16,18 +16,11 @@ public class Library {
     }
 
     public static class LibraryRespond {
-        @SerializedName("status")
-        private int status;
-
-        @SerializedName("detail")
+         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private List<LibraryData> libraryData;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

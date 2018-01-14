@@ -66,15 +66,13 @@ public class SupportFragment extends Fragment {
                 workAPI.sendSupportMessage(new StatusCallback() {
                     @Override
                     public void onSuccess(@NonNull int status) {
-                        if (status == 200) {
                             Toast.makeText(getActivity(), R.string.thanks_for_your_message, Toast.LENGTH_SHORT).show();
                             getSupportActivity().finish();
-                        }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable t) {
-
+                        Utils.messageSnack(getView(), getString(R.string.error_has_occurred));
                     }
                 }, mEmail.getText().toString().trim(), mSupportText.getText().toString().trim());
             } else {

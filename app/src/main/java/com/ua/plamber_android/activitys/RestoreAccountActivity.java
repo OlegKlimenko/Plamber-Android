@@ -80,13 +80,11 @@ public class RestoreAccountActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Account.EmailRespond> call, Response<Account.EmailRespond> response) {
                 if (response.isSuccessful()) {
-                    if (response.body().getStatus() == 200) {
-                        Utils.messageSnack(mRestoreParentLayout, getString(R.string.instruction_was_send_to_your_email));
-                        visibleProgressBar(false);
-                    } else if (response.body().getStatus() == 404) {
-                        Utils.messageSnack(mRestoreParentLayout, getString(R.string.this_email_not_register));
-                        visibleProgressBar(false);
-                    }
+                    Utils.messageSnack(mRestoreParentLayout, getString(R.string.instruction_was_send_to_your_email));
+                    visibleProgressBar(false);
+                } else {
+                    Utils.messageSnack(mRestoreParentLayout, getString(R.string.this_email_not_register));
+                    visibleProgressBar(false);
                 }
             }
 

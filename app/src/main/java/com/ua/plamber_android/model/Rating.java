@@ -19,16 +19,10 @@ public class Rating {
     }
 
     public static class RatingRespond {
-        @SerializedName("status")
-        private int status;
         @SerializedName("detail")
         private String detail;
         @SerializedName("data")
         private RatingData ratingData;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

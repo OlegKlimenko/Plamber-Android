@@ -43,18 +43,11 @@ public class LoadMoreBook {
     }
 
     public class LoadMoreBookRespond {
-        @SerializedName("status")
-        private int status;
-
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private LoadMoreBookData data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

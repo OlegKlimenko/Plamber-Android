@@ -74,18 +74,12 @@ public class Upload {
     }
 
     public static class UploadBookRespond {
-        @SerializedName("status")
-        int status;
 
         @SerializedName("detail")
         String detail;
 
         @SerializedName("data")
         UploadBookData data;
-
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;
@@ -106,18 +100,12 @@ public class Upload {
     }
 
     public static class UploadAvatarRespond {
-        @SerializedName("status")
-        int status;
-
         @SerializedName("detail")
         String detail;
 
         @SerializedName("data")
         UploadAvatarData data;
 
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

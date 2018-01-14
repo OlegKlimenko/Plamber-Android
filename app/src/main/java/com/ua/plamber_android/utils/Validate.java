@@ -105,8 +105,7 @@ public class Validate {
     public boolean passwordValidate(EditText editText, final TextInputLayout inputLayout) {
         boolean isValid = true;
         inputLayout.setErrorEnabled(true);
-        //*** Change min length to 6***
-        String regex = "\\w{5,16}\\b";
+        String regex = "\\w{6,16}\\b";
         String password = editText.getText().toString();
 
         if (!password.matches(regex)) {
@@ -144,11 +143,10 @@ public class Validate {
             isValid = false;
             inputLayout.setError(context.getString(R.string.validate_username));
         }
-        //*** in release uncomment ***
-//        else if (user.equals("admin")) {
-//            isValid = false;
-//            inputLayout.setError("Not allowed username");
-//        }
+        else if (user.equals("admin")) {
+            isValid = false;
+            inputLayout.setError(context.getString(R.string.not_allowed_user_name));
+        }
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override

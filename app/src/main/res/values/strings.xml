@@ -158,6 +158,7 @@
     <string name="about_plamber_setting">About plamber</string>
     <string name="version_setting">Version</string>
     <string name="information_about_plamber">Information about plamber</string>
+    <string name="not_allowed_user_name">Not allowed username</string>
 
 
 </resources>

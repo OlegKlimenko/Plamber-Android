@@ -106,7 +106,7 @@ public class WorkAPI {
             request.enqueue(new Callback<Book.BookDetailRespond>() {
                 @Override
                 public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
-                    if (response.isSuccessful() && response.body().getStatus() == 200) {
+                    if (response.isSuccessful()) {
                         callback.onSuccess(true);
                     } else {
                         callback.onSuccess(false);
@@ -192,7 +192,7 @@ public class WorkAPI {
                 @Override
                 public void onResponse(Call<Rating.RatingRespond> call, Response<Rating.RatingRespond> response) {
                     if (response.isSuccessful()) {
-                        callback.onSuccess(response.body().getStatus());
+                        callback.onSuccess(response.code());
                     } else {
                         Log.i(TAG, response.message());
                     }
@@ -311,9 +311,8 @@ public class WorkAPI {
             request.enqueue(new Callback<Page.SetPageRespond>() {
                 @Override
                 public void onResponse(Call<Page.SetPageRespond> call, Response<Page.SetPageRespond> response) {
-                    if (response.isSuccessful()) {
-                        callback.onSuccess(response.body().getStatus());
-                    }
+                    if (response.isSuccessful())
+                        callback.onSuccess(response.code());
                 }
 
                 @Override
@@ -332,7 +331,7 @@ public class WorkAPI {
                 @Override
                 public void onResponse(Call<Support.SupportRespond> call, Response<Support.SupportRespond> response) {
                     if (response.isSuccessful())
-                    callback.onSuccess(response.body().getStatus());
+                    callback.onSuccess(response.code());
                 }
 
                 @Override

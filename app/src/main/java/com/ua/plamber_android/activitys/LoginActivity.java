@@ -121,16 +121,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User.UserRespond> call, Response<User.UserRespond> response) {
                 if (response.isSuccessful()) {
-                    if (response.body().getStatus() == 200) {
-                        preferenceUtils.writePreference(PreferenceUtils.TOKEN, response.body().getData().getToken());
-                        visibleProgressBar(false);
-                        Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Utils.messageSnack(mParentLayout, getString(R.string.password_or_account_is_incorrect));
-                        visibleProgressBar(false);
-                    }
+
+                    preferenceUtils.writePreference(PreferenceUtils.TOKEN, response.body().getData().getToken());
+                    visibleProgressBar(false);
+                    Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Utils.messageSnack(mParentLayout, getString(R.string.password_or_account_is_incorrect));
+                    visibleProgressBar(false);
                 }
             }
 

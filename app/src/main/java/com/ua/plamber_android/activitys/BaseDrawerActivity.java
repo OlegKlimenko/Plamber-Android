@@ -171,13 +171,8 @@ public class BaseDrawerActivity extends AppCompatActivity {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
         Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
-        mProfileImage.setColorFilter(null);
     }
 
-    private void setAvatar(int drawable) {
-        mProfileImage.setColorFilter(getResources().getColor(R.color.colorAccent));
-        Glide.with(getApplicationContext()).load(drawable).into(mProfileImage);
-    }
 
     private void setProfileName(String name) {
         TextView profileName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_name);
@@ -190,12 +185,8 @@ public class BaseDrawerActivity extends AppCompatActivity {
     }
 
     private void setProfile(String name, String email, String photo) {
-        if (!preferenceUtils.checkPreference(PreferenceUtils.USER_PHOTO)) {
-            setAvatar(R.drawable.ic_account_circle_black_48dp);
-        } else {
-            setAvatar(photo);
-        }
-        setEmail(email);
+        setAvatar(photo);
+        setProfileName(name);
     }
 
     private void saveProfileData() {
@@ -210,7 +201,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
                 public void onSuccess(@NonNull User.ProfileData profileData) {
                     preferenceUtils.writePreference(PreferenceUtils.USER_NAME, profileData.getUserName());
                     preferenceUtils.writePreference(PreferenceUtils.USER_EMAIL, profileData.getUserEmail());
-                    preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl() + "?" + String.valueOf(System.currentTimeMillis()));
+                        preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl() + "?" + String.valueOf(System.currentTimeMillis()));
                     String photo = preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
                     setProfile(profileData.getUserName(), profileData.getUserEmail(), photo);
                 }

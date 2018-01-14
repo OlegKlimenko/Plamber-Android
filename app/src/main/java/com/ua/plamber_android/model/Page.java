@@ -34,15 +34,9 @@ public class Page {
     }
 
     public static class SetPageRespond {
-        @SerializedName("status")
-        private int status;
-
         @SerializedName("detail")
         private String detail;
 
-        public int getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;

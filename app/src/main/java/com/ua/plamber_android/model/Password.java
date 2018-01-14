@@ -21,18 +21,12 @@ public class Password {
     }
 
     public class PasswordRespond {
-        @SerializedName("status")
-        private String status;
 
         @SerializedName("detail")
         private String detail;
 
         @SerializedName("data")
         private PasswordData data;
-
-        public String getStatus() {
-            return status;
-        }
 
         public String getDetail() {
             return detail;
