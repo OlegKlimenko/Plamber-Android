@@ -44,7 +44,7 @@ public class Utils {
     public String getPlamberPath() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            String path = Environment.getExternalStorageDirectory() + File.separator + "Plamber" + File.separator;
+            String path = getRootDirectory() + File.separator + "Plamber" + File.separator;
             File plamberDirectory = new File(path);
             if (!plamberDirectory.exists()) {
                 plamberDirectory.mkdir();
@@ -55,12 +55,12 @@ public class Utils {
         }
     }
 
-    public String getRootDirectory() {
+    public File getRootDirectory() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return Environment.getExternalStorageDirectory().getPath();
+            return Environment.getExternalStorageDirectory();
         } else {
-            return null;
+            return context.getFilesDir();
         }
     }
 

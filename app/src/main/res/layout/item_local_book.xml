@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/margin_library"
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/local_book_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/local_book_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/margin_checkbox"
+            android:paddingRight="@dimen/margin_checkbox"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            tools:text="Pdf book" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/local_book_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_checkbox"
+                android:paddingRight="@dimen/margin_checkbox"
+                android:textSize="16sp"
+                tools:text="18.1" />
+
+            <TextView
+                android:id="@+id/tv_local_file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:text="mb" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

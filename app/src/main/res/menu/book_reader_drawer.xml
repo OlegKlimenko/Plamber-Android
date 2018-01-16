@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/group_first"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/reader_nav_go_to_page"
+            android:icon="@drawable/arrow_right_circle"
+            android:title="@string/go_to_page_menu" />
+
+        <item
+            android:id="@+id/reader_nav_align"
+            android:icon="@drawable/document_width"
+            android:title="@string/fit_to_width" />
+
+        <item
+        android:id="@+id/reader_synchronize"
+        android:icon="@drawable/ic_sync_black_24dp"
+        android:title="@string/synchronize" />
+
+        <item
+            android:id="@+id/reader_nav_hide_toolbar"
+            android:icon="@drawable/screwdriver_and_wrench_crossed"
+            android:title="@string/hide_toolbar"
+            app:actionLayout="@layout/switch_menu"/>
+
+        <item
+            android:id="@+id/reader_nav_hide_status_bar"
+            android:icon="@drawable/clock_circular"
+            android:title="@string/hide_status_bar"
+            app:actionLayout="@layout/switch_menu"/>
+
+        <item
+            android:id="@+id/reader_exit"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/close_reader_menu" />
+    </group>
+</menu>

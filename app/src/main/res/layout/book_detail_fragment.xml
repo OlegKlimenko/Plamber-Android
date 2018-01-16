@@ -124,6 +124,14 @@
                     android:gravity="right|center_vertical">
 
                     <ImageButton
+                        android:id="@+id/file_download_indicator_btn"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:visibility="gone"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_cloud_done_black_24dp"/>
+
+                    <ImageButton
                         android:id="@+id/share_book_btn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"

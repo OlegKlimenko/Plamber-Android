@@ -56,7 +56,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_restore_account)
     public void restoreAccountButton() {
-        if (apiUtils.isOnline()) {
+        if (apiUtils.isOnline(mRestoreParentLayout)) {
             Validate validate = new Validate(getApplicationContext());
             if (validate.emailValidate(mRestoreAccountEdit, mTilRestoreAccountEdit)) {
                 restoreAccount();
@@ -91,6 +91,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Account.EmailRespond> call, Throwable t) {
                 Log.i(TAG, t.getLocalizedMessage());
+                Utils.messageSnack(mRestoreParentLayout, getString(R.string.connetion_error_title));
                 visibleProgressBar(false);
             }
         });

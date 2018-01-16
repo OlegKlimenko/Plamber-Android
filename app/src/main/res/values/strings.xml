@@ -45,7 +45,7 @@
     <string name="upload">Upload</string>
     <string name="recommended">Recommended</string>
     <string name="library">Library</string>
-    <string name="my_books">My books</string>
+    <string name="my_books">Readable</string>
     <string name="upload_book_activity">Upload books</string>
     <string name="upload_book_name">Book name</string>
     <string name="upload_book_author">Book author</string>
@@ -159,6 +159,21 @@
     <string name="version_setting">Version</string>
     <string name="information_about_plamber">Information about plamber</string>
     <string name="not_allowed_user_name">Not allowed username</string>
+    <string name="no_find_pdf_files_in_your_device">No find pdf files in your device</string>
+    <string name="local_file_title">Local files</string>
+    <string name="enter_page_number">Enter page number</string>
+    <string name="number_of_page_in_this_book">Number of pages in this book\ </string>
+    <string name="go_to">Go to</string>
+    <string name="go_to_page_menu">Go to page</string>
+    <string name="close_reader_menu">Close reader</string>
+    <string name="fit_to_width">Fit to width</string>
+    <string name="hide_toolbar">Hide toolbar</string>
+    <string name="hide_status_bar">Hide status bar</string>
+    <string name="show_status_bar">Show status bar</string>
+    <string name="synchronize">Synchronize</string>
+    <string name="synchronize_complete">Synchronize complete</string>
+    <string name="book_remove_from_device">Book remove from device</string>
+    <string name="this_book_was_saved_on_your_device">This book was saved on your device</string>
 
 
 </resources>

@@ -3,10 +3,17 @@ package com.ua.plamber_android.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
+import com.ua.plamber_android.utils.FileUtils;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Utils;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserBookFragment extends BaseViewBookFragment {
 
@@ -14,6 +21,7 @@ public class UserBookFragment extends BaseViewBookFragment {
     private final static String HOME_BOOK_API = "api/v1/home/";
     BookUtilsDB bookUtilsDB;
     PreferenceUtils preferenceUtils;
+    Utils utils;
 
     @Override
     public String getBookAPI() {

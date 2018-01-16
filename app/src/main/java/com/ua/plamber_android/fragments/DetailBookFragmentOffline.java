@@ -100,6 +100,8 @@ public class DetailBookFragmentOffline extends Fragment {
         Intent intent = BookReaderActivity.startReaderActivity(getActivity());
         intent.putExtra(DetailBookActivity.PDF_PATH, utils.getFullFileName(bookData.getBookName()));
         intent.putExtra(DetailBookActivity.BOOK_ID, bookData.getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_PHOTO, bookData.getPhoto());
+        intent.putExtra(DetailBookActivity.BOOK_AUTHOR, bookData.getIdAuthor());
         startActivity(intent);
     }
 

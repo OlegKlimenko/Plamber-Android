@@ -145,8 +145,8 @@ public class DownloadDialogFragmant extends DialogFragment {
             dismiss();
             if (status) {
                 getDetailBookFragment().writeBookToDB();
-                getDetailBookFragment().checkBook();
-                Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_complete_message));
+                getDetailBookFragment().startReadBook();
+                //Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_complete_message));
             } else {
                 file.delete();
                 Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_error_message));

@@ -34,7 +34,6 @@ import io.realm.Realm;
 
 public class LibraryFragment extends Fragment {
 
-
     @BindView(R.id.library_recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.progress_library)

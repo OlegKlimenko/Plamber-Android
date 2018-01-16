@@ -42,7 +42,7 @@
     <string name="upload">Загруженные</string>
     <string name="recommended">Рекомендуемые</string>
     <string name="library">Библиотека</string>
-    <string name="my_books">Мои книги</string>
+    <string name="my_books">Читаемые</string>
     <string name="upload_book_activity">Загрузка книги</string>
     <string name="upload_book_name">Название</string>
     <string name="upload_book_author">Автор</string>
@@ -155,5 +155,20 @@
     <string name="information_about_plamber">Узнайте больше про PLamber</string>
     <string name="version_setting">Версия</string>
     <string name="not_allowed_user_name">Недопустимое имя пользователя</string>
+    <string name="no_find_pdf_files_in_your_device">Не удалось найти pdf файлы</string>
+    <string name="local_file_title">Файлы на устройстве</string>
+    <string name="enter_page_number">Введите номер страницы</string>
+    <string name="number_of_page_in_this_book">Количество страниц в этой книге\ </string>
+    <string name="go_to">Перейти</string>
+    <string name="go_to_page_menu">Перейти к странице</string>
+    <string name="close_reader_menu">Закрыть</string>
+    <string name="fit_to_width">Растянуть на всю ширину</string>
+    <string name="hide_toolbar">Скрыть Toolbar</string>
+    <string name="hide_status_bar">Скрыть состояние</string>
+    <string name="show_status_bar">Показать состояние</string>
+    <string name="synchronize">Синхронизировать данные</string>
+    <string name="synchronize_complete">Данные синхронизированы</string>
+    <string name="book_remove_from_device">Книга удалена с устройства</string>
+    <string name="this_book_was_saved_on_your_device">Данная книга сохранена на ваше устройство</string>
 
 </resources>

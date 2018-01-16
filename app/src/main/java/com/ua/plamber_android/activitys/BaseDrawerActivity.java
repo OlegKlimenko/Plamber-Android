@@ -215,7 +215,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
     }
 
     public SwitchCompat getOfflineSwitcher() {
-        SwitchCompat offlineModeSwitch = (SwitchCompat) getNavigationView().getMenu().findItem(R.id.nav_mode_switch).getActionView().findViewById(R.id.offline_mode_switch);
+        SwitchCompat offlineModeSwitch = (SwitchCompat) getNavigationView().getMenu().findItem(R.id.nav_mode_switch).getActionView().findViewById(R.id.menu_switch);
         if (!preferenceUtils.checkPreference(PreferenceUtils.OFFLINE_MODE)) {
             preferenceUtils.writeOfflineMode(false);
         } else {

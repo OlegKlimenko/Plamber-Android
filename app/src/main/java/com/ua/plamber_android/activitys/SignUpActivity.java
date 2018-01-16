@@ -70,47 +70,51 @@ public class SignUpActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_sing_up_connected)
     public void connectedButton() {
-
-        if (apiUtils.isOnline()) {
-            Validate valid = new Validate(getApplicationContext());
-            if (valid.userNameValidate(mUserNameSingUpEdit, mTilUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit, mTilEmailSingUpEdit)
-                    & valid.passwordAgainValidate(mPasswordSingUpEdit, mPasswordAgainSingUpEdit, mTilPasswordSingUpEdit, mTilPasswordAgainSingUpEdit)) {
-                visibleProgressBar(true);
-                checkUserName(new AccountCallback() {
-                    @Override
-                    public void onSuccess(@NonNull boolean isCreate) {
-                        if (!isCreate) {
-                            checkUserEmail(new AccountCallback() {
-                                @Override
-                                public void onSuccess(@NonNull boolean isCreate) {
-                                    if (!isCreate) {
-                                        registerUser();
-                                        visibleProgressBar(false);
-                                    } else {
-                                        mTilEmailSingUpEdit.setError(getString(R.string.email_already_use));
-                                        visibleProgressBar(false);
-                                    }
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable t) {
-                                    messageError();
-                                    visibleProgressBar(false);
-                                }
-                            });
-                        } else {
-                            mTilUserNameSingUpEdit.setError(getString(R.string.login_already_use));
-                            visibleProgressBar(false);
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable t) {
-                       messageError();
-                    }
-                });
-            }
+        if (apiUtils.isOnline(mParentLayout) && checkFieldsValid()) {
+            visibleProgressBar(true);
+            checkUserData();
         }
+    }
+
+    private boolean checkFieldsValid() {
+        Validate valid = new Validate(getApplicationContext());
+        return valid.userNameValidate(mUserNameSingUpEdit, mTilUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit, mTilEmailSingUpEdit)
+                & valid.passwordAgainValidate(mPasswordSingUpEdit, mPasswordAgainSingUpEdit, mTilPasswordSingUpEdit, mTilPasswordAgainSingUpEdit);
+    }
+
+    private void checkUserData() {
+        checkUserName(new AccountCallback() {
+            @Override
+            public void onSuccess(@NonNull boolean isCreate) {
+                if (!isCreate) {
+                    checkUserEmail(new AccountCallback() {
+                        @Override
+                        public void onSuccess(@NonNull boolean isCreate) {
+                            if (!isCreate) {
+                                registerUser();
+                                visibleProgressBar(false);
+                            } else {
+                                mTilEmailSingUpEdit.setError(getString(R.string.email_already_use));
+                                visibleProgressBar(false);
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable t) {
+                            messageError();
+                        }
+                    });
+                } else {
+                    mTilUserNameSingUpEdit.setError(getString(R.string.login_already_use));
+                    visibleProgressBar(false);
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable t) {
+                messageError();
+            }
+        });
     }
 
     @OnClick(R.id.tv_sing_up_back_login)
@@ -129,7 +133,7 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Account.LoginRespond> call, Response<Account.LoginRespond> response) {
                     boolean isCreated = true;
-                    if (response.isSuccessful() && response.body().getDetail().equals("successful")) {
+                    if (response.isSuccessful()) {
                         isCreated = response.body().getData().isLoginStatus();
                     }
                     callback.onSuccess(isCreated);

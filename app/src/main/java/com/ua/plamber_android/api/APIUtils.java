@@ -3,7 +3,11 @@ package com.ua.plamber_android.api;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
 import android.widget.Toast;
+
+import com.ua.plamber_android.R;
+import com.ua.plamber_android.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,18 +35,18 @@ public class APIUtils {
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        PlamberAPI plamberAPI = retrofit.create(PlamberAPI.class);
 
-        return plamberAPI;
+        return retrofit.create(PlamberAPI.class);
     }
 
-    public boolean isOnline() {
+    public boolean isOnline(View view) {
         ConnectivityManager manager = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = manager.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         } else {
+            Utils.messageSnack(view, context.getString(R.string.no_internet_connection));
             return false;
         }
     }

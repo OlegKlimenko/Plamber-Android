@@ -1,5 +1,6 @@
 package com.ua.plamber_android.utils;
 
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,8 @@ public class FileUtils {
         double fileSize = file.length() / (double)(1024 * 1024);
         return String.format(Locale.US, "%.2f", fileSize);
     }
+
+
 
     private static String getFileType(File file) {
         String type = "";

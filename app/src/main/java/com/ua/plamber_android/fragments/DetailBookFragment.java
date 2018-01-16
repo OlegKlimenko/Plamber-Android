@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -101,6 +102,8 @@ public class DetailBookFragment extends Fragment {
     LinearLayout mPopularityLayout;
     @BindView(R.id.main_layout_detail)
     LinearLayout mMainDetailLayout;
+    @BindView(R.id.file_download_indicator_btn)
+    ImageButton mFileIndicator;
 
     private Book.BookDetailData bookDataDetail;
     private BookUtilsDB bookUtilsDB;
@@ -109,6 +112,7 @@ public class DetailBookFragment extends Fragment {
     private WorkAPI workAPI;
     private RecyclerCommentAdapter commentAdapter;
     private PageUtilsDB pageUtilsDB;
+    private File file;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,6 +148,7 @@ public class DetailBookFragment extends Fragment {
             public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
                 bookDataDetail = bookDetail.getData();
                 pageUtilsDB = new PageUtilsDB(getActivity(), bookDetail.getData().getBookData().getIdBook());
+                file = new File(utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
                 Book.BookDetailData bookDataDetail = bookDetail.getData();
                 Collections.reverse(bookDataDetail.getCommentData());
                 viewProgress(false);
@@ -160,8 +165,20 @@ public class DetailBookFragment extends Fragment {
         }, getArguments().getLong(DetailBookActivity.BOOK_ID));
     }
 
-    private void initDetailBook(Book.BookData book) {
+    private void setDownloadIndicator(boolean view) {
+        if (view) {
+            mFileIndicator.setVisibility(View.VISIBLE);
+        } else {
+            mFileIndicator.setVisibility(View.GONE);
+        }
+    }
 
+    @OnClick(R.id.file_download_indicator_btn)
+    public void messageIndicator() {
+        Utils.messageSnack(mParentLayout, getString(R.string.this_book_was_saved_on_your_device));
+    }
+
+    private void initDetailBook(Book.BookData book) {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
         Glide.with(getActivity()).load(currentUrl).into(mImageBook);
@@ -173,7 +190,6 @@ public class DetailBookFragment extends Fragment {
         mAboutBook.setText(book.getDescription());
         mWhoAddedBook.setText(book.getWhoAdded());
         mDateAddedBook.setText(Utils.dateUpload(book.getUploadDate()));
-        mDetailButton.setTag("Download");
     }
 
     private void initDetailAdditionally(Book.BookDetailData book) {
@@ -226,6 +242,7 @@ public class DetailBookFragment extends Fragment {
         args.putLong(id, bookDataDetail.getBookData().getIdBook());
         return args;
     }
+
     @OnClick(R.id.frame_add_rated)
     public void addRatedBook() {
         AddRatedFragment ratedFragment = new AddRatedFragment();
@@ -245,28 +262,30 @@ public class DetailBookFragment extends Fragment {
 
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
-        if (mDetailButton.getTag() == "Download" && apiUtils.isOnline()) {
-            runDownloadDialog();
-        } else if (mDetailButton.getTag() == "Added") {
+        if (mDetailButton.getTag() == "Added") {
             addBookToLibrary(bookDataDetail.getBookData().getIdBook());
-        } else {
-            Intent intent = BookReaderActivity.startReaderActivity(getActivity());
-            intent.putExtra(DetailBookActivity.PDF_PATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
-            intent.putExtra(DetailBookActivity.BOOK_ID, bookDataDetail.getBookData().getIdBook());
-            startActivity(intent);
+        } else if (mDetailButton.getTag() == "Read") {
+            if (file.exists())
+                startReadBook();
+            else
+                runDownloadDialog();
         }
     }
 
+    public void startReadBook() {
+        Intent intent = BookReaderActivity.startReaderActivity(getActivity());
+        intent.putExtra(DetailBookActivity.PDF_PATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
+        intent.putExtra(DetailBookActivity.BOOK_ID, bookDataDetail.getBookData().getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_PHOTO, bookDataDetail.getBookData().getPhoto());
+        intent.putExtra(DetailBookActivity.BOOK_AUTHOR, bookDataDetail.getBookData().getIdAuthor());
+        startActivity(intent);
+    }
+
     public void checkBook() {
+        setDownloadIndicator(file.exists());
         if (bookDataDetail.isAddedBook()) {
-            File file = new File(utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
-            if (file.exists()) {
-                mDetailButton.setText(R.string.read_book_detail_btn);
-                mDetailButton.setTag("Read");
-            } else {
-                mDetailButton.setText(R.string.download_book_detail_btn);
-                mDetailButton.setTag("Download");
-            }
+            mDetailButton.setText(R.string.read_book_detail_btn);
+            mDetailButton.setTag("Read");
         } else {
             mDetailButton.setText(R.string.added_book_detail_btn);
             mDetailButton.setTag("Added");
@@ -310,7 +329,7 @@ public class DetailBookFragment extends Fragment {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_book_removed));
                     bookDataDetail.setAddedBook(false);
                     pageUtilsDB.removePageData();
-                    removeBookFromDevice(bookDataDetail.getBookData().getBookName());
+                    removeBookFromDevice(bookDataDetail.getBookData().getBookName(), false);
                 } else {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_remove_error));
                 }
@@ -323,10 +342,12 @@ public class DetailBookFragment extends Fragment {
         }, id, URL_REMOVE_BOOK);
     }
 
-    private void removeBookFromDevice(String bookName) {
+    private void removeBookFromDevice(String bookName, boolean viewMessage) {
         File file = new File(utils.getFullFileName(bookName));
         file.delete();
         checkBook();
+        if (viewMessage)
+        Utils.messageSnack(mParentLayout, getString(R.string.book_remove_from_device));
         removeBookFromDB();
     }
 
@@ -377,7 +398,7 @@ public class DetailBookFragment extends Fragment {
                 removeBookFromLibrary(bookDataDetail.getBookData().getIdBook());
                 break;
             case R.id.item_remove_device:
-                removeBookFromDevice(bookDataDetail.getBookData().getBookName());
+                removeBookFromDevice(bookDataDetail.getBookData().getBookName(), true);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -388,7 +409,7 @@ public class DetailBookFragment extends Fragment {
         if (mDetailButton.getTag() == "Added") {
             menu.findItem(R.id.item_remove_library).setEnabled(false);
             menu.findItem(R.id.item_remove_device).setEnabled(false);
-        } else if (mDetailButton.getTag() == "Read") {
+        } else if (mDetailButton.getTag() == "Read" && file.exists()) {
             menu.findItem(R.id.item_remove_device).setEnabled(true);
             menu.findItem(R.id.item_remove_library).setEnabled(true);
         } else {

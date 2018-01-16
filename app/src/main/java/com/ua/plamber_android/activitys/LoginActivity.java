@@ -2,9 +2,12 @@ package com.ua.plamber_android.activitys;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout mParentLayout;
 
     private static long timeExit;
-
+    private static final int REQUEST_WRITE_STORAGE = 101;
 
     PreferenceUtils preferenceUtils;
     APIUtils apiUtils;
@@ -61,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
         Utils utils = new Utils(getApplicationContext());
         preferenceUtils = new PreferenceUtils(getApplicationContext());
         apiUtils = new APIUtils(getApplicationContext());
+
+        if (!checkPermission())
+            runQuestionPermissions();
 
         utils.initBackgroundImage(mBackgroundLogin);
 
@@ -84,26 +90,28 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void loginButton() {
-        if (apiUtils.isOnline()) {
+        if (apiUtils.isOnline(mParentLayout)) {
             Validate valid = new Validate(getApplicationContext());
             if (valid.userNameValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
                 userLoginInSystem();
             }
-        } else {
-            Utils.messageSnack(mParentLayout, getString(R.string.no_internet_connection));
         }
     }
 
     @OnClick(R.id.btn_login_signup)
     public void signUpButton() {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+        if (apiUtils.isOnline(mParentLayout)) {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.tv_restore_account)
     public void restoreAccountButton() {
-        Intent intent = RestoreAccountActivity.startRestoreActivity(getApplicationContext());
-        startActivity(intent);
+        if (apiUtils.isOnline(mParentLayout)) {
+            Intent intent = RestoreAccountActivity.startRestoreActivity(getApplicationContext());
+            startActivity(intent);
+        }
     }
 
     public static Intent startLoginActivity(Context context) {
@@ -148,6 +156,27 @@ public class LoginActivity extends AppCompatActivity {
             mLoginProgressBar.setVisibility(LinearLayout.INVISIBLE);
         }
         Utils.hideKeyboard(mParentLayout);
+    }
+
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+    private void runQuestionPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_WRITE_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, R.string.not_have_write_permission, Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 }
 

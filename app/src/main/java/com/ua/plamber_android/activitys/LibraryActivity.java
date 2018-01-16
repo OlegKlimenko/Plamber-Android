@@ -27,6 +27,7 @@ import com.ua.plamber_android.adapters.ViewPagerAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.fragments.ConnectionErrorDialog;
 import com.ua.plamber_android.fragments.LibraryFragment;
+import com.ua.plamber_android.fragments.LocalFileFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
@@ -53,7 +54,6 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     public static final String TAG = "LibraryActivity";
     public static final String ERROR_MESSAGE = "ERROR_MESSAGE";
-    private static final int REQUEST_WRITE_STORAGE = 101;
     private Utils utils;
     private PreferenceUtils preferenceUtils;
     private static long timeExit;
@@ -77,9 +77,6 @@ public class LibraryActivity extends BaseDrawerActivity {
         }
         //view fab on start in offline mode
         initFabButton(0);
-
-        if (!checkPermission())
-            runQuestionPermissions();
     }
 
     @Override
@@ -172,6 +169,7 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     public void setupPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        //adapter.addFragment(new LocalFileFragment(), getString(R.string.local_file_title));
         adapter.addFragment(new UserBookFragment(), getString(R.string.my_books));
         adapter.addFragment(new LibraryFragment(), getString(R.string.library));
         adapter.addFragment(new RecommendedFragmnet(), getString(R.string.recommended));
@@ -256,26 +254,4 @@ public class LibraryActivity extends BaseDrawerActivity {
             dialog.show(getSupportFragmentManager(), ConnectionErrorDialog.TAG);
         }
     }
-
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-    private void runQuestionPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_WRITE_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.not_have_write_permission, Toast.LENGTH_SHORT).show();
-                }
-        }
-    }
-
 }

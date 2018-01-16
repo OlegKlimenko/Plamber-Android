@@ -2,6 +2,7 @@ package com.ua.plamber_android.database.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 public class BookDB extends RealmObject {
     @PrimaryKey
