@@ -2,16 +2,13 @@ package com.ua.plamber_android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.ChangePasswordActivity;
 import com.ua.plamber_android.activitys.SupportActivity;
+import com.ua.plamber_android.fragments.dialogs.ChangeAvatarDialog;
 
 public class SettingFragmant extends PreferenceFragmentCompat {
 

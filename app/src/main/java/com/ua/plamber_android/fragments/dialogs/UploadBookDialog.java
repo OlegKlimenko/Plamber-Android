@@ -1,4 +1,4 @@
-package com.ua.plamber_android.fragments;
+package com.ua.plamber_android.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,6 +23,7 @@ import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.fragments.UploadFileFragment;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.utils.FileUploadProgress;
 import com.ua.plamber_android.utils.FileUtils;
@@ -122,6 +123,7 @@ public class UploadBookDialog extends DialogFragment {
             @Override
             public void onResponse(Call<Upload.UploadBookRespond> call, Response<Upload.UploadBookRespond> response) {
                 if (response.isSuccessful()) {
+                    getUploadFileFragamnt().updateOfflineBook(response.body().getData().getBookData());
                     Toast.makeText(getActivity(), R.string.book_uploaded_success, Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                     dismiss();
@@ -129,6 +131,7 @@ public class UploadBookDialog extends DialogFragment {
                 } else {
                     Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
                     dismiss();
+                    Toast.makeText(getActivity(), R.string.error_has_occurred, Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                     Log.i(TAG, response.message());
                 }
@@ -169,30 +172,6 @@ public class UploadBookDialog extends DialogFragment {
         return MultipartBody.Part.createFormData("book_file", file.getName(), requestFile);
     }
 
-    private byte[] getFirstPageAsByte(File pdfFileUrl) {
-        PdfiumCore pdfiumCore = null;
-        PdfDocument pdfDocument = null;
-        try {
-            ParcelFileDescriptor fd = ParcelFileDescriptor.open(pdfFileUrl, ParcelFileDescriptor.MODE_READ_ONLY);
-            pdfiumCore = new PdfiumCore(getActivity());
-            pdfDocument = pdfiumCore.newDocument(fd);
-        } catch (IOException e) {
-            Log.i(TAG, e.getLocalizedMessage());
-        }
-        pdfiumCore.openPage(pdfDocument, 0);
-
-        int width = pdfiumCore.getPageWidthPoint(pdfDocument, 0);
-        int height = pdfiumCore.getPageHeightPoint(pdfDocument, 0);
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height,
-                Bitmap.Config.RGB_565);
-        pdfiumCore.renderPageBitmap(pdfDocument, bitmap, 0, 0, 0,
-                width, height);
-        pdfiumCore.closeDocument(pdfDocument);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
-    }
 
     private class UploadFile extends AsyncTask<File, Void, MultipartBody.Part> {
         File file;
@@ -200,7 +179,7 @@ public class UploadBookDialog extends DialogFragment {
         @Override
         protected MultipartBody.Part doInBackground(File... files) {
             file = files[0];
-            RequestBody requestCover = RequestBody.create(MultipartBody.FORM, getFirstPageAsByte(files[0]));
+            RequestBody requestCover = RequestBody.create(MultipartBody.FORM, utils.getFirstPageAsByte(files[0]));
             return MultipartBody.Part.createFormData("photo", FileUtils.removeType(files[0].getName()) + ".png", requestCover);
         }
 
@@ -225,5 +204,7 @@ public class UploadBookDialog extends DialogFragment {
             linearWait.setVisibility(View.VISIBLE);
         }
     }
-
+    private UploadFileFragment getUploadFileFragamnt() {
+        return ((UploadFileFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+    }
 }

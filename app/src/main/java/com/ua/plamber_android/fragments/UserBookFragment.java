@@ -35,10 +35,6 @@ public class UserBookFragment extends BaseViewBookFragment {
         preferenceUtils = new PreferenceUtils(getActivity());
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -49,7 +45,7 @@ public class UserBookFragment extends BaseViewBookFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (preferenceUtils.readStatusOffline())
+        if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
             viewBookOffline();
         else
             viewUserBook();
@@ -57,7 +53,6 @@ public class UserBookFragment extends BaseViewBookFragment {
 
     @Override
     public void viewBookOffline() {
-        offlineMessage();
         initAdapter(bookUtilsDB.getListBookFromDB());
     }
 }

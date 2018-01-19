@@ -90,8 +90,13 @@ public class Upload {
         }
     }
 
-    private class UploadBookData {
+    public class UploadBookData {
+        @SerializedName("book")
+        Book.BookData bookData;
 
+        public Book.BookData getBookData() {
+            return bookData;
+        }
     }
 
     public static class UploadAvatarRequest {

@@ -3,6 +3,7 @@ package com.ua.plamber_android.activitys;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
@@ -53,6 +54,15 @@ public class CategoryActivity extends BaseDrawerActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (!getDrawerLayout().isDrawerOpen(GravityCompat.START))
+            super.onBackPressed();
+         else
+            getDrawerLayout().closeDrawers();
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -66,7 +76,7 @@ public class CategoryActivity extends BaseDrawerActivity {
         getOfflineSwitcher().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                preferenceUtils.writeOfflineMode(b);
+                preferenceUtils.writeLogic(PreferenceUtils.OFFLINE_MODE, b);
                 finish();
             }
         });

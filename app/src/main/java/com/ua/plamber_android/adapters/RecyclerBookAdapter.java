@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,12 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.api.PlamberAPI;
+import com.ua.plamber_android.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
-
+import com.ua.plamber_android.utils.Utils;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int VIEW_TYPE_ITEM = 0;
     public final int VIEW_TYPE_LOADING = 1;
     private RecyclerViewClickListener mListener;
-
+    private static final String TAG = "RecyclerBookAdapter";
 
     public RecyclerBookAdapter(RecyclerView recyclerView, List<Book.BookData> books, RecyclerViewClickListener listener) {
         this.books = books;
@@ -91,7 +92,10 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView authorBook;
         @BindView(R.id.pb_user_book_download)
         ProgressBar userProgressImage;
+        @BindView(R.id.book_offline_indicator)
+        ImageView offlineIndicator;
         public View view;
+
         private RecyclerViewClickListener mListener;
 
         private BookHolder(View v, RecyclerViewClickListener listener) {
@@ -128,22 +132,17 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             final BookHolder bookHolder = (BookHolder) holder;
             Book.BookData book = books.get(position);
-            String url = PlamberAPI.ENDPOINT;
-            String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
-            Glide.with(bookHolder.view).load(currentUrl)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            bookHolder.userProgressImage.setVisibility(View.GONE);
-                            return false;
-                        }
+            if (!book.isOfflineBook()) {
+                String url = PlamberAPI.ENDPOINT;
+                String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
+                viewPhotoBook(currentUrl, bookHolder);
+            } else {
+                Utils utils = new Utils(bookHolder.view.getContext());
+                viewPhotoBook(utils.getPngFileWithPath(book.getIdBook()), bookHolder);
+                bookHolder.offlineIndicator.setVisibility(View.VISIBLE);
+                Glide.with(bookHolder.view).load(R.drawable.ic_cloud_off_black_24dp).into(bookHolder.offlineIndicator);
+            }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            bookHolder.userProgressImage.setVisibility(View.GONE);
-                            return false;
-                        }
-                    }).into(bookHolder.img);
             bookHolder.nameBook.setText(book.getBookName());
             bookHolder.authorBook.setText(book.getIdAuthor());
         }
@@ -159,6 +158,23 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         books.clear();
         books.addAll(newLsit);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    private void viewPhotoBook(String path, final BookHolder bookHolder) {
+        Glide.with(bookHolder.view).load(path)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        bookHolder.userProgressImage.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        bookHolder.userProgressImage.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(bookHolder.img);
     }
 
     public void stopLoading() {

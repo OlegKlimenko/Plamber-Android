@@ -25,11 +25,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
-import com.ua.plamber_android.fragments.ChangeAvatarDialog;
-import com.ua.plamber_android.fragments.UploadAvatarDialog;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
+import com.ua.plamber_android.fragments.dialogs.ChangeAvatarDialog;
+import com.ua.plamber_android.fragments.dialogs.UploadAvatarDialog;
 import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,12 +52,16 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
     private PreferenceUtils preferenceUtils;
     private WorkAPI workAPI;
+    private Utils utils;
+    private BookUtilsDB bookUtilsDB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferenceUtils = new PreferenceUtils(this);
         workAPI = new WorkAPI(this);
+        utils = new Utils(this);
+        bookUtilsDB = new BookUtilsDB(this);
     }
 
 
@@ -92,6 +98,9 @@ public class BaseDrawerActivity extends AppCompatActivity {
     public void logoutApplication() {
         PreferenceUtils preferenceUtils = new PreferenceUtils(getApplicationContext());
         preferenceUtils.removePreference();
+        utils.deleteAllPdfFiles();
+        utils.deleteAllImageFiles();
+        bookUtilsDB.deleteAllFromDB();
         finish();
         Intent intent = LoginActivity.startLoginActivity(getApplicationContext());
         startActivity(intent);
@@ -175,7 +184,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
 
     private void setProfileName(String name) {
-        TextView profileName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_name);
+        TextView profileName = (TextView) mNavigationView.getHeaderView(1).findViewById(R.id.header_profile_name);
         profileName.setText(name);
     }
 
@@ -217,9 +226,9 @@ public class BaseDrawerActivity extends AppCompatActivity {
     public SwitchCompat getOfflineSwitcher() {
         SwitchCompat offlineModeSwitch = (SwitchCompat) getNavigationView().getMenu().findItem(R.id.nav_mode_switch).getActionView().findViewById(R.id.menu_switch);
         if (!preferenceUtils.checkPreference(PreferenceUtils.OFFLINE_MODE)) {
-            preferenceUtils.writeOfflineMode(false);
+            preferenceUtils.writeLogic(PreferenceUtils.OFFLINE_MODE, false);
         } else {
-            offlineModeSwitch.setChecked(preferenceUtils.readStatusOffline());
+            offlineModeSwitch.setChecked(preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE));
         }
         return offlineModeSwitch;
     }

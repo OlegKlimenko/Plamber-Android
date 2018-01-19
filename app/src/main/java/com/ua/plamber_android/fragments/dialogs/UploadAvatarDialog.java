@@ -1,4 +1,4 @@
-package com.ua.plamber_android.fragments;
+package com.ua.plamber_android.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -54,7 +54,7 @@ public class UploadAvatarDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflate = getActivity().getLayoutInflater();
-        View v = inflate.inflate(R.layout.upload_avatar_dialog, null);
+        View v = inflate.inflate(R.layout.simple_progress_dialog, null);
         File file = new File(getArguments().getString(UPLOAD_AVATAR));
         uploadAvatar(file);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

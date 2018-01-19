@@ -20,12 +20,14 @@ import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.activitys.LibraryActivity;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,6 +39,7 @@ public abstract class BaseViewBookFragment extends Fragment {
     private WorkAPI workAPI;
     private PreferenceUtils preferenceUtils;
     private Utils utils;
+    private BookUtilsDB bookUtilsDB;
     public static final int ADDED_REQUEST = 142;
     public static boolean isShowError;
     private static final String TAG = "BaseViewBookFragment";
@@ -59,6 +62,16 @@ public abstract class BaseViewBookFragment extends Fragment {
         workAPI = new WorkAPI(getActivity());
         preferenceUtils = new PreferenceUtils(getActivity());
         utils = new Utils(getActivity());
+        bookUtilsDB = new BookUtilsDB(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
+            viewBookOffline();
+        else
+            viewUserBook();
     }
 
     @Nullable
@@ -79,16 +92,15 @@ public abstract class BaseViewBookFragment extends Fragment {
             }
         });
         recyclerView.setLayoutManager(gridLayoutManager);
+        initSwipeRefresh();
         return v;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void initSwipeRefresh() {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (preferenceUtils.readStatusOffline()) {
+                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
                     viewBookOffline();
                 } else {
                     isShowError = false;
@@ -96,18 +108,9 @@ public abstract class BaseViewBookFragment extends Fragment {
                 }
             }
         });
-
-        if (preferenceUtils.readStatusOffline())
-            viewBookOffline();
-        else
-            viewUserBook();
     }
 
     public void viewBookOffline() {
-        offlineMessage();
-    }
-
-    public void offlineMessage() {
         visible(recyclerView, false);
         visible(mUserBookProgress, false);
         visible(mMessageAgain, true);
@@ -119,12 +122,19 @@ public abstract class BaseViewBookFragment extends Fragment {
         workAPI.getUserBook(new BooksCallback() {
             @Override
             public void onSuccess(@NonNull List<Book.BookData> books) {
-               initAdapter(books);
+                List<Book.BookData> offlineBooks = new ArrayList<>();
+                for (Book.BookData book : bookUtilsDB.getListBookFromDB()) {
+                    if (book.isOfflineBook())
+                        offlineBooks.add(book);
+                }
+                List<Book.BookData> newList = new ArrayList<>(books);
+                newList.addAll(offlineBooks);
+                initAdapter(newList);
             }
 
             @Override
             public void onError(@NonNull Throwable t) {
-               errorViewBook(t);
+                errorViewBook(t);
             }
         }, getBookAPI());
     }
@@ -149,12 +159,15 @@ public abstract class BaseViewBookFragment extends Fragment {
             visible(recyclerView, true);
             mSwipeRefresh.setRefreshing(false);
         }
+
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
+                intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(position).getIdServerBook());
                 intent.putExtra(DetailBookActivity.BOOK_ID, books.get(position).getIdBook());
                 intent.putExtra(DetailBookActivity.BOOK_NAME, books.get(position).getBookName());
+                intent.putExtra(DetailBookActivity.IS_OFFLINE_BOOK, books.get(position).isOfflineBook());
                 startActivity(intent);
             }
         };
@@ -209,7 +222,7 @@ public abstract class BaseViewBookFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && fab.isShown()) {
                     fab.hide();
-                } else if (LibraryActivity.currentPosition == 3 || LibraryActivity.currentPosition == 0){
+                } else if (LibraryActivity.currentPosition == 3 || LibraryActivity.currentPosition == 0) {
                     fab.show();
                 }
             }

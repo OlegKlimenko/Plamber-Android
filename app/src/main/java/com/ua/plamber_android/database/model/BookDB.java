@@ -2,11 +2,12 @@ package com.ua.plamber_android.database.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 public class BookDB extends RealmObject {
     @PrimaryKey
-    private long idBook;
+    private String idBook;
+
+    private long idServerBook;
 
     private String bookName;
 
@@ -24,12 +25,26 @@ public class BookDB extends RealmObject {
 
     private String uploadDate;
 
-    public long getIdBook() {
+    private int bookPage;
+
+    private String lastReadDate;
+
+    private boolean isOfflineBook;
+
+    public String getIdBook() {
         return idBook;
     }
 
-    public void setIdBook(long idBook) {
+    public void setIdBook(String idBook) {
         this.idBook = idBook;
+    }
+
+    public long getIdServerBook() {
+        return idServerBook;
+    }
+
+    public void setIdServerBook(long idServerBook) {
+        this.idServerBook = idServerBook;
     }
 
     public String getBookName() {
@@ -94,5 +109,29 @@ public class BookDB extends RealmObject {
 
     public void setUploadDate(String uploadDate) {
         this.uploadDate = uploadDate;
+    }
+
+    public boolean isOfflineBook() {
+        return isOfflineBook;
+    }
+
+    public void setOfflineBook(boolean offlineBook) {
+        isOfflineBook = offlineBook;
+    }
+
+    public int getBookPage() {
+        return bookPage;
+    }
+
+    public void setBookPage(int bookPage) {
+        this.bookPage = bookPage;
+    }
+
+    public String getLastReadDate() {
+        return lastReadDate;
+    }
+
+    public void setLastReadDate(String lastReadDate) {
+        this.lastReadDate = lastReadDate;
     }
 }

@@ -3,31 +3,25 @@ package com.ua.plamber_android.activitys;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
-import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.fragments.ConnectionErrorDialog;
+import com.ua.plamber_android.fragments.dialogs.ConnectionErrorDialog;
 import com.ua.plamber_android.fragments.LibraryFragment;
-import com.ua.plamber_android.fragments.LocalFileFragment;
 import com.ua.plamber_android.fragments.RecommendedFragmnet;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
@@ -37,7 +31,6 @@ import com.ua.plamber_android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 public class LibraryActivity extends BaseDrawerActivity {
 
@@ -97,10 +90,7 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     @OnClick(R.id.fab_upload)
     public void openUploadActivity() {
-        if (!preferenceUtils.readStatusOffline())
-            startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
-        else
-            Utils.messageSnack(mParentLayout, getString(R.string.upload_not_available_in_offline_mode));
+        startActivity(UploadActivity.startUploadActivity(getApplicationContext()));
     }
 
     @Override
@@ -113,7 +103,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_search_library:
-                if (preferenceUtils.readStatusOffline()) {
+                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
                     Utils.messageSnack(mParentLayout, getString(R.string.search_not_access_in_offline));
                 } else {
                     Intent intent = SearchActivity.startSearchActivity(this);
@@ -158,13 +148,17 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     @Override
     public void onBackPressed() {
-        if (timeExit + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed();
-        } else {
-            String mess = getString(R.string.press_once_to_exit);
-            Toast.makeText(this, mess, Toast.LENGTH_SHORT).show();
-        }
-        timeExit = System.currentTimeMillis();
+        if (!getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+            if (timeExit + 2000 > System.currentTimeMillis()) {
+                super.onBackPressed();
+            } else {
+                String mess = getString(R.string.press_once_to_exit);
+                Toast.makeText(this, mess, Toast.LENGTH_SHORT).show();
+            }
+            timeExit = System.currentTimeMillis();
+        } else
+            getDrawerLayout().closeDrawers();
+
     }
 
     public void setupPager() {
@@ -221,15 +215,14 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     public static Intent startLibraryActivity(Context context) {
-        Intent intent = new Intent(context, LibraryActivity.class);
-        return intent;
+        return new Intent(context, LibraryActivity.class);
     }
 
     private void initOfflineModeSwitch() {
         getOfflineSwitcher().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                preferenceUtils.writeOfflineMode(b);
+                preferenceUtils.writeLogic(PreferenceUtils.OFFLINE_MODE, b);
                 updateView();
             }
         });
@@ -245,7 +238,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     public void runErrorDialog(String message) {
-        if (!preferenceUtils.readStatusOffline()) {
+        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
             ConnectionErrorDialog dialog = new ConnectionErrorDialog();
             dialog.setCancelable(false);
             Bundle args = new Bundle();

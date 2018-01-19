@@ -1,4 +1,4 @@
-package com.ua.plamber_android.fragments;
+package com.ua.plamber_android.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

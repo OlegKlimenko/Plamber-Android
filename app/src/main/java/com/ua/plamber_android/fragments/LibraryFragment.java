@@ -78,13 +78,13 @@ public class LibraryFragment extends Fragment {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (preferenceUtils.readStatusOffline())
+                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
                     viewCategoryOffline();
                 else
                     viewCategory();
             }
         });
-        if (preferenceUtils.readStatusOffline())
+        if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
             viewCategoryOffline();
         else
             viewCategory();

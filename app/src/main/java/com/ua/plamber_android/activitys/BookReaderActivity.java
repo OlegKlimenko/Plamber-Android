@@ -2,6 +2,7 @@ package com.ua.plamber_android.activitys;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -28,8 +29,8 @@ import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
-import com.ua.plamber_android.database.utils.PageUtilsDB;
-import com.ua.plamber_android.fragments.GoToPageDialog;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
+import com.ua.plamber_android.fragments.dialogs.GoToPageDialog;
 import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.model.Page;
@@ -56,16 +57,16 @@ public class BookReaderActivity extends AppCompatActivity {
     private static final String TAG = "BookReaderActivity";
     private static final String CURRENT_PAGE = "CURRENT_PAGE";
     private static final String COUNT_PAGE = "COUNT_PAGE";
-
-
     private PreferenceUtils preferenceUtils;
     private WorkAPI workAPI;
-    private PageUtilsDB pageUtilsDB;
+    private BookUtilsDB bookUtilsDB;
+    private Utils utils;
     private File file;
-    private long bookId;
+    private long bookServerId;
+    private String bookId;
     private String bookPhoto;
     private String bookAuthor;
-
+    private boolean isBookOffline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +75,25 @@ public class BookReaderActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         preferenceUtils = new PreferenceUtils(this);
         workAPI = new WorkAPI(this);
+        utils = new Utils(this);
+        bookUtilsDB = new BookUtilsDB(this);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
         Intent intent = getIntent();
-        String bookPath = intent.getStringExtra(DetailBookActivity.PDF_PATH);
-        file = new File(bookPath);
+        bookId = intent.getStringExtra(DetailBookActivity.BOOK_ID);
         bookPhoto = intent.getStringExtra(DetailBookActivity.BOOK_PHOTO);
         bookAuthor = intent.getStringExtra(DetailBookActivity.BOOK_AUTHOR);
-        bookId = intent.getLongExtra(DetailBookActivity.BOOK_ID, 0);
-        pageUtilsDB = new PageUtilsDB(this, bookId);
+        bookServerId = bookUtilsDB.readBookFromDB(bookId).getIdServerBook();
+        isBookOffline = bookUtilsDB.readBookFromDB(bookId).isOfflineBook();
+        file = new File(utils.getPdfFileWithPath(bookId));
 
         if (savedInstanceState != null) {
             setPages(savedInstanceState.getInt(CURRENT_PAGE), savedInstanceState.getInt(COUNT_PAGE));
         }
         initToolbar();
         initNavigationView();
-        if (!preferenceUtils.readStatusOffline()) {
+        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline) {
             viewFromCloud();
         } else {
             viewFromDB();
@@ -104,7 +110,7 @@ public class BookReaderActivity extends AppCompatActivity {
     private void initToolbar() {
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(FileUtils.removeType(file.getName()));
+            getSupportActionBar().setTitle(bookUtilsDB.readBookFromDB(bookId).getBookName());
             getSupportActionBar().setElevation(10);
         }
     }
@@ -247,17 +253,14 @@ public class BookReaderActivity extends AppCompatActivity {
         workAPI.getLastPageFromCloud(new PageCallback() {
             @Override
             public void onSuccess(@NonNull Page.PageData page) {
-                if (!pageUtilsDB.isBookCreate()) {
-                    pageUtilsDB.createPageData(page.getLastPage(), page.getLastReadData());
-                    viewPdf(page.getLastPage() - 1);
+                bookUtilsDB.updatePage(bookId, page.getLastPage());
+                bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
+                if (bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() > bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookId)).getTime()) {
+                    bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
+                    bookUtilsDB.updatePage(bookId, page.getLastPage());
+                    viewFromDB();
                 } else {
-                    if (Utils.convertStringToDate(page.getLastReadData()).getTime() > Utils.convertStringToDate(pageUtilsDB.readPageDate().getLastRead()).getTime()) {
-                        pageUtilsDB.updateLastReadDate(page.getLastReadData());
-                        pageUtilsDB.updatePage(page.getLastPage());
-                        viewFromDB();
-                    } else {
-                        viewFromDB();
-                    }
+                    viewFromDB();
                 }
             }
 
@@ -265,13 +268,11 @@ public class BookReaderActivity extends AppCompatActivity {
             public void onError(@NonNull Throwable t) {
 
             }
-        }, bookId);
+        }, bookServerId);
     }
 
     private void viewFromDB() {
-        if (!pageUtilsDB.isBookCreate())
-            pageUtilsDB.createPageData(0, Utils.getCurrentTime());
-        viewPdf(pageUtilsDB.readPageDate().getBookPage() - 1);
+        viewPdf(bookUtilsDB.readLastPage(bookId) - 1);
     }
 
     @Override
@@ -281,9 +282,9 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void saveCurrentPage() {
-        pageUtilsDB.updatePage(getCurrentPage());
-        pageUtilsDB.updateLastReadDate(Utils.getCurrentTime());
-        if (!preferenceUtils.readStatusOffline())
+        bookUtilsDB.updatePage(bookId, getCurrentPage());
+        bookUtilsDB.updateLastReadDate(bookId, bookUtilsDB.getCurrentTime());
+        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline)
             workAPI.setLastPage(new StatusCallback() {
                 @Override
                 public void onSuccess(@NonNull int status) {
@@ -294,7 +295,7 @@ public class BookReaderActivity extends AppCompatActivity {
                 public void onError(@NonNull Throwable t) {
 
                 }
-            }, bookId, getCurrentPage());
+            }, bookServerId, getCurrentPage());
     }
 
     private int getCurrentPage() {
@@ -338,14 +339,22 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void setBookInformation() {
-        ImageView photo = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_book_photo);
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + bookPhoto;
-        Glide.with(getApplicationContext()).load(currentUrl).into(photo);
+        if (isBookOffline)
+            viewPhoto(utils.getPngFileWithPath(bookId));
+        else
+            viewPhoto(currentUrl);
+
         TextView name = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_book_name);
         name.setText(FileUtils.removeType(file.getName()));
         TextView author = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_author_name);
         author.setText(bookAuthor);
+    }
+
+    private void viewPhoto(String path) {
+        ImageView photo = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_book_photo);
+        Glide.with(getApplicationContext()).load(path).into(photo);
     }
 
     private void setPages(int current, int all) {

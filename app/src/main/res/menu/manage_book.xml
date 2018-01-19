@@ -11,6 +11,12 @@
             android:id="@+id/item_remove_device"
             android:title="@string/remove_book_from_device"
             app:showAsAction="never" />
+        <item
+            android:id="@+id/item_upload_book_to_server"
+            android:title="@string/upload_book_to_server_menu"
+            android:visible="false"
+            app:showAsAction="never" />
+
     </group>
 
 

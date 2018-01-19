@@ -1,4 +1,4 @@
-package com.ua.plamber_android.fragments;
+package com.ua.plamber_android.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.fragments.DetailBookFragment;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.Utils;
 
@@ -45,6 +46,7 @@ public class DownloadDialogFragmant extends DialogFragment {
     TextView percentDownload;
 
     Book.BookData bookData;
+    private String bookId;
     private Utils utils;
 
     @Override
@@ -53,6 +55,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         bookData = new Gson().fromJson(getArguments().getString(DOWNLOADBOOK), Book.BookData.class);
         apiUtils = new APIUtils(getActivity());
         utils = new Utils(getActivity());
+        bookId = Utils.generateIdBook();
         setRetainInstance(true);
     }
 
@@ -70,7 +73,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         View v = inflate.inflate(R.layout.progress_fragment_dialog, null);
         ButterKnife.bind(this, v);
 
-        final File file = new File(utils.getFullFileName(bookData.getBookName()));
+        final File file = new File(utils.getPdfFileWithPath(bookId));
         if (asyncDownload == null || asyncDownload.isCancelled())
         downloadBook(file);
 
@@ -144,7 +147,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         protected void onPostExecute(Boolean status) {
             dismiss();
             if (status) {
-                getDetailBookFragment().writeBookToDB();
+                getDetailBookFragment().writeBookToDB(bookId);
                 getDetailBookFragment().startReadBook();
                 //Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_complete_message));
             } else {

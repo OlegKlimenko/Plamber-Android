@@ -55,7 +55,7 @@ public class FilePickActivity extends AppCompatActivity {
         mFiles = new ArrayList<>();
         initToolbar();
 
-        currentFolder = utils.getRootDirectory();
+        currentFolder = utils.getUsersDirectory();
         mFiles = searchFileInDirectory(currentFolder.getPath());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -104,7 +104,7 @@ public class FilePickActivity extends AppCompatActivity {
     }
 
     private void backDirectory() {
-        if (currentFolder.equals(utils.getRootDirectory())) {
+        if (currentFolder.equals(utils.getUsersDirectory())) {
             finish();
         } else {
             String path = currentFolder.getParent();

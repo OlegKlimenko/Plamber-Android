@@ -90,28 +90,38 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void loginButton() {
-        if (apiUtils.isOnline(mParentLayout)) {
+        if (checkPermission()) {
             Validate valid = new Validate(getApplicationContext());
-            if (valid.userNameValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
+            if (apiUtils.isOnline(mParentLayout) && valid.userNameValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
                 userLoginInSystem();
             }
-        }
+        } else
+            Utils.messageSnack(mParentLayout, getString(R.string.not_have_write_permission));
     }
 
     @OnClick(R.id.btn_login_signup)
     public void signUpButton() {
-        if (apiUtils.isOnline(mParentLayout)) {
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        }
+        if (checkPermission()) {
+            if (apiUtils.isOnline(mParentLayout) && checkPermission()) {
+                Intent intent = new Intent(this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        } else
+            Utils.messageSnack(mParentLayout, getString(R.string.not_have_write_permission));
+
     }
 
     @OnClick(R.id.tv_restore_account)
     public void restoreAccountButton() {
-        if (apiUtils.isOnline(mParentLayout)) {
-            Intent intent = RestoreAccountActivity.startRestoreActivity(getApplicationContext());
-            startActivity(intent);
-        }
+        if (checkPermission()) {
+            if (apiUtils.isOnline(mParentLayout)) {
+                Intent intent = RestoreAccountActivity.startRestoreActivity(getApplicationContext());
+                startActivity(intent);
+            }
+        } else
+            Utils.messageSnack(mParentLayout, getString(R.string.not_have_write_permission));
+
+
     }
 
     public static Intent startLoginActivity(Context context) {
@@ -165,18 +175,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void runQuestionPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_WRITE_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.not_have_write_permission, Toast.LENGTH_SHORT).show();
-                }
-        }
     }
 }
 

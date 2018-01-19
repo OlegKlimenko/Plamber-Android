@@ -112,8 +112,11 @@ public class Book {
     }
 
     public static class BookData {
+        @Expose
+        private String idBook;
+
         @SerializedName("id")
-        private long idBook;
+        private long idServerBook;
 
         @SerializedName("book_name")
         private String bookName;
@@ -147,6 +150,9 @@ public class Book {
 
         @SerializedName("url")
         private String bookUrl;
+
+        @Expose
+        private boolean isOfflineBook;
 
         public String getBookName() {
             return bookName;
@@ -184,24 +190,20 @@ public class Book {
             return uploadDate;
         }
 
-        public boolean isPrivatBeook() {
-            return isPrivatBook;
-        }
-
         public String getBookUrl() {
             return bookUrl;
         }
 
-        public long getIdBook() {
-            return idBook;
+        public long getIdServerBook() {
+            return idServerBook;
         }
 
         public boolean isPrivatBook() {
             return isPrivatBook;
         }
 
-        public void setIdBook(long idBook) {
-            this.idBook = idBook;
+        public void setIdServerBook(long idServerBook) {
+            this.idServerBook = idServerBook;
         }
 
         public void setBookName(String bookName) {
@@ -248,6 +250,22 @@ public class Book {
             this.bookUrl = bookUrl;
         }
 
+        public String getIdBook() {
+            return idBook;
+        }
+
+        public void setIdBook(String idBook) {
+            this.idBook = idBook;
+        }
+
+        public boolean isOfflineBook() {
+            return isOfflineBook;
+        }
+
+        public void setOfflineBook(boolean offlineBook) {
+            isOfflineBook = offlineBook;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -255,8 +273,11 @@ public class Book {
 
             BookData bookData = (BookData) o;
 
-            if (idBook != bookData.idBook) return false;
+            if (idServerBook != bookData.idServerBook) return false;
             if (isPrivatBook != bookData.isPrivatBook) return false;
+            if (isOfflineBook != bookData.isOfflineBook) return false;
+            if (idBook != null ? !idBook.equals(bookData.idBook) : bookData.idBook != null)
+                return false;
             if (bookName != null ? !bookName.equals(bookData.bookName) : bookData.bookName != null)
                 return false;
             if (idAuthor != null ? !idAuthor.equals(bookData.idAuthor) : bookData.idAuthor != null)
@@ -280,7 +301,8 @@ public class Book {
 
         @Override
         public int hashCode() {
-            int result = (int) (idBook ^ (idBook >>> 32));
+            int result = idBook != null ? idBook.hashCode() : 0;
+            result = 31 * result + (int) (idServerBook ^ (idServerBook >>> 32));
             result = 31 * result + (bookName != null ? bookName.hashCode() : 0);
             result = 31 * result + (idAuthor != null ? idAuthor.hashCode() : 0);
             result = 31 * result + (idCategory != null ? idCategory.hashCode() : 0);
@@ -292,6 +314,7 @@ public class Book {
             result = 31 * result + (uploadDate != null ? uploadDate.hashCode() : 0);
             result = 31 * result + (isPrivatBook ? 1 : 0);
             result = 31 * result + (bookUrl != null ? bookUrl.hashCode() : 0);
+            result = 31 * result + (isOfflineBook ? 1 : 0);
             return result;
         }
     }

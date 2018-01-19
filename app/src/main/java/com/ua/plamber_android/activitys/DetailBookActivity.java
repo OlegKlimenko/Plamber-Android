@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.DetailBookFragment;
 import com.ua.plamber_android.fragments.DetailBookFragmentOffline;
 import com.ua.plamber_android.utils.PreferenceUtils;
@@ -22,11 +22,13 @@ public class DetailBookActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    public static final String BOOK_SERVER_ID = "BOOK_SERVER_ID";
     public static final String BOOK_ID = "BOOK_ID";
     public static final String BOOK_PHOTO = "BOOK_PHOTO";
     public static final String BOOK_AUTHOR = "BOOK_AUTHOR";
     public static final String BOOK_NAME = "BOOK_NAME";
     public static final String PDF_PATH = "PDF_PATH";
+    public static final String IS_OFFLINE_BOOK = "IS_OFFLINE_BOOK";
     PreferenceUtils preferenceUtils;
 
     @Override
@@ -53,7 +55,7 @@ public class DetailBookActivity extends AppCompatActivity {
     }
 
     private Fragment createFragment() {
-        if (preferenceUtils.readStatusOffline()) {
+        if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) || getIntent().getBooleanExtra(IS_OFFLINE_BOOK, false)) {
             return new DetailBookFragmentOffline();
         } else {
             return new DetailBookFragment();
@@ -62,13 +64,14 @@ public class DetailBookActivity extends AppCompatActivity {
 
     private Bundle setBundleId() {
         Bundle args = new Bundle();
-        long id = getIntent().getLongExtra(BOOK_ID, 0);
-        args.putLong(BOOK_ID, id);
+        long idServer = getIntent().getLongExtra(BOOK_SERVER_ID, 0);
+        String id = getIntent().getStringExtra(BOOK_ID);
+        args.putLong(BOOK_SERVER_ID, idServer);
+        args.putString(BOOK_ID, id);
         return args;
     }
 
     public static Intent startDetailActivity(Context context) {
-        Intent intent = new Intent(context, DetailBookActivity.class);
-        return intent;
+        return new Intent(context, DetailBookActivity.class);
     }
 }

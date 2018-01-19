@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,9 @@ import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,7 +101,7 @@ public class LocalFileFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String... strings) {
-            getAllFilesInDevise(utils.getRootDirectory(), strings);
+            getAllFilesInDevise(utils.getUsersDirectory(), strings);
             return null;
         }
 
@@ -143,6 +144,7 @@ public class LocalFileFragment extends Fragment {
             }
         };
         if (getActivity() != null) {
+            deleteDuplicate();
             adapter = new RecyclerLocalBookAdapter(listFile, listener);
             mRecyclerView.setAdapter(adapter);
         }
@@ -153,6 +155,12 @@ public class LocalFileFragment extends Fragment {
 
     }
 
+    private void deleteDuplicate() {
+        Set<File> set = new HashSet<>();
+        set.addAll(listFile);
+        listFile.clear();
+        listFile.addAll(set);
+    }
 
     public void visible(View v, boolean status) {
         if (status) {

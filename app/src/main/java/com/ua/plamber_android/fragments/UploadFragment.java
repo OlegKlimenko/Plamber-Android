@@ -33,13 +33,6 @@ public class UploadFragment extends BaseViewBookFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (!preferenceUtils.readStatusOffline())
-        viewUserBook();
-    }
-
-    @Override
     public void viewMessageListEmpty(String message) {
         super.viewMessageListEmpty(getString(R.string.no_upload_book_in_library));
     }

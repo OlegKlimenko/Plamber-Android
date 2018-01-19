@@ -170,5 +170,8 @@
     <string name="synchronize_complete">Данные синхронизированы</string>
     <string name="book_remove_from_device">Книга удалена с устройства</string>
     <string name="this_book_was_saved_on_your_device">Данная книга сохранена на ваше устройство</string>
+    <string name="message_upload_offline">Вы загружаете книгу в оффлайн режиме, она не будет доступна на других устройствах. После подключения к сети вы сможете загрузить ее на сервер</string>
+    <string name="current_book_was_uplopad_offline">Это книга была загружена в оффлайн режиме. Для того что бы загрузить ее на сервер нажмите это сообщение или выберите соответствующий пункт меню</string>
+    <string name="upload_book_to_server_menu">Загрузить книгу на сервер</string>
 
 </resources>

@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -30,9 +29,8 @@ import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
-import com.ua.plamber_android.database.model.PageDB;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
-import com.ua.plamber_android.database.utils.PageUtilsDB;
+import com.ua.plamber_android.fragments.dialogs.DownloadDialogFragmant;
 import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
@@ -111,8 +109,6 @@ public class DetailBookFragment extends Fragment {
     private Utils utils;
     private WorkAPI workAPI;
     private RecyclerCommentAdapter commentAdapter;
-    private PageUtilsDB pageUtilsDB;
-    private File file;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,8 +143,7 @@ public class DetailBookFragment extends Fragment {
             @Override
             public void onSuccess(@NonNull Book.BookDetailRespond bookDetail) {
                 bookDataDetail = bookDetail.getData();
-                pageUtilsDB = new PageUtilsDB(getActivity(), bookDetail.getData().getBookData().getIdBook());
-                file = new File(utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
+                bookUtilsDB = new BookUtilsDB(getActivity());
                 Book.BookDetailData bookDataDetail = bookDetail.getData();
                 Collections.reverse(bookDataDetail.getCommentData());
                 viewProgress(false);
@@ -162,7 +157,7 @@ public class DetailBookFragment extends Fragment {
             public void onError(@NonNull Throwable t) {
                 viewProgress(false);
             }
-        }, getArguments().getLong(DetailBookActivity.BOOK_ID));
+        }, getArguments().getLong(DetailBookActivity.BOOK_SERVER_ID));
     }
 
     private void setDownloadIndicator(boolean view) {
@@ -178,9 +173,14 @@ public class DetailBookFragment extends Fragment {
         Utils.messageSnack(mParentLayout, getString(R.string.this_book_was_saved_on_your_device));
     }
 
+    private File getBookFile() {
+        return new File(utils.getPdfFileWithPath(getCurrentBookKey()));
+    }
+
     private void initDetailBook(Book.BookData book) {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
+        if(getActivity() != null)
         Glide.with(getActivity()).load(currentUrl).into(mImageBook);
 
         mBookName.setText(book.getBookName());
@@ -220,7 +220,7 @@ public class DetailBookFragment extends Fragment {
     public void shareBook() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdBook());
+        intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdServerBook());
         startActivity(intent);
     }
 
@@ -234,12 +234,13 @@ public class DetailBookFragment extends Fragment {
         AddCommentFragment commentFragment = new AddCommentFragment();
         commentFragment.setArguments(bundleBookId(AddCommentFragment.BOOK_ID_COMMENT));
         commentFragment.setCancelable(false);
+        if (getFragmentManager() != null)
         commentFragment.show(getFragmentManager(), AddCommentFragment.TAG);
     }
 
     private Bundle bundleBookId(String id) {
         Bundle args = new Bundle();
-        args.putLong(id, bookDataDetail.getBookData().getIdBook());
+        args.putLong(id, bookDataDetail.getBookData().getIdServerBook());
         return args;
     }
 
@@ -248,6 +249,7 @@ public class DetailBookFragment extends Fragment {
         AddRatedFragment ratedFragment = new AddRatedFragment();
         ratedFragment.setArguments(bundleBookId(AddRatedFragment.BOOK_ID_RATED));
         ratedFragment.setCancelable(false);
+        if (getFragmentManager() != null)
         ratedFragment.show(getFragmentManager(), AddRatedFragment.TAG);
     }
 
@@ -256,6 +258,7 @@ public class DetailBookFragment extends Fragment {
         args.putString(AllCommentsFragment.BOOK_COMMENTS, new Gson().toJson(bookDataDetail.getCommentData()));
         AllCommentsFragment dialogComments = new AllCommentsFragment();
         dialogComments.setArguments(args);
+        if (getFragmentManager() != null)
         dialogComments.show(getFragmentManager(), AllCommentsFragment.TAG);
     }
 
@@ -263,9 +266,9 @@ public class DetailBookFragment extends Fragment {
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
         if (mDetailButton.getTag() == "Added") {
-            addBookToLibrary(bookDataDetail.getBookData().getIdBook());
+            addBookToLibrary(bookDataDetail.getBookData().getIdServerBook());
         } else if (mDetailButton.getTag() == "Read") {
-            if (file.exists())
+            if (getBookFile().exists())
                 startReadBook();
             else
                 runDownloadDialog();
@@ -274,15 +277,14 @@ public class DetailBookFragment extends Fragment {
 
     public void startReadBook() {
         Intent intent = BookReaderActivity.startReaderActivity(getActivity());
-        intent.putExtra(DetailBookActivity.PDF_PATH, utils.getFullFileName(bookDataDetail.getBookData().getBookName()));
-        intent.putExtra(DetailBookActivity.BOOK_ID, bookDataDetail.getBookData().getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_ID, bookUtilsDB.getBookPrimaryKey(bookDataDetail.getBookData().getIdServerBook()));
         intent.putExtra(DetailBookActivity.BOOK_PHOTO, bookDataDetail.getBookData().getPhoto());
         intent.putExtra(DetailBookActivity.BOOK_AUTHOR, bookDataDetail.getBookData().getIdAuthor());
         startActivity(intent);
     }
 
     public void checkBook() {
-        setDownloadIndicator(file.exists());
+        setDownloadIndicator(getBookFile().exists());
         if (bookDataDetail.isAddedBook()) {
             mDetailButton.setText(R.string.read_book_detail_btn);
             mDetailButton.setTag("Read");
@@ -293,12 +295,15 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void runDownloadDialog() {
-        Bundle args = new Bundle();
-        args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
-        DownloadDialogFragmant dialogFragment = new DownloadDialogFragmant();
-        dialogFragment.setArguments(args);
-        dialogFragment.setCancelable(false);
-        dialogFragment.show(getFragmentManager(), "DownloadDialog");
+        if (apiUtils.isOnline(mParentLayout)) {
+            Bundle args = new Bundle();
+            args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
+            DownloadDialogFragmant dialogFragment = new DownloadDialogFragmant();
+            dialogFragment.setArguments(args);
+            dialogFragment.setCancelable(false);
+            if (getFragmentManager() != null)
+            dialogFragment.show(getFragmentManager(), "DownloadDialog");
+        }
     }
 
     private void addBookToLibrary(long id) {
@@ -328,8 +333,8 @@ public class DetailBookFragment extends Fragment {
                 if (result) {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_book_removed));
                     bookDataDetail.setAddedBook(false);
-                    pageUtilsDB.removePageData();
-                    removeBookFromDevice(bookDataDetail.getBookData().getBookName(), false);
+                    removeBookFromDB();
+                    removeBookFromDevice(getCurrentBookKey(), false);
                 } else {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_remove_error));
                 }
@@ -342,8 +347,8 @@ public class DetailBookFragment extends Fragment {
         }, id, URL_REMOVE_BOOK);
     }
 
-    private void removeBookFromDevice(String bookName, boolean viewMessage) {
-        File file = new File(utils.getFullFileName(bookName));
+    private void removeBookFromDevice(String bookId, boolean viewMessage) {
+        File file = new File(utils.getPdfFileWithPath(bookId));
         file.delete();
         checkBook();
         if (viewMessage)
@@ -369,12 +374,12 @@ public class DetailBookFragment extends Fragment {
         bookDataDetail.getCommentData().add(comment);
     }
 
-    public void writeBookToDB() {
-        bookUtilsDB.writeBookToDataBase(bookDataDetail.getBookData());
+    public void writeBookToDB(String bookId) {
+        bookUtilsDB.writeBookToDataBase(bookId, bookDataDetail.getBookData());
     }
 
     public void removeBookFromDB() {
-        bookUtilsDB.removeBookFromDatabase(bookDataDetail.getBookData().getIdBook());
+        bookUtilsDB.removeBookFromDatabase(bookUtilsDB.getBookPrimaryKey(bookDataDetail.getBookData().getIdServerBook()));
     }
 
     @Override
@@ -388,17 +393,22 @@ public class DetailBookFragment extends Fragment {
         initCommentsPreview();
     }
 
+    private String getCurrentBookKey() {
+        return bookUtilsDB.getBookPrimaryKey(bookDataDetail.getBookData().getIdServerBook());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                if (getActivity() != null)
                 getActivity().onBackPressed();
                 return false;
             case R.id.item_remove_library:
-                removeBookFromLibrary(bookDataDetail.getBookData().getIdBook());
+                removeBookFromLibrary(bookDataDetail.getBookData().getIdServerBook());
                 break;
             case R.id.item_remove_device:
-                removeBookFromDevice(bookDataDetail.getBookData().getBookName(), true);
+                removeBookFromDevice(getCurrentBookKey(), true);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -409,7 +419,7 @@ public class DetailBookFragment extends Fragment {
         if (mDetailButton.getTag() == "Added") {
             menu.findItem(R.id.item_remove_library).setEnabled(false);
             menu.findItem(R.id.item_remove_device).setEnabled(false);
-        } else if (mDetailButton.getTag() == "Read" && file.exists()) {
+        } else if (mDetailButton.getTag() == "Read" && getBookFile().exists()) {
             menu.findItem(R.id.item_remove_device).setEnabled(true);
             menu.findItem(R.id.item_remove_library).setEnabled(true);
         } else {

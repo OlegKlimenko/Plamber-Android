@@ -4,20 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.fragments.SettingFragmant;
-import com.ua.plamber_android.fragments.UploadAvatarDialog;
-import com.ua.plamber_android.utils.Utils;
+import com.ua.plamber_android.fragments.dialogs.UploadAvatarDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

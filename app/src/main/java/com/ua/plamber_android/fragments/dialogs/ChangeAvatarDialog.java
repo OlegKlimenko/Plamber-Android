@@ -1,4 +1,4 @@
-package com.ua.plamber_android.fragments;
+package com.ua.plamber_android.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import com.ua.plamber_android.activitys.ImagePickActivity;
 import com.ua.plamber_android.activitys.SettingActivity;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +38,8 @@ public class ChangeAvatarDialog extends DialogFragment {
     TextView mCurrentName;
     @BindView(R.id.current_user_email)
     TextView mCurrentEmail;
+    @BindView(R.id.change_avatar_dialog_parent)
+    LinearLayout mParentLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,14 +69,25 @@ public class ChangeAvatarDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();
                     }
-                }).setPositiveButton(R.string.change_avatar_btn, new DialogInterface.OnClickListener() {
+                }).setPositiveButton(R.string.change_avatar_btn, null);
+        return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = ImagePickActivity.startImagePickActivity(getActivity());
-                getActivity().startActivityForResult(intent, SettingActivity.REQUEST_SELECT_IMAGE);
+            public void onClick(View view) {
+                if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
+                    Intent intent = ImagePickActivity.startImagePickActivity(getActivity());
+                    getActivity().startActivityForResult(intent, SettingActivity.REQUEST_SELECT_IMAGE);
+                } else {
+                    Utils.messageSnack(mParentLayout, getString(R.string.upload_not_available_in_offline_mode));
+                }
             }
         });
-        return builder.create();
     }
 
     private void loadData(View v) {

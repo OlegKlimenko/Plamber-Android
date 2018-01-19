@@ -3,10 +3,13 @@ package com.ua.plamber_android.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -17,20 +20,25 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.shockwave.pdfium.PdfDocument;
+import com.shockwave.pdfium.PdfiumCore;
 import com.ua.plamber_android.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class Utils {
 
     private Context context;
-    private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    private static final String TAG = "Utils";
 
     public Utils(Context context) {
         this.context = context;
@@ -41,27 +49,69 @@ public class Utils {
                 .apply(new RequestOptions().transform(new CenterCrop())).into(background);
     }
 
-    public String getPlamberPath() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            String path = getRootDirectory() + File.separator + "Plamber" + File.separator;
-            File plamberDirectory = new File(path);
-            if (!plamberDirectory.exists()) {
-                plamberDirectory.mkdir();
-            }
-            return path;
-        } else {
-            return context.getFilesDir().getPath();
+    public String getStoragePdfPath() {
+            File file = new File(context.getFilesDir() + File.separator + "pdf");
+            if (!file.exists())
+                file.mkdir();
+        return file.getAbsolutePath() + File.separator;
+
+    }
+
+    public static String generateIdBook() {
+        return UUID.randomUUID().toString();
+    }
+
+    public String getStorageImagesPath() {
+        File file = new File(context.getFilesDir() + File.separator + "images");
+        if (!file.exists())
+            file.mkdir();
+        return file.getAbsolutePath() + File.separator;
+
+    }
+
+    public void deleteAllPdfFiles() {
+        File[] allFiles = new File(getStoragePdfPath()).listFiles();
+        for (File file : allFiles) {
+            file.delete();
         }
     }
 
-    public File getRootDirectory() {
+    public void deleteAllImageFiles() {
+        File[] allFiles = new File(getStorageImagesPath()).listFiles();
+        for (File file : allFiles) {
+            file.delete();
+        }
+    }
+
+    public File getUsersDirectory() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return Environment.getExternalStorageDirectory();
         } else {
-            return context.getFilesDir();
+            return null;
         }
+    }
+
+    public String getPdfFileWithPath(String bookId) {
+        return getStoragePdfPath() + getNameWithPDF(bookId);
+    }
+
+    public String getPngFileWithPath(String bookId) {
+        return getStorageImagesPath() + getNameWithPNG(bookId);
+    }
+
+    public void removeImage(String imageName) {
+        File file = new File(getPngFileWithPath(imageName));
+        if (file.exists())
+            file.delete();
+    }
+
+    public String getNameWithPDF(String bookId) {
+        return bookId + ".pdf";
+    }
+
+    public String getNameWithPNG(String bookId) {
+        return bookId + ".png";
     }
 
     public float getHeightDeviceDP() {
@@ -72,14 +122,6 @@ public class Utils {
     public float getWidthDeviceDP() {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return displayMetrics.widthPixels / displayMetrics.density;
-    }
-
-    public String getFullFileName(String bookName) {
-        return getPlamberPath() + bookName + ".pdf";
-    }
-
-    public String getNamePDF(String bookName) {
-        return bookName + ".pdf";
     }
 
     public static void messageSnack(View view, String mes) {
@@ -94,41 +136,48 @@ public class Utils {
     }
 
     public static String dateUpload(String date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        DateFormat plamberFormat = new SimpleDateFormat("dd.MM.yy", Locale.US);
-        Date newDate = null;
-        try {
-            newDate = format.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (date != null) {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            DateFormat plamberFormat = new SimpleDateFormat("dd.MM.yy", Locale.US);
+            Date newDate = null;
+            try {
+                newDate = format.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return plamberFormat.format(newDate);
+        } else {
+            return null;
         }
-        return plamberFormat.format(newDate);
-    }
-
-    public static String getCurrentTime() {
-        DateFormat format = new SimpleDateFormat(datePattern, Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return format.format(new Date());
-    }
-
-    public static Date convertStringToDate(String date) {
-        DateFormat format = new SimpleDateFormat(datePattern, Locale.US);
-        Date newDate = null;
-        try {
-            newDate = format.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
-    }
-
-    public static String convertDateToString(Date date) {
-        DateFormat format = new SimpleDateFormat(datePattern, Locale.US);
-        return format.format(date);
     }
 
     public static void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public byte[] getFirstPageAsByte(File file) {
+        PdfiumCore pdfiumCore = null;
+        PdfDocument pdfDocument = null;
+        try {
+            ParcelFileDescriptor fd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+            pdfiumCore = new PdfiumCore(context);
+            pdfDocument = pdfiumCore.newDocument(fd);
+        } catch (IOException e) {
+            Log.i(TAG, e.getLocalizedMessage());
+        }
+        pdfiumCore.openPage(pdfDocument, 0);
+
+        int width = pdfiumCore.getPageWidthPoint(pdfDocument, 0);
+        int height = pdfiumCore.getPageHeightPoint(pdfDocument, 0);
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height,
+                Bitmap.Config.RGB_565);
+        pdfiumCore.renderPageBitmap(pdfDocument, bitmap, 0, 0, 0,
+                width, height);
+        pdfiumCore.closeDocument(pdfDocument);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 }

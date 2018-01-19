@@ -88,7 +88,7 @@ public class SelectLanguageFragamnt extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra(UploadActivity.BOOK_LANGUAGE, languages.get(position));
+                returnIntent.putExtra(UploadFileFragment.BOOK_LANGUAGE, languages.get(position));
                 getActivity().setResult(Activity.RESULT_OK, returnIntent);
                 getActivity().finish();
             }
