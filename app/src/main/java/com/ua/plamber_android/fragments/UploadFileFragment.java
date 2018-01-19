@@ -140,6 +140,7 @@ public class UploadFileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (getActivity() != null)
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
@@ -191,13 +192,12 @@ public class UploadFileFragment extends Fragment {
 
     private boolean validateFields() {
         boolean isValid = false;
-        if (validate.bookValidate(mBookName, mTilBookName, R.string.valid_book_name) &
-                validate.bookValidate(mBookAuthor, mTilBookAuthor, R.string.valid_book_author) &
-                validate.bookValidate(mBookCategory, mTilBookCategory, R.string.valid_book_category) &
-                validate.bookValidate(mBookFile, mTilBookFile, R.string.valid_book_file) &
-                validate.bookValidate(mBookLanguage, mTilBookLanguage, R.string.valid_book_language) &
-                validate.bookValidate(mBookAbout, mTilBookAbout, R.string.valid_book_about)) {
-
+        if (validate.bookValidate(mBookName, mTilBookName, R.string.valid_book_name) &&
+                validate.bookValidate(mBookAuthor, mTilBookAuthor, R.string.valid_book_author) &&
+                validate.bookValidate(mBookCategory, mTilBookCategory, R.string.valid_book_category) &&
+                validate.bookValidate(mBookFile, mTilBookFile, R.string.valid_book_file) &&
+                validate.bookValidate(mBookLanguage, mTilBookLanguage, R.string.valid_book_language)
+                && validate.bookValidate(mBookAbout, mTilBookAbout, R.string.valid_book_about)) {
             isValid = true;
         }
         return isValid;
@@ -208,13 +208,28 @@ public class UploadFileFragment extends Fragment {
         startActivityForResult(FilePickActivity.startBookFilePickActivity(getActivity()), UploadActivity.REQUEST_SELECT_FILE);
     }
 
+    @OnClick(R.id.et_upload_book_file)
+    public void textSelectBookFile() {
+        startActivityForResult(FilePickActivity.startBookFilePickActivity(getActivity()), UploadActivity.REQUEST_SELECT_FILE);
+    }
+
     @OnClick(R.id.btn_upload_select_category)
     public void selectCategory() {
         startActivityForResult(SelectCategoryActivity.startCategoryUploadActivity(getActivity()), UploadActivity.REQUEST_SELECT_CATEGORY);
     }
 
+    @OnClick(R.id.et_upload_book_category)
+    public void textSelectCategory() {
+        startActivityForResult(SelectCategoryActivity.startCategoryUploadActivity(getActivity()), UploadActivity.REQUEST_SELECT_CATEGORY);
+    }
+
     @OnClick(R.id.btn_upload_select_language)
     public void selectBookLanguage() {
+        startActivityForResult(SelectLanguageActivity.startSelectLanguageActivity(getActivity()), UploadActivity.REQUEST_SELECT_LANGUAGE);
+    }
+
+    @OnClick(R.id.et_upload_book_language)
+    public void textBookLanguage() {
         startActivityForResult(SelectLanguageActivity.startSelectLanguageActivity(getActivity()), UploadActivity.REQUEST_SELECT_LANGUAGE);
     }
 
@@ -255,8 +270,8 @@ public class UploadFileFragment extends Fragment {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
-                        if (editable.toString().length() > 1 && !editable.toString().equals(currentAutoComplete)) {
+                        if (editable.toString().length() > 1 && !editable.toString().equals(currentAutoComplete) && getActivity() != null) {
+                            final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
                             currentAutoComplete = "";
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -319,9 +334,8 @@ public class UploadFileFragment extends Fragment {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
-
-                        if (editable.toString().length() > 1 && !editable.toString().equals(currentAutoComplete)) {
+                        if (editable.toString().length() > 1 && !editable.toString().equals(currentAutoComplete) && getActivity() != null) {
+                            final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
                             currentAutoComplete = "";
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override

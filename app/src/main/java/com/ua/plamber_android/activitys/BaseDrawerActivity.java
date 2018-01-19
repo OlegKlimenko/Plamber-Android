@@ -184,7 +184,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
 
     private void setProfileName(String name) {
-        TextView profileName = (TextView) mNavigationView.getHeaderView(1).findViewById(R.id.header_profile_name);
+        TextView profileName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.header_profile_name);
         profileName.setText(name);
     }
 

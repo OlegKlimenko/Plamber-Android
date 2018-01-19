@@ -7,12 +7,15 @@ import android.util.Log;
 
 import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
+import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
+import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.FileUtils;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UserBookFragment extends BaseViewBookFragment {
@@ -43,12 +46,18 @@ public class UserBookFragment extends BaseViewBookFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
-            viewBookOffline();
-        else
-            viewUserBook();
+    public void viewUserBook() {
+        getWorkAPI().getUserBook(new BooksCallback() {
+            @Override
+            public void onSuccess(@NonNull List<Book.BookData> books) {
+                initAdapter(addOfflineBook(books));
+            }
+
+            @Override
+            public void onError(@NonNull Throwable t) {
+                errorViewBook(t);
+            }
+        }, getBookAPI());
     }
 
     @Override

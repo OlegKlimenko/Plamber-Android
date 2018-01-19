@@ -75,6 +75,11 @@ public class UploadFileOfflineFragment extends Fragment {
         startActivityForResult(FilePickActivity.startBookFilePickActivity(getActivity()), UploadActivity.REQUEST_SELECT_FILE);
     }
 
+    @OnClick(R.id.et_upload_book_offline_file)
+    public void textSelectBookFile() {
+        startActivityForResult(FilePickActivity.startBookFilePickActivity(getActivity()), UploadActivity.REQUEST_SELECT_FILE);
+    }
+
     private boolean validateFields() {
         boolean isValid = false;
         if (validate.bookValidate(mUploadBookName, mTilUploadBoookName, R.string.valid_book_name)

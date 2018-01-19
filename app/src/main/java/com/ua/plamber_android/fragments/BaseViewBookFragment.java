@@ -122,14 +122,7 @@ public abstract class BaseViewBookFragment extends Fragment {
         workAPI.getUserBook(new BooksCallback() {
             @Override
             public void onSuccess(@NonNull List<Book.BookData> books) {
-                List<Book.BookData> offlineBooks = new ArrayList<>();
-                for (Book.BookData book : bookUtilsDB.getListBookFromDB()) {
-                    if (book.isOfflineBook())
-                        offlineBooks.add(book);
-                }
-                List<Book.BookData> newList = new ArrayList<>(books);
-                newList.addAll(offlineBooks);
-                initAdapter(newList);
+                initAdapter(books);
             }
 
             @Override
@@ -137,6 +130,17 @@ public abstract class BaseViewBookFragment extends Fragment {
                 errorViewBook(t);
             }
         }, getBookAPI());
+    }
+
+    public List<Book.BookData> addOfflineBook(List<Book.BookData> books) {
+        List<Book.BookData> offlineBooks = new ArrayList<>();
+        for (Book.BookData book : bookUtilsDB.getListBookFromDB()) {
+            if (book.isOfflineBook())
+                offlineBooks.add(book);
+        }
+        List<Book.BookData> newList = new ArrayList<>(books);
+        newList.addAll(offlineBooks);
+        return newList;
     }
 
     public void errorViewBook(Throwable t) {
