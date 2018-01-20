@@ -6,10 +6,14 @@ import java.util.List;
 
 public class Language {
     public static class LanguageRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
-        public LanguageRequest(String userToken) {
+        public LanguageRequest(String appKey, String userToken) {
+            this.appKey = appKey;
             this.userToken = userToken;
         }
     }

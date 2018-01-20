@@ -117,7 +117,7 @@ public class UploadBookDialog extends DialogFragment {
     private void uploadFileToServer(final File file, MultipartBody.Part photo) {
 
         MultipartBody.Part fileBody = prepareFilePart(file);
-        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
+        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(getString(R.string.app_key)), createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
 
         request.enqueue(new Callback<Upload.UploadBookRespond>() {
             @Override

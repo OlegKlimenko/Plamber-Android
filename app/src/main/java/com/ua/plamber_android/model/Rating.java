@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Rating {
     public static class RatingRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
         @SerializedName("book_id")
@@ -11,7 +14,8 @@ public class Rating {
         @SerializedName("rating")
         private int rating;
 
-        public RatingRequest(String userToken, long bookId, int rating) {
+        public RatingRequest(String appKey, String userToken, long bookId, int rating) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.bookId = bookId;
             this.rating = rating;

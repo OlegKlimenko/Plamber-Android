@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userLoginInSystem() {
         User.UserRequest userRequest =
-                new User.UserRequest(mUsername.getText().toString().trim(),
+                new User.UserRequest(getString(R.string.app_key), mUsername.getText().toString().trim(),
                         mPasswordLoginEdit.getText().toString().trim());
 
         visibleProgressBar(true);

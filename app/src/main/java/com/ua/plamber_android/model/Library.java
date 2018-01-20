@@ -7,10 +7,14 @@ import java.util.List;
 public class Library {
 
     public static class LibraryRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
-        public LibraryRequest(String userToken) {
+        public LibraryRequest(String appKey, String userToken) {
+            this.appKey = appKey;
             this.userToken = userToken;
         }
     }

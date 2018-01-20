@@ -84,7 +84,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private void changeCurrentPassword() {
         String oldPassword = mChangeOldPassword.getText().toString().trim();
         String newPassword = mChangeNewPassword.getText().toString().trim();
-        Password.PasswordRequest password = new Password.PasswordRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN), oldPassword, newPassword);
+        Password.PasswordRequest password = new Password.PasswordRequest(getString(R.string.app_key), preferenceUtils.readPreference(PreferenceUtils.TOKEN), oldPassword, newPassword);
         Call<Password.PasswordRespond> request = apiUtils.initializePlamberAPI().changePassword(password);
         request.enqueue(new Callback<Password.PasswordRespond>() {
             @Override

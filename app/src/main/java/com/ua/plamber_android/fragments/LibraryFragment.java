@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
+import com.ua.plamber_android.activitys.LibraryActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
@@ -78,10 +79,12 @@ public class LibraryFragment extends Fragment {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
+                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
                     viewCategoryOffline();
-                else
+                } else {
+                    BaseViewBookFragment.isShowError = false;
                     viewCategory();
+                }
             }
         });
         if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
@@ -118,6 +121,10 @@ public class LibraryFragment extends Fragment {
                 viewElement(mRecyclerView, false);
                 viewElement(mMessageAgain, true);
                 mSwipeRefresh.setRefreshing(false);
+                if (!BaseViewBookFragment.isShowError) {
+                    getLibraryActivity().runErrorDialog(getString(R.string.no_connection_error));
+                    BaseViewBookFragment.isShowError = true;
+                }
             }
         });
     }
@@ -160,5 +167,9 @@ public class LibraryFragment extends Fragment {
 
     public List<Library.LibraryData> getCategoriesList() {
         return categoriesList;
+    }
+
+    public LibraryActivity getLibraryActivity() {
+        return ((LibraryActivity) getActivity());
     }
 }

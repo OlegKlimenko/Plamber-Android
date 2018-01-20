@@ -74,7 +74,7 @@ public class UploadAvatarDialog extends DialogFragment {
         RequestBody requestToken = createRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
         RequestBody requestAvatar = RequestBody.create(MultipartBody.FORM, file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestAvatar);
-        Call<Upload.UploadAvatarRespond> request = apiUtils.initializePlamberAPI().uploadAvatar(requestToken, body);
+        Call<Upload.UploadAvatarRespond> request = apiUtils.initializePlamberAPI().uploadAvatar(createRequest(getString(R.string.app_key)), requestToken, body);
         request.enqueue(new Callback<Upload.UploadAvatarRespond>() {
             @Override
             public void onResponse(Call<Upload.UploadAvatarRespond> call, Response<Upload.UploadAvatarRespond> response) {

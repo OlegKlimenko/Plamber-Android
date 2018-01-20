@@ -127,7 +127,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void checkUserName(final AccountCallback callback) {
         if (callback != null) {
             Account.LoginRequest userLogin =
-                    new Account.LoginRequest(mUserNameSingUpEdit.getText().toString().trim());
+                    new Account.LoginRequest(getString(R.string.app_key), mUserNameSingUpEdit.getText().toString().trim());
             Call<Account.LoginRespond> loginRequest = apiUtils.initializePlamberAPI().checkLogin(userLogin);
             loginRequest.enqueue(new Callback<Account.LoginRespond>() {
                 @Override
@@ -150,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void checkUserEmail(final AccountCallback callback) {
         if (callback != null) {
             Account.EmailRequest userEmail =
-                    new Account.EmailRequest(mEmailSingUpEdit.getText().toString().trim());
+                    new Account.EmailRequest(getString(R.string.app_key), mEmailSingUpEdit.getText().toString().trim());
             Call<Account.EmailRespond> emailRequest = apiUtils.initializePlamberAPI().checkEmail(userEmail);
             emailRequest.enqueue(new Callback<Account.EmailRespond>() {
                 @Override
@@ -175,7 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
         String email = mEmailSingUpEdit.getText().toString().trim();
         String password = mPasswordAgainSingUpEdit.getText().toString().trim();
         Account.RegisterRequest registerUser =
-                new Account.RegisterRequest(name, email, password);
+                new Account.RegisterRequest(getString(R.string.app_key), name, email, password);
         Call<User.UserRespond> request = apiUtils.initializePlamberAPI().registerUser(registerUser);
         request.enqueue(new Callback<User.UserRespond>() {
             @Override

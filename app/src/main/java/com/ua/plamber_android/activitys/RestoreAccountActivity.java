@@ -73,7 +73,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
 
     private void restoreAccount() {
         String email = mRestoreAccountEdit.getText().toString().trim();
-        Account.EmailRequest emailRequest = new Account.EmailRequest(email);
+        Account.EmailRequest emailRequest = new Account.EmailRequest(getString(R.string.app_key), email);
         visibleProgressBar(true);
         Call<Account.EmailRespond> request = apiUtils.initializePlamberAPI().restoreAccount(emailRequest);
         request.enqueue(new Callback<Account.EmailRespond>() {

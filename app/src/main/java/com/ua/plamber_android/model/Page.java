@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Page {
     public static class SetPageRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
@@ -13,7 +16,8 @@ public class Page {
         @SerializedName("current_page")
         private int currentPage;
 
-        public SetPageRequest(String userToken, long book_id, int currentPage) {
+        public SetPageRequest(String appKey, String userToken, long book_id, int currentPage) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.book_id = book_id;
             this.currentPage = currentPage;
@@ -21,13 +25,17 @@ public class Page {
     }
 
     public static class GetPageRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
         @SerializedName("book_id")
         private long book_id;
 
-        public GetPageRequest(String userToken, long book_id) {
+        public GetPageRequest(String appKey, String userToken, long book_id) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.book_id = book_id;
         }

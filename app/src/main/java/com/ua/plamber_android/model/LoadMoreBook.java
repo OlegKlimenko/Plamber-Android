@@ -7,6 +7,8 @@ import java.util.List;
 public class LoadMoreBook {
 
     public static class LoadMoreRequestCategory {
+        @SerializedName("app_key")
+        private String appKey;
 
         @SerializedName("user_token")
         private String userToken;
@@ -17,7 +19,8 @@ public class LoadMoreBook {
         @SerializedName("category_id")
         private long categoryID;
 
-        public LoadMoreRequestCategory(String userToken, int pageNumber, long categoryID) {
+        public LoadMoreRequestCategory(String appKey, String userToken, int pageNumber, long categoryID) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.pageNumber = pageNumber;
             this.categoryID = categoryID;
@@ -25,6 +28,8 @@ public class LoadMoreBook {
     }
 
     public static class LoadMoreRequestSearch {
+        @SerializedName("app_key")
+        private String appKey;
 
         @SerializedName("user_token")
         private String userToken;
@@ -35,7 +40,8 @@ public class LoadMoreBook {
         @SerializedName("page")
         private int page;
 
-        public LoadMoreRequestSearch (String userToken, String term, int page) {
+        public LoadMoreRequestSearch(String appKey, String userToken, String term, int page) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.term = term;
             this.page = page;

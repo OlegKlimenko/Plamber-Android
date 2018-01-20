@@ -5,23 +5,31 @@ import com.google.gson.annotations.SerializedName;
 public class User {
 
     public static class UserRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("username")
         private String username;
 
         @SerializedName("password")
         private String password;
 
-        public UserRequest(String username, String password) {
+        public UserRequest(String appKey, String username, String password) {
+            this.appKey = appKey;
             this.username = username;
             this.password = password;
         }
     }
 
     public static class ProfileRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String token;
 
-        public ProfileRequest(String token) {
+        public ProfileRequest(String appKey, String token) {
+            this.appKey = appKey;
             this.token = token;
         }
     }

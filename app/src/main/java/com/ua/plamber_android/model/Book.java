@@ -8,10 +8,14 @@ import java.util.List;
 public class Book {
 
     public static class BookRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
-        public BookRequest(String userToken) {
+        public BookRequest(String appKey, String userToken) {
+            this.appKey = appKey;
             this.userToken = userToken;
         }
     }
@@ -35,13 +39,17 @@ public class Book {
     }
 
     public static class BookDetailRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
         @SerializedName("book_id")
         private long idBook;
 
-        public BookDetailRequest(String userToken, long idBook) {
+        public BookDetailRequest(String appKey, String userToken, long idBook) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.idBook = idBook;
         }

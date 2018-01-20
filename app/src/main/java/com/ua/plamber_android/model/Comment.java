@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Comment {
     public static class CommentRequest {
+        @SerializedName("app_key")
+        private String appKey;
+
         @SerializedName("user_token")
         private String userToken;
 
@@ -13,7 +16,8 @@ public class Comment {
         @SerializedName("text")
         private String commentText;
 
-        public CommentRequest(String userToken, long bookId, String commentText) {
+        public CommentRequest(String appKey, String userToken, long bookId, String commentText) {
+            this.appKey = appKey;
             this.userToken = userToken;
             this.bookId = bookId;
             this.commentText = commentText;

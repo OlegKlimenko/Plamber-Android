@@ -29,14 +29,14 @@ public class Upload {
         @SerializedName("private_book")
         boolean isPrivateBook;
 
-        public UploadBookRequest(String userToken, String bookName, String authorName, String categoryName, String bookPath, String aboutBook, String languageBook, boolean isPrivateBook) {
+        public UploadBookRequest(String userToken, String bookName, String authorName, String categoryName, String bookPath, String bookAbout, String bookLanguage, boolean isPrivateBook) {
             this.userToken = userToken;
             this.bookName = bookName;
             this.authorName = authorName;
             this.categoryName = categoryName;
             this.bookPath = bookPath;
-            this.bookAbout = aboutBook;
-            this.bookLanguage = languageBook;
+            this.bookAbout = bookAbout;
+            this.bookLanguage = bookLanguage;
             this.isPrivateBook = isPrivateBook;
         }
 
