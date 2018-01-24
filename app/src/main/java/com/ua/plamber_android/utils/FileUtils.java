@@ -49,7 +49,7 @@ public class FileUtils {
         int i = file.getName().lastIndexOf(".");
         if (i > 0)
             type = file.getName().substring(i + 1);
-        return type;
+        return type.toLowerCase();
     }
 
     public static String removeType(String fileName) {
@@ -58,12 +58,5 @@ public class FileUtils {
         if (i > 0)
             name = fileName.substring(0, i);
         return name;
-    }
-
-    public static class FileCompare implements Comparator<File> {
-        @Override
-        public int compare(File f1, File f2) {
-            return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());
-        }
     }
 }

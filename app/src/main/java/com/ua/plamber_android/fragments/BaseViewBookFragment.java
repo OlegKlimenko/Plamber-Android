@@ -68,6 +68,10 @@ public abstract class BaseViewBookFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setBooks();
+    }
+
+    public void setBooks() {
         if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
             viewBookOffline();
         else
@@ -175,8 +179,12 @@ public abstract class BaseViewBookFragment extends Fragment {
                 startActivity(intent);
             }
         };
-        mAdapter = new RecyclerBookAdapter(recyclerView, books, listener);
-        recyclerView.setAdapter(mAdapter);
+        if (recyclerView.getAdapter() == null) {
+            mAdapter = new RecyclerBookAdapter(recyclerView, books, listener);
+            recyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.updateList(books);
+        }
     }
 
     public void viewMessageListEmpty(String message) {
@@ -231,6 +239,10 @@ public abstract class BaseViewBookFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public PreferenceUtils getPreferenceUtils() {
+        return preferenceUtils;
     }
 
     public LibraryActivity getLibraryActivity() {

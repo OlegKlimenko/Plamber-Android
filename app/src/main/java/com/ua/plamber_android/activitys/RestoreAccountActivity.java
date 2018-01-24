@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Account;
@@ -38,6 +39,8 @@ public class RestoreAccountActivity extends AppCompatActivity {
     TextInputLayout mTilRestoreAccountEdit;
     @BindView(R.id.restore_account_parent)
     RelativeLayout mRestoreParentLayout;
+    @BindView(R.id.iv_restore_login)
+    ImageView mRestoreLogo;
 
     APIUtils apiUtils;
 
@@ -51,7 +54,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
         apiUtils = new APIUtils(getApplicationContext());
         Utils utils = new Utils(getApplicationContext());
         utils.initBackgroundImage(mBackgroundRestore);
-
+        Glide.with(getApplicationContext()).load(R.drawable.plamber_logo_mini).into(mRestoreLogo);
     }
 
     @OnClick(R.id.btn_restore_account)

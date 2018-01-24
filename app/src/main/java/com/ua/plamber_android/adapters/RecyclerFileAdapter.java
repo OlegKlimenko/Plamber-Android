@@ -100,6 +100,6 @@ public class RecyclerFileAdapter extends RecyclerView.Adapter<RecyclerFileAdapte
     }
 
     private void sort(List<File> list) {
-        Collections.sort(list, new FileUtils.FileCompare());
+        Collections.sort(list, (f1, f2) -> f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase()));
     }
 }

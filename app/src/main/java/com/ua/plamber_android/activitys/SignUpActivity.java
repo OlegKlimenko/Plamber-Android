@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.interfaces.callbacks.AccountCallback;
@@ -51,6 +52,8 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout mTilPasswordAgainSingUpEdit;
     @BindView(R.id.sing_up_parent_layout)
     RelativeLayout mParentLayout;
+    @BindView(R.id.iv_sigup_logo)
+    ImageView mSingUpLogo;
 
     private final static String TAG = "SignUpActivity";
     APIUtils apiUtils;
@@ -66,6 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
         preferenceUtils = new PreferenceUtils(getApplicationContext());
         Utils utils = new Utils(getApplicationContext());
         utils.initBackgroundImage(backgroundSing);
+        Glide.with(getApplicationContext()).load(R.drawable.plamber_logo_mini).into(mSingUpLogo);
     }
 
     @OnClick(R.id.btn_sing_up_connected)

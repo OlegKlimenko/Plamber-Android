@@ -36,4 +36,5 @@ public class UploadFragment extends BaseViewBookFragment {
     public void viewMessageListEmpty(String message) {
         super.viewMessageListEmpty(getString(R.string.no_upload_book_in_library));
     }
+
 }

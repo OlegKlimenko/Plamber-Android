@@ -78,15 +78,16 @@ public class UploadAvatarDialog extends DialogFragment {
         request.enqueue(new Callback<Upload.UploadAvatarRespond>() {
             @Override
             public void onResponse(Call<Upload.UploadAvatarRespond> call, Response<Upload.UploadAvatarRespond> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && getActivity() != null) {
                     preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, response.body().getData().getAvatarUrl() + "?" + String.valueOf(System.currentTimeMillis()));
                     if (getActivity() instanceof BaseDrawerActivity) {
-                        getBaseDrawerActivty().updateAvatar();
+                        getBaseDrawerActivty().setAvatar();
                         Utils.messageSnack(getBaseDrawerActivty().getDrawerLayout(), getString(R.string.avatar_uploaded_message));
                     } else {
                         Utils.messageSnack(getActivity().getCurrentFocus(), getString(R.string.avatar_uploaded_message));
                     }
                     dismiss();
+                    getChangeAvatrDialog().updateAvatar();
                 }
             }
 
@@ -112,5 +113,9 @@ public class UploadAvatarDialog extends DialogFragment {
 
     private BaseDrawerActivity getBaseDrawerActivty() {
         return ((BaseDrawerActivity) getActivity());
+    }
+
+    private ChangeAvatarDialog getChangeAvatrDialog() {
+        return ((ChangeAvatarDialog) getActivity().getSupportFragmentManager().findFragmentByTag(ChangeAvatarDialog.TAG));
     }
 }

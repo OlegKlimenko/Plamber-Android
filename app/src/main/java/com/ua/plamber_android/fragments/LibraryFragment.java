@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -93,6 +94,7 @@ public class LibraryFragment extends Fragment {
             viewCategory();
     }
 
+
     private void viewCategoryOffline() {
         offlineMessage();
     }
@@ -136,6 +138,7 @@ public class LibraryFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), CategoryActivity.class);
                 intent.putExtra(IDCATEGORI, categoriesList.get(position).getId());
                 intent.putExtra(NAMECATEGORI, categoriesList.get(position).getCategoryName());
+                if (getActivity() != null)
                 getActivity().startActivityForResult(intent, MENU_REQUEST);
             }
         };
@@ -148,9 +151,10 @@ public class LibraryFragment extends Fragment {
         for (Library.LibraryData libraryData : categoriesList) {
             items.add(libraryData.getCategoryName());
         }
-        mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
-
-        mRecyclerView.setAdapter(mLibraryAdapter);
+        if (mRecyclerView.getAdapter() == null) {
+            mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
+            mRecyclerView.setAdapter(mLibraryAdapter);
+        }
         viewElement(mProgressLibrary, false);
         viewElement(mMessageAgain, false);
         viewElement(mRecyclerView, true);

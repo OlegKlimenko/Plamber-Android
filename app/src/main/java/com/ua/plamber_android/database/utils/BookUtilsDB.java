@@ -22,7 +22,7 @@ import io.realm.RealmResults;
 public class BookUtilsDB {
     private Utils utils;
     public static final String TAG = "BookUtilsDB";
-    private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss";
 
     public BookUtilsDB(Context context) {
         Realm.init(context);

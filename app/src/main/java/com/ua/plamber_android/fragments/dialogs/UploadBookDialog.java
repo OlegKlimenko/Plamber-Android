@@ -159,12 +159,7 @@ public class UploadBookDialog extends DialogFragment {
             @Override
             public void onUploadProgress(final int progressInPercent, long totalBytes) {
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setProgress(progressInPercent);
-                        }
-                    });
+                    getActivity().runOnUiThread(() -> setProgress(progressInPercent));
                 }
 
             }

@@ -45,14 +45,6 @@ public class ChangeAvatarDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferenceUtils = new PreferenceUtils(getActivity());
-        setRetainInstance(true);
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance())
-            getDialog().setOnDismissListener(null);
-        super.onDestroyView();
     }
 
     @NonNull
@@ -61,7 +53,7 @@ public class ChangeAvatarDialog extends DialogFragment {
         LayoutInflater inflate = getActivity().getLayoutInflater();
         View v = inflate.inflate(R.layout.change_avatar_dialog, null);
         ButterKnife.bind(this, v);
-        loadData(v);
+        loadData();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
                 .setNegativeButton(R.string.ok_btn, new DialogInterface.OnClickListener() {
@@ -82,6 +74,7 @@ public class ChangeAvatarDialog extends DialogFragment {
             public void onClick(View view) {
                 if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
                     Intent intent = ImagePickActivity.startImagePickActivity(getActivity());
+                    if (getActivity() != null)
                     getActivity().startActivityForResult(intent, SettingActivity.REQUEST_SELECT_IMAGE);
                 } else {
                     Utils.messageSnack(mParentLayout, getString(R.string.upload_not_available_in_offline_mode));
@@ -90,15 +83,16 @@ public class ChangeAvatarDialog extends DialogFragment {
         });
     }
 
-    private void loadData(View v) {
-        updateAvatar(v);
+    private void loadData() {
+        updateAvatar();
         mCurrentName.setText(preferenceUtils.readPreference(PreferenceUtils.USER_NAME));
         mCurrentEmail.setText(preferenceUtils.readPreference(PreferenceUtils.USER_EMAIL));
     }
 
-    private void updateAvatar(View v) {
+    public void updateAvatar() {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
-        Glide.with(v).load(currentUrl).into(mCurrentAvatar);
+        if (getActivity() != null)
+        Glide.with(getActivity()).load(currentUrl).into(mCurrentAvatar);
     }
 }

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.fragments.DetailBookFragment;
 import com.ua.plamber_android.model.Book;
@@ -39,6 +38,7 @@ public class DownloadDialogFragmant extends DialogFragment {
     public static final String DOWNLOADBOOK = "DOWNLOADBOOK";
     private APIUtils apiUtils;
     private AsyncDownloadBook asyncDownload;
+    public static final String TAG = "DownloadDialogFragmant";
 
     @BindView(R.id.pb_dialog_download)
     ProgressBar progressDownload;
@@ -102,7 +102,7 @@ public class DownloadDialogFragmant extends DialogFragment {
                    asyncDownload = new AsyncDownloadBook(file);
                    asyncDownload.execute(response);
                 } else {
-                    Log.d("BookReaderActivity", "Download error");
+                    Log.d(TAG, "Download error");
                 }
             }
 
@@ -116,26 +116,21 @@ public class DownloadDialogFragmant extends DialogFragment {
 
     private void setProgress(int progress) {
         progressDownload.setProgress(progress);
-        percentDownload.setText(new StringBuilder().append(progress).append("%").toString());
+        percentDownload.setText(String.valueOf(progress) + "%");
     }
 
     private class AsyncDownloadBook extends AsyncTask<Response<ResponseBody>, Integer, Boolean> {
 
         private File file;
 
-        public AsyncDownloadBook(File file) {
+        private AsyncDownloadBook(File file) {
             this.file = file;
         }
 
         @SafeVarargs
         @Override
         protected final Boolean doInBackground(Response<ResponseBody>... response) {
-            try {
-                return writeResponse(file, response[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+            return writeResponse(file, response[0]);
         }
 
         @Override
@@ -149,47 +144,35 @@ public class DownloadDialogFragmant extends DialogFragment {
             if (status) {
                 getDetailBookFragment().writeBookToDB(bookId);
                 getDetailBookFragment().startReadBook();
-                //Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_complete_message));
             } else {
                 file.delete();
                 Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_error_message));
             }
         }
 
-        private boolean writeResponse(File file, Response<ResponseBody> response) throws IOException {
-            boolean checkFile = false;
-            FileOutputStream stream = null;
-            BufferedInputStream inputStream = null;
-            try {
-                float fileSize = response.body().contentLength();
-                stream = new FileOutputStream(file);
-                inputStream = new BufferedInputStream(response.body().byteStream());
-                byte[] data = new byte[8192];
-                float total = 0;
-                int readBytes;
-                int progress = 0;
+        private boolean writeResponse(File file, Response<ResponseBody> response) {
+            try (FileOutputStream stream = new FileOutputStream(file)) {
+                try (BufferedInputStream inputStream = new BufferedInputStream(response.body().byteStream())) {
+                    float fileSize = response.body().contentLength();
+                    byte[] data = new byte[8192];
+                    float total = 0;
+                    int readBytes;
+                    int progress = 0;
 
-                while ((readBytes = inputStream.read(data)) != -1) {
-                    int download = (int)((total / fileSize) * 100);
-                    if (progress + 1 <= download) {
-                        progress = download;
-                        publishProgress(download);
+                    while ((readBytes = inputStream.read(data)) != -1) {
+                        int download = (int) ((total / fileSize) * 100);
+                        if (progress + 1 <= download) {
+                            progress = download;
+                            publishProgress(download);
+                        }
+                        total += readBytes;
+                        stream.write(data, 0, readBytes);
                     }
-                    total += readBytes;
-                    stream.write(data, 0, readBytes);
-
                 }
-                if (fileSize == total) {
-                    checkFile = true;
-                }
-            } finally {
-                if (stream != null)
-                    stream.close();
-
-                if (inputStream != null)
-                    inputStream.close();
+            } catch (IOException e) {
+                Log.i(TAG, e.getLocalizedMessage());
             }
-            return checkFile;
+            return file.exists();
         }
     }
 

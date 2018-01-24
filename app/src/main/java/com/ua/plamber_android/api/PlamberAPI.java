@@ -30,7 +30,8 @@ import retrofit2.http.Url;
 
 public interface PlamberAPI {
 
-    String ENDPOINT = "http://ec2-52-201-246-230.compute-1.amazonaws.com/";
+    //String ENDPOINT = "http://ec2-52-201-246-230.compute-1.amazonaws.com/";
+    String ENDPOINT = "https://plamber.com.ua/";
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/user-login/")

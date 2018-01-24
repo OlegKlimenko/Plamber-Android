@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.User;
@@ -48,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout mTilPasswordLoginEdit;
     @BindView(R.id.parent_login_layout)
     LinearLayout mParentLayout;
+    @BindView(R.id.iv_login_plamber_logo)
+    ImageView mPlamberLogo;
 
     private static long timeExit;
     private static final int REQUEST_WRITE_STORAGE = 101;
@@ -69,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             runQuestionPermissions();
 
         utils.initBackgroundImage(mBackgroundLogin);
+        Glide.with(getApplicationContext()).load(R.drawable.plamber_logo_mini).into(mPlamberLogo);
 
         if (preferenceUtils.checkPreference(PreferenceUtils.TOKEN)) {
             Intent intent = LibraryActivity.startLibraryActivity(this);

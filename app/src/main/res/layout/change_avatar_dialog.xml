@@ -12,8 +12,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/current_avatar"
         android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/logo2"/>
+        android:layout_height="48dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

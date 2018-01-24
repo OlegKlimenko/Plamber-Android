@@ -2,6 +2,9 @@ package com.ua.plamber_android.utils;
 
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.util.ListUpdateCallback;
+import android.support.v7.widget.RecyclerView;
+
 
 import com.ua.plamber_android.model.Book;
 
@@ -29,8 +32,7 @@ public class RecyclerUserBooksUpdate extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldBooks.get(oldItemPosition).getBookFile()
-                .equals(newBooks.get(newItemPosition).getBookFile());
+        return oldBooks.get(oldItemPosition).getIdServerBook() == newBooks.get(newItemPosition).getIdServerBook();
     }
 
     @Override

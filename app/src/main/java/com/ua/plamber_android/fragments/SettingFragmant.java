@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.ChangePasswordActivity;
 import com.ua.plamber_android.activitys.SupportActivity;
@@ -18,6 +19,7 @@ public class SettingFragmant extends PreferenceFragmentCompat {
         setSupport();
         setChangePassword();
         setAvatar();
+        setAppVersion();
     }
 
     private void setAvatar() {
@@ -53,6 +55,10 @@ public class SettingFragmant extends PreferenceFragmentCompat {
                 return true;
             }
         });
+    }
+
+    private void setAppVersion() {
+        getPreference("version").setSummary(BuildConfig.VERSION_NAME);
     }
 
     private  Preference getPreference(String key) {

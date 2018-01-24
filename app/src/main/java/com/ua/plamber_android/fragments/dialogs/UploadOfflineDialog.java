@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.UploadActivity;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.UploadFileOfflineFragment;
 import com.ua.plamber_android.utils.Utils;
@@ -64,7 +66,7 @@ public class UploadOfflineDialog extends DialogFragment {
         LayoutInflater inflate = getActivity().getLayoutInflater();
         View v = inflate.inflate(R.layout.simple_progress_dialog, null);
         ButterKnife.bind(this, v);
-        mProgressMessage.setText("Saving file");
+        mProgressMessage.setText(R.string.saving_file);
         if (saveFile == null || saveFile.isCancelled()) {
             saveFile = new SaveFile();
             saveFile.execute(bookFile);
@@ -91,23 +93,20 @@ public class UploadOfflineDialog extends DialogFragment {
 
         @Override
         protected void onPostExecute(byte[] bytes) {
-            try {
                 saveByteAsImage(bytes);
                 writeBookToDB();
                 copyBookFile();
+                if (getActivity() != null)
                 getActivity().finish();
-            } catch (IOException e) {
-                Log.e(TAG, e.getLocalizedMessage());
-                getActivity().finish();
-            }
         }
     }
 
-    private void saveByteAsImage(byte[] bytes) throws IOException {
-        FileOutputStream stream = new FileOutputStream(utils.getPngFileWithPath(bookId));
-        stream.write(bytes);
-        stream.close();
-
+    private void saveByteAsImage(byte[] bytes) {
+        try (FileOutputStream stream = new FileOutputStream(utils.getPngFileWithPath(bookId))) {
+            stream.write(bytes);
+        } catch (IOException e) {
+            Log.i(TAG, e.getLocalizedMessage());
+        }
     }
 
     private void writeBookToDB() {
@@ -115,13 +114,15 @@ public class UploadOfflineDialog extends DialogFragment {
         bookUtilsDB.saveBookOffline(bookId, bookName);
     }
 
-    private void copyBookFile() throws IOException{
-        FileInputStream in = new FileInputStream(bookFile);
-        FileOutputStream out = new FileOutputStream(utils.getPdfFileWithPath(bookId));
-        FileChannel inChannel = in.getChannel();
-        FileChannel outChannel = out.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        in.close();
-        out.close();
+    private void copyBookFile(){
+        try (FileInputStream in = new FileInputStream(bookFile)) {
+            try (FileOutputStream out = new FileOutputStream(utils.getPdfFileWithPath(bookId))) {
+                FileChannel inChannel = in.getChannel();
+                FileChannel outChannel = out.getChannel();
+                inChannel.transferTo(0, inChannel.size(), outChannel);
+            }
+        } catch (IOException e) {
+            Log.i(TAG, e.getLocalizedMessage());
+        }
     }
 }

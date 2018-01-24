@@ -22,7 +22,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
 import com.ua.plamber_android.fragments.dialogs.ConnectionErrorDialog;
 import com.ua.plamber_android.fragments.LibraryFragment;
-import com.ua.plamber_android.fragments.RecommendedFragmnet;
+import com.ua.plamber_android.fragments.RecommendedFragment;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
 import com.ua.plamber_android.utils.PreferenceUtils;
@@ -166,7 +166,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         //adapter.addFragment(new LocalFileFragment(), getString(R.string.local_file_title));
         adapter.addFragment(new UserBookFragment(), getString(R.string.my_books));
         adapter.addFragment(new LibraryFragment(), getString(R.string.library));
-        adapter.addFragment(new RecommendedFragmnet(), getString(R.string.recommended));
+        adapter.addFragment(new RecommendedFragment(), getString(R.string.recommended));
         adapter.addFragment(new UploadFragment(), getString(R.string.upload));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);

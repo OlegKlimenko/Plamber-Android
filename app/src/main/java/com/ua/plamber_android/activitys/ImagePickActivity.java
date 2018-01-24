@@ -7,7 +7,7 @@ import com.ua.plamber_android.R;
 
 public class ImagePickActivity extends FilePickActivity {
 
-    public static final String[] IMAGE_FORMAT = {"png", "jpeg", "gif", "bmp"};
+    public static final String[] IMAGE_FORMAT = {"png", "jpeg", "gif", "bmp", "jpg"};
 
     @Override
     public String[] searchFileType() {

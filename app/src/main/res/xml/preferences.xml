@@ -41,8 +41,7 @@
 
         <Preference
             android:key="version"
-            android:title="@string/version_setting"
-            android:summary="@string/plamber_version">
+            android:title="@string/version_setting">
         </Preference>
 
     </PreferenceCategory>

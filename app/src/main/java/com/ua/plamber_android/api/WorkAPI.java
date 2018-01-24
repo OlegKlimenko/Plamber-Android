@@ -1,6 +1,7 @@
 package com.ua.plamber_android.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ua.plamber_android.R;
@@ -291,9 +292,9 @@ public class WorkAPI {
             Call<Page.GetPageRespond> request = apiUtils.initializePlamberAPI().getPage(page);
             request.enqueue(new Callback<Page.GetPageRespond>() {
                 @Override
-                public void onResponse(Call<Page.GetPageRespond> call, Response<Page.GetPageRespond> response) {
+                public void onResponse(Call<Page.GetPageRespond> call, @NonNull Response<Page.GetPageRespond> response) {
                     if (response.isSuccessful()) {
-                        callback.onSuccess( response.body().getData());
+                        callback.onSuccess(response.body().getData());
                     }
                 }
 

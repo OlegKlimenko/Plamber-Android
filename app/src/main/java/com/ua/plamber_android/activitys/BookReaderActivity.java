@@ -255,7 +255,7 @@ public class BookReaderActivity extends AppCompatActivity {
             public void onSuccess(@NonNull Page.PageData page) {
                 bookUtilsDB.updatePage(bookId, page.getLastPage());
                 bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
-                if (bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() > bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookId)).getTime()) {
+                if (bookUtilsDB.convertStringToDate(page.getLastReadData()) != null && bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() > bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookId)).getTime()) {
                     bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
                     bookUtilsDB.updatePage(bookId, page.getLastPage());
                     viewFromDB();
@@ -347,7 +347,7 @@ public class BookReaderActivity extends AppCompatActivity {
             viewPhoto(currentUrl);
 
         TextView name = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_book_name);
-        name.setText(FileUtils.removeType(file.getName()));
+        name.setText(bookUtilsDB.readBookFromDB(bookId).getBookName());
         TextView author = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_author_name);
         author.setText(bookAuthor);
     }

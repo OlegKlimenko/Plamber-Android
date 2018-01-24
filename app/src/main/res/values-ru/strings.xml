@@ -27,7 +27,7 @@
     <string name="restore_title">Восстановить аккаунт</string>
     <string name="restore_send">Отправить</string>
     <string name="cancel">Отмена</string>
-
+    <string name="ok_btn">OK</string>
     <string name="error_recycler">Потяните, чтобы обновить</string>
     <string name="tap_to_change">Нажмите, что бы сменить аватар</string>
     <string name="validate_password_clone">Старый и новый пароль не должны совпадать</string>
@@ -36,7 +36,7 @@
     <string name="remove_book_from_library">Удалить книгу из библиотеки</string>
     <string name="remove_book_from_device">Удалить книгу c устройства</string>
     <string name="nothing_found">По вашему запросу ничего не найдено</string>
-    <string name="download_only">Только скачанные</string>
+    <string name="download_only">Оффлайн режим</string>
     <string name="setting">Настройки</string>
     <string name="logout">Выйти</string>
     <string name="upload">Загруженные</string>
@@ -152,7 +152,7 @@
     <string name="find_errors_or_have_questions">Есть вопросы или нашли ошибку? Напишите нам</string>
     <string name="home_page">Официальный сайт</string>
     <string name="about_plamber_setting">О Plamber</string>
-    <string name="information_about_plamber">Узнайте больше про PLamber</string>
+    <string name="information_about_plamber">Узнайте больше про plamber</string>
     <string name="version_setting">Версия</string>
     <string name="not_allowed_user_name">Недопустимое имя пользователя</string>
     <string name="no_find_pdf_files_in_your_device">Не удалось найти pdf файлы</string>
@@ -173,5 +173,6 @@
     <string name="message_upload_offline">Вы загружаете книгу в оффлайн режиме, она не будет доступна на других устройствах. После подключения к сети вы сможете загрузить ее на сервер</string>
     <string name="current_book_was_uplopad_offline">Это книга была загружена в оффлайн режиме. Для того что бы загрузить ее на сервер нажмите это сообщение или выберите соответствующий пункт меню</string>
     <string name="upload_book_to_server_menu">Загрузить книгу на сервер</string>
+    <string name="saving_file">Сохранение файла</string>
 
 </resources>

@@ -20,11 +20,11 @@
             android:layout_marginRight="@dimen/logo_margin">
 
             <ImageView
+                android:id="@+id/iv_login_plamber_logo"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_margin"
                 android:layout_marginBottom="@dimen/logo_margin"
                 android:layout_marginTop="@dimen/logo_margin"
-                android:src="@drawable/logo"
                 android:layout_gravity="center_horizontal"/>
 
             <android.support.design.widget.TextInputLayout
@@ -37,7 +37,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name"
-                    android:text="andrey"
                     android:inputType="textEmailAddress"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -54,7 +53,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:text="qce689kh"
                     android:hint="@string/password" />
 
             </android.support.design.widget.TextInputLayout>

@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.ua.plamber_android.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.utils.RecyclerUserBooksUpdate;
+import com.ua.plamber_android.utils.JumpToChangeItem;
 import com.ua.plamber_android.utils.Utils;
 
 import java.util.List;
@@ -42,10 +42,12 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public final int VIEW_TYPE_LOADING = 1;
     private RecyclerViewClickListener mListener;
     private static final String TAG = "RecyclerBookAdapter";
+    private RecyclerView recyclerView;
 
     public RecyclerBookAdapter(RecyclerView recyclerView, List<Book.BookData> books, RecyclerViewClickListener listener) {
         this.books = books;
-        mListener = listener;
+        this.mListener = listener;
+        this.recyclerView = recyclerView;
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -154,10 +156,13 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void updateList(List<Book.BookData> newLsit) {
+        JumpToChangeItem jumpToChange = new JumpToChangeItem();
+        jumpToChange.bind(this);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RecyclerUserBooksUpdate(this.books, newLsit));
         books.clear();
         books.addAll(newLsit);
-        diffResult.dispatchUpdatesTo(this);
+        diffResult.dispatchUpdatesTo(jumpToChange);
+        recyclerView.scrollToPosition(jumpToChange.getFirstInsert());
     }
 
     private void viewPhotoBook(String path, final BookHolder bookHolder) {

@@ -169,14 +169,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
         Glide.with(getApplicationContext()).load(R.drawable.main_background).apply(new RequestOptions().transform(new CenterCrop())).into(headerImage);
     }
 
-
-    private void setAvatar(String urlAvatar) {
-        String url = PlamberAPI.ENDPOINT;
-        String currentUrl = url.substring(0, url.length() - 1) + urlAvatar;
-        Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
-    }
-
-    public void updateAvatar() {
+    public void setAvatar() {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
         Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
@@ -193,8 +186,8 @@ public class BaseDrawerActivity extends AppCompatActivity {
         userEmail.setText(email);
     }
 
-    private void setProfile(String name, String email, String photo) {
-        setAvatar(photo);
+    private void setProfile(String name, String email) {
+        setAvatar();
         setProfileName(name);
     }
 
@@ -202,8 +195,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
         if (preferenceUtils.checkPreference(PreferenceUtils.USER_NAME)) {
             String name = preferenceUtils.readPreference(PreferenceUtils.USER_NAME);
             String email = preferenceUtils.readPreference(PreferenceUtils.USER_EMAIL);
-            String photo = preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
-            setProfile(name, email, photo);
+            setProfile(name, email);
         } else {
             workAPI.getProfileData(new ProfileCallback() {
                 @Override
@@ -211,8 +203,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
                     preferenceUtils.writePreference(PreferenceUtils.USER_NAME, profileData.getUserName());
                     preferenceUtils.writePreference(PreferenceUtils.USER_EMAIL, profileData.getUserEmail());
                         preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl() + "?" + String.valueOf(System.currentTimeMillis()));
-                    String photo = preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
-                    setProfile(profileData.getUserName(), profileData.getUserEmail(), photo);
+                    setProfile(profileData.getUserName(), profileData.getUserEmail());
                 }
 
                 @Override

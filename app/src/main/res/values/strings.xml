@@ -1,9 +1,8 @@
 <resources>
 
     <!--no localization-->
-    <string name="plamber_version">1.0</string>
-    <string name="plamber_web_page">http://ec2-52-201-246-230.compute-1.amazonaws.com/</string>
-    <string name="plamber_page_about">http://ec2-52-201-246-230.compute-1.amazonaws.com/about</string>
+    <string name="plamber_web_page" translatable="false">https://plamber.com.ua/</string>
+    <string name="plamber_page_about" translatable="false">https://plamber.com.ua/about</string>
 
 
     <string name="app_name">Plamber</string>
@@ -14,7 +13,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="connected">Connected</string>
     <string name="user_name">User name</string>
-    <string name="password_agian">Password agian</string>
+    <string name="password_agian">Password again</string>
     <string name="already_a_member_login">Already a member? Login</string>
     <string name="validate_email">Please enter valid email address</string>
     <string name="validate_username">Only latin symbols, digits, length from 2 to 30 and _ </string>
@@ -39,7 +38,7 @@
     <string name="remove_book_from_library">Remove book from library</string>
     <string name="remove_book_from_device">Remove book from device</string>
     <string name="nothing_found">Nothing found on your request</string>
-    <string name="download_only">Download only</string>
+    <string name="download_only">Offline mode</string>
     <string name="setting">Setting</string>
     <string name="logout">Logout</string>
     <string name="upload">Upload</string>
@@ -177,6 +176,7 @@
     <string name="message_upload_offline">You download the book offline, it will not be available on other devices. After connecting to the network, you can upload it to the server</string>
     <string name="current_book_was_uplopad_offline">This book was downloaded offline. To download it to the server, click this message or select the appropriate menu item</string>
     <string name="upload_book_to_server_menu">Upload book to server</string>
+    <string name="saving_file">Saving file</string>
 
 
 </resources>
