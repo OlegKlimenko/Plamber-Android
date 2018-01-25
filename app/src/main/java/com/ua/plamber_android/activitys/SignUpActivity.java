@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,6 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
         checkUserName(new AccountCallback() {
             @Override
             public void onSuccess(@NonNull boolean isCreate) {
+                Log.i(TAG, String.valueOf(isCreate));
                 if (!isCreate) {
                     checkUserEmail(new AccountCallback() {
                         @Override
@@ -136,11 +138,9 @@ public class SignUpActivity extends AppCompatActivity {
             loginRequest.enqueue(new Callback<Account.LoginRespond>() {
                 @Override
                 public void onResponse(Call<Account.LoginRespond> call, Response<Account.LoginRespond> response) {
-                    boolean isCreated = true;
                     if (response.isSuccessful()) {
-                        isCreated = response.body().getData().isLoginStatus();
+                        callback.onSuccess(response.body().getData().isLoginStatus());
                     }
-                    callback.onSuccess(isCreated);
                 }
 
                 @Override
@@ -159,11 +159,9 @@ public class SignUpActivity extends AppCompatActivity {
             emailRequest.enqueue(new Callback<Account.EmailRespond>() {
                 @Override
                 public void onResponse(Call<Account.EmailRespond> call, Response<Account.EmailRespond> response) {
-                    boolean isCreate = true;
                     if (response.isSuccessful()) {
-                        isCreate = response.body().getData().isEmailStatus();
+                        callback.onSuccess(response.body().getData().isEmailStatus());
                     }
-                    callback.onSuccess(isCreate);
                 }
 
                 @Override

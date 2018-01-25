@@ -11,9 +11,9 @@ public class Account {
         @SerializedName("username")
         private String username;
 
-        public LoginRequest(String username, String appKey) {
-            this.username = username;
+        public LoginRequest(String appKey, String username)  {
             this.appKey = appKey;
+            this.username = username;
         }
     }
 

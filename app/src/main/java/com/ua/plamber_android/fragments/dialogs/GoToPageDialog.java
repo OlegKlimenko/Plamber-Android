@@ -61,7 +61,8 @@ public class GoToPageDialog extends DialogFragment {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int page = Integer.parseInt(mPgaeNumber.getText().toString().trim()) - 1;
+                String pageNumber = mPgaeNumber.getText().toString().trim();
+                int page = pageNumber.isEmpty() ? 0 : Integer.parseInt(pageNumber) - 1;
                 if (page > getReaderActivity().getCountPage()) {
                     Utils.messageSnack(mParentGoTo, getString(R.string.number_of_page_in_this_book) + getReaderActivity().getCountPage());
                 } else {
