@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
@@ -55,8 +58,6 @@ public class BookReaderActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     private static final String TAG = "BookReaderActivity";
-    private static final String CURRENT_PAGE = "CURRENT_PAGE";
-    private static final String COUNT_PAGE = "COUNT_PAGE";
     private PreferenceUtils preferenceUtils;
     private WorkAPI workAPI;
     private BookUtilsDB bookUtilsDB;
@@ -88,23 +89,14 @@ public class BookReaderActivity extends AppCompatActivity {
         isBookOffline = bookUtilsDB.readBookFromDB(bookId).isOfflineBook();
         file = new File(utils.getPdfFileWithPath(bookId));
 
-        if (savedInstanceState != null) {
-            setPages(savedInstanceState.getInt(CURRENT_PAGE), savedInstanceState.getInt(COUNT_PAGE));
-        }
         initToolbar();
         initNavigationView();
+
         if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline) {
             viewFromCloud();
         } else {
             viewFromDB();
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(CURRENT_PAGE, getCurrentPage());
-        outState.putInt(COUNT_PAGE, getCountPage());
-        super.onSaveInstanceState(outState);
     }
 
     private void initToolbar() {
@@ -126,11 +118,6 @@ public class BookReaderActivity extends AppCompatActivity {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 setPages(getCurrentPage(), getCountPage());
-            }
-
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-
             }
         };
         mReaderDrawer.addDrawerListener(toggle);
@@ -282,20 +269,22 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void saveCurrentPage() {
-        bookUtilsDB.updatePage(bookId, getCurrentPage());
-        bookUtilsDB.updateLastReadDate(bookId, bookUtilsDB.getCurrentTime());
-        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline)
-            workAPI.setLastPage(new StatusCallback() {
-                @Override
-                public void onSuccess(@NonNull int status) {
+        if (getCountPage() != 0) {
+            bookUtilsDB.updatePage(bookId, getCurrentPage());
+            bookUtilsDB.updateLastReadDate(bookId, bookUtilsDB.getCurrentTime());
+            if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline)
+                workAPI.setLastPage(new StatusCallback() {
+                    @Override
+                    public void onSuccess(@NonNull int status) {
 
-                }
+                    }
 
-                @Override
-                public void onError(@NonNull Throwable t) {
+                    @Override
+                    public void onError(@NonNull Throwable t) {
 
-                }
-            }, bookServerId, getCurrentPage());
+                    }
+                }, bookServerId, getCurrentPage());
+        }
     }
 
     private int getCurrentPage() {
@@ -309,9 +298,10 @@ public class BookReaderActivity extends AppCompatActivity {
                     public void onInitiallyRendered(int nbPages, float pageWidth, float pageHeight) {
                         mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
                         mPdfView.jumpTo(currentPage);
-                        mPdfView.setBackgroundColor(getResources().getColor(R.color.screenLock));
+                        setPages(getCurrentPage(), getCountPage());
                     }
                 }).enableAntialiasing(true).spacing(10).load();
+
     }
 
     public static Intent startReaderActivity(Context context) {
@@ -358,10 +348,10 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void setPages(int current, int all) {
-        TextView currentText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_current_page);
-        currentText.setText(String.valueOf(current));
-        TextView allPageText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.all_page);
-        allPageText.setText(String.valueOf(all));
+            TextView currentText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_current_page);
+            currentText.setText(String.valueOf(current));
+            TextView allPageText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.all_page);
+            allPageText.setText(String.valueOf(all));
     }
 
     private void setHeaderBackground() {

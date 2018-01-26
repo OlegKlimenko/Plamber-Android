@@ -180,8 +180,8 @@ public class DetailBookFragment extends Fragment {
     private void initDetailBook(Book.BookData book) {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
-        if(getActivity() != null)
-        Glide.with(getActivity()).load(currentUrl).into(mImageBook);
+        if (getActivity() != null)
+            Glide.with(getActivity()).load(currentUrl).into(mImageBook);
 
         mBookName.setText(book.getBookName());
         mAuthorBook.setText(book.getIdAuthor());
@@ -235,7 +235,7 @@ public class DetailBookFragment extends Fragment {
         commentFragment.setArguments(bundleBookId(AddCommentFragment.BOOK_ID_COMMENT));
         commentFragment.setCancelable(false);
         if (getFragmentManager() != null)
-        commentFragment.show(getFragmentManager(), AddCommentFragment.TAG);
+            commentFragment.show(getFragmentManager(), AddCommentFragment.TAG);
     }
 
     private Bundle bundleBookId(String id) {
@@ -250,7 +250,7 @@ public class DetailBookFragment extends Fragment {
         ratedFragment.setArguments(bundleBookId(AddRatedFragment.BOOK_ID_RATED));
         ratedFragment.setCancelable(false);
         if (getFragmentManager() != null)
-        ratedFragment.show(getFragmentManager(), AddRatedFragment.TAG);
+            ratedFragment.show(getFragmentManager(), AddRatedFragment.TAG);
     }
 
     private void openAllComments() {
@@ -259,7 +259,7 @@ public class DetailBookFragment extends Fragment {
         AllCommentsFragment dialogComments = new AllCommentsFragment();
         dialogComments.setArguments(args);
         if (getFragmentManager() != null)
-        dialogComments.show(getFragmentManager(), AllCommentsFragment.TAG);
+            dialogComments.show(getFragmentManager(), AllCommentsFragment.TAG);
     }
 
 
@@ -302,7 +302,7 @@ public class DetailBookFragment extends Fragment {
             dialogFragment.setArguments(args);
             dialogFragment.setCancelable(false);
             if (getFragmentManager() != null)
-            dialogFragment.show(getFragmentManager(), "DownloadDialog");
+                dialogFragment.show(getFragmentManager(), "DownloadDialog");
         }
     }
 
@@ -352,7 +352,7 @@ public class DetailBookFragment extends Fragment {
         file.delete();
         checkBook();
         if (viewMessage)
-        Utils.messageSnack(mParentLayout, getString(R.string.book_remove_from_device));
+            Utils.messageSnack(mParentLayout, getString(R.string.book_remove_from_device));
         removeBookFromDB();
     }
 
@@ -402,7 +402,7 @@ public class DetailBookFragment extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (getActivity() != null)
-                getActivity().onBackPressed();
+                    getActivity().onBackPressed();
                 return false;
             case R.id.item_remove_library:
                 removeBookFromLibrary(bookDataDetail.getBookData().getIdServerBook());

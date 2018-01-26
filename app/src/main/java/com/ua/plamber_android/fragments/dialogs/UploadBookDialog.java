@@ -129,7 +129,6 @@ public class UploadBookDialog extends DialogFragment {
                     dismiss();
 
                 } else {
-                    Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
                     dismiss();
                     Toast.makeText(getActivity(), R.string.error_has_occurred, Toast.LENGTH_SHORT).show();
                     getActivity().finish();
