@@ -71,7 +71,7 @@ public class Book {
         }
     }
 
-    public class BookDetailData {
+    public static class BookDetailData {
         @SerializedName("book_rating")
         private double bookRating;
 

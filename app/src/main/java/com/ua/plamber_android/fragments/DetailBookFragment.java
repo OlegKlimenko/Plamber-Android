@@ -108,7 +108,6 @@ public class DetailBookFragment extends Fragment {
     private APIUtils apiUtils;
     private Utils utils;
     private WorkAPI workAPI;
-    private RecyclerCommentAdapter commentAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,7 +124,6 @@ public class DetailBookFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_detail_fragment, container, false);
         ButterKnife.bind(this, view);
-
         viewDetailBook();
         return view;
     }
@@ -205,6 +203,7 @@ public class DetailBookFragment extends Fragment {
             mFrameViewAllComments.setVisibility(View.GONE);
         } else {
             mFrameViewAllComments.setVisibility(View.VISIBLE);
+            RecyclerCommentAdapter commentAdapter;
             if (bookDataDetail.getCommentData().size() > COMMENT_LENGTH) {
                 List<Comment.CommentData> previewComments = bookDataDetail.getCommentData().subList(0, 3);
                 commentAdapter = new RecyclerCommentAdapter(previewComments);
@@ -218,10 +217,12 @@ public class DetailBookFragment extends Fragment {
 
     @OnClick(R.id.share_book_btn)
     public void shareBook() {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdServerBook());
-        startActivity(intent);
+        if (bookDataDetail != null) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdServerBook());
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.comments_preview_frame)
@@ -240,6 +241,7 @@ public class DetailBookFragment extends Fragment {
 
     private Bundle bundleBookId(String id) {
         Bundle args = new Bundle();
+        if (bookDataDetail != null)
         args.putLong(id, bookDataDetail.getBookData().getIdServerBook());
         return args;
     }
@@ -254,18 +256,20 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void openAllComments() {
-        Bundle args = new Bundle();
-        args.putString(AllCommentsFragment.BOOK_COMMENTS, new Gson().toJson(bookDataDetail.getCommentData()));
-        AllCommentsFragment dialogComments = new AllCommentsFragment();
-        dialogComments.setArguments(args);
-        if (getFragmentManager() != null)
-            dialogComments.show(getFragmentManager(), AllCommentsFragment.TAG);
+        if (bookDataDetail != null) {
+            Bundle args = new Bundle();
+            args.putString(AllCommentsFragment.BOOK_COMMENTS, new Gson().toJson(bookDataDetail.getCommentData()));
+            AllCommentsFragment dialogComments = new AllCommentsFragment();
+            dialogComments.setArguments(args);
+            if (getFragmentManager() != null)
+                dialogComments.show(getFragmentManager(), AllCommentsFragment.TAG);
+        }
     }
 
 
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
-        if (mDetailButton.getTag() == "Added") {
+        if (bookDataDetail != null && mDetailButton.getTag() == "Added") {
             addBookToLibrary(bookDataDetail.getBookData().getIdServerBook());
         } else if (mDetailButton.getTag() == "Read") {
             if (getBookFile().exists())
@@ -276,16 +280,18 @@ public class DetailBookFragment extends Fragment {
     }
 
     public void startReadBook() {
-        Intent intent = BookReaderActivity.startReaderActivity(getActivity());
-        intent.putExtra(DetailBookActivity.BOOK_ID, bookUtilsDB.getBookPrimaryKey(bookDataDetail.getBookData().getIdServerBook()));
-        intent.putExtra(DetailBookActivity.BOOK_PHOTO, bookDataDetail.getBookData().getPhoto());
-        intent.putExtra(DetailBookActivity.BOOK_AUTHOR, bookDataDetail.getBookData().getIdAuthor());
-        startActivity(intent);
+        if (bookDataDetail != null) {
+            Intent intent = BookReaderActivity.startReaderActivity(getActivity());
+            intent.putExtra(DetailBookActivity.BOOK_ID, bookUtilsDB.getBookPrimaryKey(bookDataDetail.getBookData().getIdServerBook()));
+            intent.putExtra(DetailBookActivity.BOOK_PHOTO, bookDataDetail.getBookData().getPhoto());
+            intent.putExtra(DetailBookActivity.BOOK_AUTHOR, bookDataDetail.getBookData().getIdAuthor());
+            startActivity(intent);
+        }
     }
 
     public void checkBook() {
         setDownloadIndicator(getBookFile().exists());
-        if (bookDataDetail.isAddedBook()) {
+        if (bookDataDetail != null && bookDataDetail.isAddedBook()) {
             mDetailButton.setText(R.string.read_book_detail_btn);
             mDetailButton.setTag("Read");
         } else {
@@ -295,7 +301,7 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void runDownloadDialog() {
-        if (apiUtils.isOnline(mParentLayout)) {
+        if (bookDataDetail != null && apiUtils.isOnline(mParentLayout)) {
             Bundle args = new Bundle();
             args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
             DownloadDialogFragmant dialogFragment = new DownloadDialogFragmant();
@@ -416,7 +422,7 @@ public class DetailBookFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (mDetailButton.getTag() == "Added") {
+        if (mDetailButton.getTag() == "Added" || bookDataDetail == null) {
             menu.findItem(R.id.item_remove_library).setEnabled(false);
             menu.findItem(R.id.item_remove_device).setEnabled(false);
         } else if (mDetailButton.getTag() == "Read" && getBookFile().exists()) {

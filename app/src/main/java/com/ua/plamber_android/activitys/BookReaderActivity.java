@@ -240,13 +240,11 @@ public class BookReaderActivity extends AppCompatActivity {
         workAPI.getLastPageFromCloud(new PageCallback() {
             @Override
             public void onSuccess(@NonNull Page.PageData page) {
-                bookUtilsDB.updatePage(bookId, page.getLastPage());
-                bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
-                if (bookUtilsDB.convertStringToDate(page.getLastReadData()) != null && bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() > bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookId)).getTime()) {
-                    bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
-                    bookUtilsDB.updatePage(bookId, page.getLastPage());
+                if (bookUtilsDB.readLastDate(bookId) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookId)).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() ) {
                     viewFromDB();
                 } else {
+                    bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
+                    bookUtilsDB.updatePage(bookId, page.getLastPage());
                     viewFromDB();
                 }
             }
@@ -348,10 +346,10 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void setPages(int current, int all) {
-            TextView currentText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_current_page);
-            currentText.setText(String.valueOf(current));
-            TextView allPageText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.all_page);
-            allPageText.setText(String.valueOf(all));
+        TextView currentText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_current_page);
+        currentText.setText(String.valueOf(current));
+        TextView allPageText = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.all_page);
+        allPageText.setText(String.valueOf(all));
     }
 
     private void setHeaderBackground() {

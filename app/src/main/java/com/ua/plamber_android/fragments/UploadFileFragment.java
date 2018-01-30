@@ -282,24 +282,26 @@ public class UploadFileFragment extends Fragment {
                             workAPI.autoCompleteAuthor(new StringListCallback() {
                                 @Override
                                 public void onSuccess(@NonNull final List<String> stringsList) {
-                                    adapter.clear();
-                                    adapter.addAll(stringsList);
-                                    adapter.notifyDataSetChanged();
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mBookAuthor.setAdapter(adapter);
-                                            mAuthorProgressComplete.setVisibility(View.GONE);
+                                    if (getActivity() != null && checkUploadFragmentAdded()) {
+                                        adapter.clear();
+                                        adapter.addAll(stringsList);
+                                        adapter.notifyDataSetChanged();
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mBookAuthor.setAdapter(adapter);
+                                                mAuthorProgressComplete.setVisibility(View.GONE);
 
-                                            mBookAuthor.showDropDown();
-                                            mBookAuthor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                @Override
-                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                    currentAutoComplete = stringsList.get(i);
-                                                }
-                                            });
-                                        }
-                                    });
+                                                mBookAuthor.showDropDown();
+                                                mBookAuthor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                    @Override
+                                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                        currentAutoComplete = stringsList.get(i);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
                                 }
 
                                 @Override
@@ -346,30 +348,32 @@ public class UploadFileFragment extends Fragment {
                             workAPI.autoCompleteBook(new BooksCallback() {
                                 @Override
                                 public void onSuccess(@NonNull final List<Book.BookData> books) {
-                                    final List<String> bookNames = new ArrayList<>();
-                                    for (Book.BookData book : books) {
-                                        bookNames.add(book.getBookName());
-                                    }
-                                    adapter.clear();
-                                    adapter.addAll(bookNames);
-                                    adapter.notifyDataSetChanged();
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mBookName.setAdapter(adapter);
-                                            mBookProgressComplete.setVisibility(View.GONE);
-                                            mBookName.showDropDown();
-                                            mBookName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                @Override
-                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                    currentAutoComplete = bookNames.get(i);
-                                                    Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
-                                                    intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(i).getIdServerBook());
-                                                    startActivityForResult(intent, BaseViewBookFragment.ADDED_REQUEST);
-                                                }
-                                            });
+                                    if (getActivity() != null && checkUploadFragmentAdded()) {
+                                        final List<String> bookNames = new ArrayList<>();
+                                        for (Book.BookData book : books) {
+                                            bookNames.add(book.getBookName());
                                         }
-                                    });
+                                        adapter.clear();
+                                        adapter.addAll(bookNames);
+                                        adapter.notifyDataSetChanged();
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mBookName.setAdapter(adapter);
+                                                mBookProgressComplete.setVisibility(View.GONE);
+                                                mBookName.showDropDown();
+                                                mBookName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                    @Override
+                                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                        currentAutoComplete = bookNames.get(i);
+                                                        Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
+                                                        intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(i).getIdServerBook());
+                                                        startActivityForResult(intent, BaseViewBookFragment.ADDED_REQUEST);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
                                 }
 
                                 @Override
@@ -382,5 +386,9 @@ public class UploadFileFragment extends Fragment {
                 }, delay);
             }
         };
+    }
+
+    private boolean checkUploadFragmentAdded() {
+        return getFragmentManager() != null && getFragmentManager().findFragmentById(R.id.fragment_container).isAdded();
     }
 }
