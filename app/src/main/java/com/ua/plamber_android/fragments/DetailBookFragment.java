@@ -30,6 +30,8 @@ import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
+import com.ua.plamber_android.fragments.dialogs.AddCommentDialog;
+import com.ua.plamber_android.fragments.dialogs.AddRatedDialog;
 import com.ua.plamber_android.fragments.dialogs.DownloadDialogFragmant;
 import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
@@ -232,11 +234,11 @@ public class DetailBookFragment extends Fragment {
 
     @OnClick(R.id.frame_add_comment)
     public void addNewComment() {
-        AddCommentFragment commentFragment = new AddCommentFragment();
-        commentFragment.setArguments(bundleBookId(AddCommentFragment.BOOK_ID_COMMENT));
+        AddCommentDialog commentFragment = new AddCommentDialog();
+        commentFragment.setArguments(bundleBookId(AddCommentDialog.BOOK_ID_COMMENT));
         commentFragment.setCancelable(false);
         if (getFragmentManager() != null)
-            commentFragment.show(getFragmentManager(), AddCommentFragment.TAG);
+            commentFragment.show(getFragmentManager(), AddCommentDialog.TAG);
     }
 
     private Bundle bundleBookId(String id) {
@@ -248,11 +250,11 @@ public class DetailBookFragment extends Fragment {
 
     @OnClick(R.id.frame_add_rated)
     public void addRatedBook() {
-        AddRatedFragment ratedFragment = new AddRatedFragment();
-        ratedFragment.setArguments(bundleBookId(AddRatedFragment.BOOK_ID_RATED));
+        AddRatedDialog ratedFragment = new AddRatedDialog();
+        ratedFragment.setArguments(bundleBookId(AddRatedDialog.BOOK_ID_RATED));
         ratedFragment.setCancelable(false);
         if (getFragmentManager() != null)
-            ratedFragment.show(getFragmentManager(), AddRatedFragment.TAG);
+            ratedFragment.show(getFragmentManager(), AddRatedDialog.TAG);
     }
 
     private void openAllComments() {

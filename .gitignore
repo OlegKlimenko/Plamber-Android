@@ -10,3 +10,4 @@
 .idea
 /app/src/main/res/values/app_key.xml
 /app/release
+/app/google-services.json

@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
 import com.ua.plamber_android.fragments.dialogs.ConnectionErrorDialog;
@@ -25,6 +27,7 @@ import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragment;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
+import com.ua.plamber_android.utils.PlamberAnalytics;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
@@ -45,6 +48,8 @@ public class LibraryActivity extends BaseDrawerActivity {
     @BindView(R.id.parentLibraryLayout)
     CoordinatorLayout mParentLayout;
 
+    Tracker mTracker;
+
     public static final String TAG = "LibraryActivity";
     public static final String ERROR_MESSAGE = "ERROR_MESSAGE";
     private Utils utils;
@@ -59,6 +64,11 @@ public class LibraryActivity extends BaseDrawerActivity {
         ButterKnife.bind(this);
         utils = new Utils(this);
         preferenceUtils = new PreferenceUtils(this);
+
+        PlamberAnalytics plamberAnalytics = (PlamberAnalytics) getApplication();
+        mTracker = plamberAnalytics.getTracker();
+        mTracker.setScreenName(TAG);
+
         setSupportActionBar(mToolbar);
         setupPager();
         setPagerSwipe();
@@ -224,6 +234,16 @@ public class LibraryActivity extends BaseDrawerActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 preferenceUtils.writeLogic(PreferenceUtils.OFFLINE_MODE, b);
                 updateView();
+                if (b) {
+                    mTracker.send(new HitBuilders.EventBuilder()
+                            .setCategory(getString(R.string.user_category))
+                            .setAction("Offline mode is enable").build());
+                } else {
+                    mTracker.send(new HitBuilders.EventBuilder()
+                            .setCategory(getString(R.string.user_category))
+                            .setAction("Offline mode is disable").build());
+                }
+
             }
         });
     }

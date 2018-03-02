@@ -50,17 +50,6 @@ public class PreferenceUtils {
         return getPreference().getBoolean(preference, false);
     }
 
-//    public void writeOfflineMode(boolean status) {
-//        SharedPreferences.Editor editor = getPreference().edit();
-//        editor.putBoolean(OFFLINE_MODE, status);
-//        editor.apply();
-//    }
-//
-//    public boolean readStatusOffline() {
-//        return getPreference().getBoolean(OFFLINE_MODE, false);
-//    }
-
-
     private SharedPreferences getPreference() {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }

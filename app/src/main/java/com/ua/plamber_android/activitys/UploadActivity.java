@@ -8,15 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.DetailBookFragmentOffline;
 import com.ua.plamber_android.fragments.UploadFileFragment;
 import com.ua.plamber_android.fragments.UploadFileOfflineFragment;
 import com.ua.plamber_android.utils.PreferenceUtils;
-import com.ua.plamber_android.utils.SingleFragmentActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class UploadActivity extends SingleFragmentActivity {
 

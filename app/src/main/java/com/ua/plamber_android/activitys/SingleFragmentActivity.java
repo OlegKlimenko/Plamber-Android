@@ -1,4 +1,4 @@
-package com.ua.plamber_android.utils;
+package com.ua.plamber_android.activitys;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
