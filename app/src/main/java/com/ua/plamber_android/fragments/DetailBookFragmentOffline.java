@@ -129,11 +129,20 @@ public class DetailBookFragmentOffline extends Fragment {
 
     @OnClick(R.id.btn_detail_download_book_offline)
     public void readBook() {
+       startReadBook();
+    }
+
+    private void startReadBook() {
         Intent intent = BookReaderActivity.startReaderActivity(getActivity());
         intent.putExtra(DetailBookActivity.BOOK_ID, bookData.getIdBook());
         intent.putExtra(DetailBookActivity.BOOK_PHOTO, bookData.getPhoto());
         intent.putExtra(DetailBookActivity.BOOK_AUTHOR, bookData.getIdAuthor());
         startActivity(intent);
+    }
+
+    @OnClick(R.id.iv_detail_book_image_offline)
+    public void bookImageAction() {
+        startReadBook();
     }
 
     @OnClick(R.id.upload_offline_message)

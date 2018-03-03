@@ -8,6 +8,7 @@
     <string name="app_name">Plamber</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="password_new">New password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>

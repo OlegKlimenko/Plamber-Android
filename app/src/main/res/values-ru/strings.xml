@@ -3,6 +3,7 @@
     <string name="app_name">Plamber</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
+    <string name="password_new">Новый пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="login">Войти</string>
     <string name="sign_up">Регистрация</string>
@@ -161,7 +162,7 @@
     <string name="number_of_page_in_this_book">Количество страниц в этой книге\ </string>
     <string name="go_to">Перейти</string>
     <string name="go_to_page_menu">Перейти к странице</string>
-    <string name="close_reader_menu">Закрыть</string>
+    <string name="close_reader_menu">Вернуться</string>
     <string name="fit_to_width">Растянуть на всю ширину</string>
     <string name="hide_toolbar">Скрыть Toolbar</string>
     <string name="hide_status_bar">Скрыть состояние</string>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,25 +21,22 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
-import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
-import com.google.android.gms.analytics.Tracker;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.database.model.BookDB;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.dialogs.GoToPageDialog;
 import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.model.Page;
-import com.ua.plamber_android.utils.FileUtils;
-import com.ua.plamber_android.utils.PlamberAnalytics;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
@@ -64,12 +61,8 @@ public class BookReaderActivity extends AppCompatActivity {
     private WorkAPI workAPI;
     private BookUtilsDB bookUtilsDB;
     private Utils utils;
-    private File file;
-    private long bookServerId;
-    private String bookId;
-    private String bookPhoto;
-    private String bookAuthor;
-    private boolean isBookOffline;
+    private BookDB bookDB;
+    private boolean isLoadPdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,31 +73,33 @@ public class BookReaderActivity extends AppCompatActivity {
         workAPI = new WorkAPI(this);
         utils = new Utils(this);
         bookUtilsDB = new BookUtilsDB(this);
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-
-        Intent intent = getIntent();
-        bookId = intent.getStringExtra(DetailBookActivity.BOOK_ID);
-        bookPhoto = intent.getStringExtra(DetailBookActivity.BOOK_PHOTO);
-        bookAuthor = intent.getStringExtra(DetailBookActivity.BOOK_AUTHOR);
-        bookServerId = bookUtilsDB.readBookFromDB(bookId).getIdServerBook();
-        isBookOffline = bookUtilsDB.readBookFromDB(bookId).isOfflineBook();
-        file = new File(utils.getPdfFileWithPath(bookId));
-
+        setBookData();
         initToolbar();
         initNavigationView();
 
-        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline) {
+        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook()) {
             viewFromCloud();
         } else {
             viewFromDB();
         }
     }
 
+    private void setBookData() {
+        bookDB = new BookDB();
+        Intent intent = getIntent();
+        bookDB.setIdBook(intent.getStringExtra(DetailBookActivity.BOOK_ID));
+        bookDB.setPhoto(intent.getStringExtra(DetailBookActivity.BOOK_PHOTO));
+        bookDB.setIdAuthor(intent.getStringExtra(DetailBookActivity.BOOK_AUTHOR));
+        bookDB.setIdServerBook(bookUtilsDB.readBookFromDB(bookDB.getIdBook()).getIdServerBook());
+        bookDB.setOfflineBook(bookUtilsDB.readBookFromDB(bookDB.getIdBook()).isOfflineBook());
+        isLoadPdf = false;
+    }
+
     private void initToolbar() {
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(bookUtilsDB.readBookFromDB(bookId).getBookName());
+            getSupportActionBar().setTitle(bookUtilsDB.readBookFromDB(bookDB.getIdBook()).getBookName());
             getSupportActionBar().setElevation(10);
         }
     }
@@ -242,11 +237,11 @@ public class BookReaderActivity extends AppCompatActivity {
         workAPI.getLastPageFromCloud(new PageCallback() {
             @Override
             public void onSuccess(@NonNull Page.PageData page) {
-                if (bookUtilsDB.readLastDate(bookId) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookId)).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() ) {
+                if (bookUtilsDB.readLastDate(bookDB.getIdBook()) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookDB.getIdBook())).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() ) {
                     viewFromDB();
                 } else {
-                    bookUtilsDB.updateLastReadDate(bookId, page.getLastReadData());
-                    bookUtilsDB.updatePage(bookId, page.getLastPage());
+                    bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), page.getLastReadData());
+                    bookUtilsDB.updatePage(bookDB.getIdBook(), page.getLastPage());
                     viewFromDB();
                 }
             }
@@ -255,11 +250,11 @@ public class BookReaderActivity extends AppCompatActivity {
             public void onError(@NonNull Throwable t) {
 
             }
-        }, bookServerId);
+        }, bookDB.getIdServerBook());
     }
 
     private void viewFromDB() {
-        viewPdf(bookUtilsDB.readLastPage(bookId) - 1);
+        viewPdf(bookUtilsDB.readLastPage(bookDB.getIdBook()) - 1);
     }
 
     @Override
@@ -269,10 +264,11 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void saveCurrentPage() {
-        if (getCountPage() != 0) {
-            bookUtilsDB.updatePage(bookId, getCurrentPage());
-            bookUtilsDB.updateLastReadDate(bookId, bookUtilsDB.getCurrentTime());
-            if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !isBookOffline)
+        if (isLoadPdf) {
+            bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
+            bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
+            isLoadPdf = false;
+            if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
                 workAPI.setLastPage(new StatusCallback() {
                     @Override
                     public void onSuccess(@NonNull int status) {
@@ -283,7 +279,7 @@ public class BookReaderActivity extends AppCompatActivity {
                     public void onError(@NonNull Throwable t) {
 
                     }
-                }, bookServerId, getCurrentPage());
+                }, bookDB.getIdServerBook(), getCurrentPage());
         }
     }
 
@@ -292,13 +288,14 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void viewPdf(final int currentPage) {
-        mPdfView.fromFile(file)
+        mPdfView.fromFile(new File(utils.getPdfFileWithPath(bookDB.getIdBook())))
                 .onRender(new OnRenderListener() {
                     @Override
                     public void onInitiallyRendered(int nbPages, float pageWidth, float pageHeight) {
                         mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
                         mPdfView.jumpTo(currentPage);
                         setPages(getCurrentPage(), getCountPage());
+                        isLoadPdf = true;
                     }
                 }).enableAntialiasing(true).spacing(10).load();
 
@@ -312,9 +309,11 @@ public class BookReaderActivity extends AppCompatActivity {
         if (view) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            postFitWidth();
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            postFitWidth();
         }
     }
 
@@ -322,24 +321,36 @@ public class BookReaderActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             if (view) {
                 getSupportActionBar().hide();
+                postFitWidth();
             } else {
                 getSupportActionBar().show();
+                postFitWidth();
             }
         }
     }
 
+    private void postFitWidth() {
+        if (isLoadPdf)
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    fitWidth();
+                }
+            });
+    }
+
     private void setBookInformation() {
         String url = PlamberAPI.ENDPOINT;
-        String currentUrl = url.substring(0, url.length() - 1) + bookPhoto;
-        if (isBookOffline)
-            viewPhoto(utils.getPngFileWithPath(bookId));
+        String currentUrl = url.substring(0, url.length() - 1) + bookDB.getPhoto();
+        if (bookDB.isOfflineBook())
+            viewPhoto(utils.getPngFileWithPath(bookDB.getIdBook()));
         else
             viewPhoto(currentUrl);
 
         TextView name = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_book_name);
-        name.setText(bookUtilsDB.readBookFromDB(bookId).getBookName());
+        name.setText(bookUtilsDB.readBookFromDB(bookDB.getIdBook()).getBookName());
         TextView author = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.reader_author_name);
-        author.setText(bookAuthor);
+        author.setText(bookDB.getIdAuthor());
     }
 
     private void viewPhoto(String path) {

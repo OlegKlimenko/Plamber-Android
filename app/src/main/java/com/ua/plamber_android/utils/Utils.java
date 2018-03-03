@@ -180,4 +180,8 @@ public class Utils {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
+
+    public static String getTimeMillis() {
+        return String.valueOf(System.currentTimeMillis());
+    }
 }

@@ -8,8 +8,8 @@ android {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 5
-        versionName "0.4.0d"
+        versionCode 6
+        versionName "0.4.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

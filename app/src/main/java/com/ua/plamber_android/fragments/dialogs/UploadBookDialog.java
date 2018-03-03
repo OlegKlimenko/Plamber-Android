@@ -117,7 +117,11 @@ public class UploadBookDialog extends DialogFragment {
     private void uploadFileToServer(final File file, MultipartBody.Part photo) {
 
         MultipartBody.Part fileBody = prepareFilePart(file);
-        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(getString(R.string.app_key)), createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()), createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()), createRequest(uploadData.getAboutBook()), createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
+        request = apiUtils.initializePlamberAPI().uploadFile(createRequest(getString(R.string.app_key)),
+                createRequest(uploadData.getUserToken()), createRequest(uploadData.getBookName()),
+                createRequest(uploadData.getAuthorName()), createRequest(uploadData.getCategoryName()),
+                createRequest(uploadData.getAboutBook()),
+                createRequest(uploadData.getLanguageBook()), uploadData.isPrivateBook(), fileBody, photo);
 
         request.enqueue(new Callback<Upload.UploadBookRespond>() {
             @Override
@@ -163,18 +167,18 @@ public class UploadBookDialog extends DialogFragment {
 
             }
         });
-        return MultipartBody.Part.createFormData("book_file", file.getName(), requestFile);
+        return MultipartBody.Part.createFormData("book_file", Utils.getTimeMillis() + FileUtils.getFileType(file), requestFile);
     }
 
 
     private class UploadFile extends AsyncTask<File, Void, MultipartBody.Part> {
-        File file;
+        private File file;
 
         @Override
         protected MultipartBody.Part doInBackground(File... files) {
             file = files[0];
             RequestBody requestCover = RequestBody.create(MultipartBody.FORM, utils.getFirstPageAsByte(files[0]));
-            return MultipartBody.Part.createFormData("photo", FileUtils.removeType(files[0].getName()) + ".png", requestCover);
+            return MultipartBody.Part.createFormData("photo", Utils.getTimeMillis() + ".png", requestCover);
         }
 
         @Override

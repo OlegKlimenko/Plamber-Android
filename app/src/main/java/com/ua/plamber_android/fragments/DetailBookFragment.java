@@ -271,6 +271,15 @@ public class DetailBookFragment extends Fragment {
 
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
+       actionBook();
+    }
+
+    @OnClick(R.id.iv_detail_book_image)
+    public void imageBookAction() {
+        actionBook();
+    }
+
+    private void actionBook() {
         if (bookDataDetail != null && mDetailButton.getTag() == "Added") {
             addBookToLibrary(bookDataDetail.getBookData().getIdServerBook());
         } else if (mDetailButton.getTag() == "Read") {

@@ -44,7 +44,7 @@ public class FileUtils {
 
 
 
-    private static String getFileType(File file) {
+    public static String getFileType(File file) {
         String type = "";
         int i = file.getName().lastIndexOf(".");
         if (i > 0)

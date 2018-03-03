@@ -368,6 +368,7 @@ public class UploadFileFragment extends Fragment {
                                                         currentAutoComplete = bookNames.get(i);
                                                         Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
                                                         intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(i).getIdServerBook());
+                                                        intent.putExtra(DetailBookActivity.BOOK_NAME, books.get(i).getBookName());
                                                         startActivityForResult(intent, BaseViewBookFragment.ADDED_REQUEST);
                                                     }
                                                 });
