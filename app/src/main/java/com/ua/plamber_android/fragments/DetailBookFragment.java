@@ -21,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BookReaderActivity;
@@ -37,6 +39,7 @@ import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
+import com.ua.plamber_android.utils.PlamberAnalytics;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
@@ -111,6 +114,8 @@ public class DetailBookFragment extends Fragment {
     private Utils utils;
     private WorkAPI workAPI;
 
+    Tracker mTracker;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +124,7 @@ public class DetailBookFragment extends Fragment {
         workAPI = new WorkAPI(getActivity());
         bookUtilsDB = new BookUtilsDB(getActivity());
         setHasOptionsMenu(true);
+        initGoogleAnalytics();
     }
 
     @Nullable
@@ -135,6 +141,14 @@ public class DetailBookFragment extends Fragment {
         super.onResume();
         if (bookDataDetail != null)
             checkBook();
+    }
+
+    private void initGoogleAnalytics() {
+        if (getActivity() != null) {
+            PlamberAnalytics plamberAnalytics = (PlamberAnalytics) getActivity().getApplication();
+            mTracker = plamberAnalytics.getTracker();
+            mTracker.setScreenName(TAG);
+        }
     }
 
     private void viewDetailBook() {
@@ -331,6 +345,9 @@ public class DetailBookFragment extends Fragment {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_book_added));
                     bookDataDetail.setAddedBook(true);
                     checkBook();
+                    mTracker.send(new HitBuilders.EventBuilder()
+                            .setCategory(getString(R.string.start_read_action))
+                            .setAction(bookDataDetail.getBookData().getBookName()).build());
                 } else {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_error_added));
                 }

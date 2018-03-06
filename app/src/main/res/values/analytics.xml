@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="user_category" translatable="false">User action</string>
+    <string name="view_activity" translatable="false">User view screen</string>
+    <string name="start_read_action" translatable="false">User start read</string>
+    <string name="search_action" translatable="false">User search</string>
 </resources>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,7 +72,8 @@ public class AddCommentDialog extends DialogFragment {
                     workAPI.addComment(new CommentCallback() {
                         @Override
                         public void onSuccess(@NonNull Comment.CommentRespond comment) {
-                                getDetailBookFragment().updateComment(comment.getCommentData(), getString(R.string.thank_you_for_your_opinion));
+                                if (getDetailBookFragment() != null)
+                                    getDetailBookFragment().updateComment(comment.getCommentData(), getString(R.string.thank_you_for_your_opinion));
                                 dismiss();
 
                         }
@@ -80,6 +82,7 @@ public class AddCommentDialog extends DialogFragment {
                         public void onError(@NonNull Throwable t) {
                             Log.i(TAG, t.getLocalizedMessage());
                             dismiss();
+                            if (getDetailBookFragment() != null)
                             getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
                         }
                     }, bookId, mCommentText.getText().toString().trim());
@@ -91,6 +94,9 @@ public class AddCommentDialog extends DialogFragment {
     }
 
     private DetailBookFragment getDetailBookFragment() {
-        return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
+        if (getActivity() != null)
+            return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
+        else
+            return null;
     }
 }

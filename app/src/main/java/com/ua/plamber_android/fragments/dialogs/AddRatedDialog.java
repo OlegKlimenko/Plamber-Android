@@ -74,12 +74,14 @@ public class AddRatedDialog extends DialogFragment {
                         @Override
                         public void onSuccess(@NonNull int status) {
                             dismiss();
+                            if (getDetailBookFragment() != null)
                             getDetailBookFragment().viewMessage(getString(R.string.thank_you_for_your_opinion));
                         }
 
                         @Override
                         public void onError(@NonNull Throwable t) {
                             dismiss();
+                            if (getDetailBookFragment() != null)
                             getDetailBookFragment().viewMessage(getString(R.string.error_has_occurred));
                             Log.i(TAG, t.getLocalizedMessage());
                         }
@@ -108,6 +110,9 @@ public class AddRatedDialog extends DialogFragment {
     }
 
     private DetailBookFragment getDetailBookFragment() {
-        return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
+        if(getActivity() != null)
+            return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
+        else
+            return null;
     }
 }

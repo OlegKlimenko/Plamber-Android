@@ -65,9 +65,7 @@ public class LibraryActivity extends BaseDrawerActivity {
         utils = new Utils(this);
         preferenceUtils = new PreferenceUtils(this);
 
-        PlamberAnalytics plamberAnalytics = (PlamberAnalytics) getApplication();
-        mTracker = plamberAnalytics.getTracker();
-        mTracker.setScreenName(TAG);
+        initGoogleAnalytics();
 
         setSupportActionBar(mToolbar);
         setupPager();
@@ -80,6 +78,12 @@ public class LibraryActivity extends BaseDrawerActivity {
         }
         //view fab on start in offline mode
         initFabButton(0);
+    }
+
+    private void initGoogleAnalytics() {
+        PlamberAnalytics plamberAnalytics = (PlamberAnalytics) getApplication();
+        mTracker = plamberAnalytics.getTracker();
+        mTracker.setScreenName(TAG);
     }
 
     @Override
@@ -96,6 +100,9 @@ public class LibraryActivity extends BaseDrawerActivity {
     protected void onResume() {
         super.onResume();
         initOfflineModeSwitch();
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory(getString(R.string.view_activity))
+                .setAction(TAG).build());
     }
 
     @OnClick(R.id.fab_upload)

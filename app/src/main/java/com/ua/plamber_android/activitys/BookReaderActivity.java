@@ -28,6 +28,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
@@ -37,6 +39,7 @@ import com.ua.plamber_android.fragments.dialogs.GoToPageDialog;
 import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.model.Page;
+import com.ua.plamber_android.utils.PlamberAnalytics;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
@@ -55,6 +58,8 @@ public class BookReaderActivity extends AppCompatActivity {
     NavigationView mNavigationView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    Tracker mTracker;
 
     private static final String TAG = "BookReaderActivity";
     private PreferenceUtils preferenceUtils;
@@ -77,12 +82,27 @@ public class BookReaderActivity extends AppCompatActivity {
         setBookData();
         initToolbar();
         initNavigationView();
+        initGoogleAnalytics();
 
         if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook()) {
             viewFromCloud();
         } else {
             viewFromDB();
         }
+    }
+
+    private void initGoogleAnalytics() {
+        PlamberAnalytics plamberAnalytics = (PlamberAnalytics) getApplication();
+        mTracker = plamberAnalytics.getTracker();
+        mTracker.setScreenName(TAG);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory(getString(R.string.view_activity))
+                .setAction(TAG).build());
     }
 
     private void setBookData() {

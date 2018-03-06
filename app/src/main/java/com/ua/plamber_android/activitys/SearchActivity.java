@@ -10,8 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.fragments.SearchFragment;
+import com.ua.plamber_android.utils.PlamberAnalytics;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +25,10 @@ public class SearchActivity extends BaseDrawerActivity {
     @BindView(R.id.searchViewBook)
     SearchView mSearch;
 
+    Tracker mTracker;
+
     public static final String SEARCH_KEY = "SEARCH_KEY";
+    public static final String TAG = "Search";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,9 @@ public class SearchActivity extends BaseDrawerActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+
+        initGoogleAnalytics();
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
             getSupportActionBar().setElevation(10);
@@ -45,6 +54,11 @@ public class SearchActivity extends BaseDrawerActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mSearch.clearFocus();
+
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory(getString(R.string.search_action))
+                        .setAction(query).build());
+
                 Bundle args = new Bundle();
                 args.putString(SEARCH_KEY, query);
                 SearchFragment fragment = new SearchFragment();
@@ -58,6 +72,13 @@ public class SearchActivity extends BaseDrawerActivity {
                 return false;
             }
         });
+    }
+
+    private void initGoogleAnalytics() {
+        PlamberAnalytics plamberAnalytics = (PlamberAnalytics) getApplication();
+        mTracker = plamberAnalytics.getTracker();
+        mTracker.setScreenName(TAG);
+
     }
 
     @Override

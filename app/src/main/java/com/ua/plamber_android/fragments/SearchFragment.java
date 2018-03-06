@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.analytics.Tracker;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.SearchActivity;
 import com.ua.plamber_android.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.LoadMoreBook;
+import com.ua.plamber_android.utils.PlamberAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class SearchFragment extends BaseViewBookFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         term = getArguments().getString(SearchActivity.SEARCH_KEY);
+
     }
 
     @Override
