@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.interfaces.OnLoadMoreListener;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Book;
@@ -139,8 +140,9 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
                 viewPhotoBook(currentUrl, bookHolder);
             } else {
+                BookUtilsDB bookUtilsDB = new BookUtilsDB(bookHolder.view.getContext());
                 Utils utils = new Utils(bookHolder.view.getContext());
-                viewPhotoBook(utils.getPngFileWithPath(book.getIdBook()), bookHolder);
+                viewPhotoBook(utils.getPngFileWithPath(bookUtilsDB.getBookPrimaryKey(book.getIdServerBook())), bookHolder);
                 bookHolder.offlineIndicator.setVisibility(View.VISIBLE);
                 Glide.with(bookHolder.view).load(R.drawable.ic_cloud_off_black_24dp).into(bookHolder.offlineIndicator);
             }

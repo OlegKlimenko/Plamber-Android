@@ -86,7 +86,7 @@ public class DetailBookFragmentOffline extends Fragment {
         viewAlways();
         if (bookData.isOfflineBook()) {
             hideDetail();
-            viewPhotoBook(utils.getPngFileWithPath(bookData.getIdBook()));
+            viewPhotoBook(utils.getPngFileWithPath(bookUtilsDB.getBookPrimaryKey(bookData.getIdServerBook())));
         } else {
             viewDetailBook();
         }

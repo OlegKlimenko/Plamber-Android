@@ -367,8 +367,8 @@ public class DetailBookFragment extends Fragment {
                 if (result) {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_book_removed));
                     bookDataDetail.setAddedBook(false);
-                    removeBookFromDB();
                     removeBookFromDevice(getCurrentBookKey(), false);
+                    removeBookFromDB();
                 } else {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_remove_error));
                 }
@@ -382,8 +382,11 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void removeBookFromDevice(String bookId, boolean viewMessage) {
-        File file = new File(utils.getPdfFileWithPath(bookId));
-        file.delete();
+        File bookFile = new File(utils.getPdfFileWithPath(bookId));
+        File bookCover = new File(utils.getPngFileWithPath(bookId));
+        bookFile.delete();
+        bookCover.delete();
+        bookCover.delete();
         checkBook();
         if (viewMessage)
             Utils.messageSnack(mParentLayout, getString(R.string.book_remove_from_device));

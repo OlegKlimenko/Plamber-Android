@@ -44,7 +44,6 @@ public class DownloadDialogFragmant extends DialogFragment {
     ProgressBar progressDownload;
     @BindView(R.id.tv_percent_dialog_download)
     TextView percentDownload;
-
     Book.BookData bookData;
     private String bookId;
     private Utils utils;
@@ -72,10 +71,13 @@ public class DownloadDialogFragmant extends DialogFragment {
         LayoutInflater inflate = getActivity().getLayoutInflater();
         View v = inflate.inflate(R.layout.progress_fragment_dialog, null);
         ButterKnife.bind(this, v);
+        File bookFile = new File(utils.getPdfFileWithPath(bookId));
+        File bookCover = new File(utils.getPngFileWithPath(bookId));
+        if (asyncDownload == null || asyncDownload.isCancelled()) {
+            downloadBook(bookFile);
+            downloadCover(bookCover);
+        }
 
-        final File file = new File(utils.getPdfFileWithPath(bookId));
-        if (asyncDownload == null || asyncDownload.isCancelled())
-        downloadBook(file);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
@@ -86,7 +88,7 @@ public class DownloadDialogFragmant extends DialogFragment {
                         if (asyncDownload != null) {
                             asyncDownload.cancel(true);
                         }
-                        file.delete();
+                        bookFile.delete();
                         Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_was_interrupted));
                     }
                 });
@@ -94,7 +96,7 @@ public class DownloadDialogFragmant extends DialogFragment {
     }
 
     private void downloadBook(final File file) {
-        final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFile(bookData.getBookFile());
+        final Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadBigFile(bookData.getBookFile());
         request.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull final Response<ResponseBody> response) {
@@ -109,6 +111,23 @@ public class DownloadDialogFragmant extends DialogFragment {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void downloadCover(File file) {
+        Call<ResponseBody> request = apiUtils.initializePlamberAPI().downloadFile(bookData.getPhoto());
+        request.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (!response.isSuccessful())
+                    return;
+                saveBookCover(file,response);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Download error");
             }
         });
     }
@@ -178,6 +197,20 @@ public class DownloadDialogFragmant extends DialogFragment {
 
     private DetailBookFragment getDetailBookFragment() {
         return ((DetailBookFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container));
+    }
+
+    private void saveBookCover(File file, Response<ResponseBody> response) {
+        try (FileOutputStream stream = new FileOutputStream(file)) {
+            try (BufferedInputStream inputStream = new BufferedInputStream(response.body().byteStream())) {
+                byte[] data = new byte[8192];
+                int readBytes;
+                while ((readBytes = inputStream.read(data)) != -1) {
+                    stream.write(data, 0, readBytes);
+                }
+            }
+        } catch (IOException e) {
+            Log.i(TAG, e.getLocalizedMessage());
+        }
     }
 
 }

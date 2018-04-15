@@ -280,13 +280,18 @@ public class BookReaderActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        savePageInDB();
         saveCurrentPage();
+    }
+
+    private void savePageInDB() {
+        bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
+        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
     }
 
     private void saveCurrentPage() {
         if (isLoadPdf) {
-            bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
-            bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
+            savePageInDB();
             isLoadPdf = false;
             if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
                 workAPI.setLastPage(new StatusCallback() {
@@ -363,7 +368,7 @@ public class BookReaderActivity extends AppCompatActivity {
         String url = PlamberAPI.ENDPOINT;
         String currentUrl = url.substring(0, url.length() - 1) + bookDB.getPhoto();
         if (bookDB.isOfflineBook())
-            viewPhoto(utils.getPngFileWithPath(bookDB.getIdBook()));
+            viewPhoto(utils.getPngFileWithPath(bookUtilsDB.getBookPrimaryKey(bookDB.getIdServerBook())));
         else
             viewPhoto(currentUrl);
 

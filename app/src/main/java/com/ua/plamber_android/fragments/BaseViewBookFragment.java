@@ -107,9 +107,8 @@ public abstract class BaseViewBookFragment extends Fragment {
                 if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
                     viewBookOffline();
                 } else {
-                    isShowError = false;
-                    viewUserBook();
-                }
+                      viewUserBook();
+                }     isShowError = false;
             }
         });
     }

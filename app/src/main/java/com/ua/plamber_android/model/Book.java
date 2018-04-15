@@ -120,7 +120,7 @@ public class Book {
     }
 
     public static class BookData {
-        @Expose
+        @Expose(serialize = false)
         private String idBook;
 
         @SerializedName("id")

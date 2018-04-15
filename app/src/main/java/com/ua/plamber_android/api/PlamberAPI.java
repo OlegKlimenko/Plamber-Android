@@ -64,7 +64,7 @@ public interface PlamberAPI {
 
     @Streaming
     @GET
-    Call<ResponseBody> downloadFile(@Url String fileUrl);
+    Call<ResponseBody> downloadBigFile(@Url String fileUrl);
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/change-password/")
@@ -143,4 +143,7 @@ public interface PlamberAPI {
             @Part("app_key") RequestBody appKey,
             @Part("user_token") RequestBody userToken,
             @Part MultipartBody.Part file);
+
+    @GET
+    Call<ResponseBody> downloadFile(@Url String fileUrl);
 }
