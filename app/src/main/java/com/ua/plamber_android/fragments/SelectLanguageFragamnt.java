@@ -92,6 +92,11 @@ public class SelectLanguageFragamnt extends Fragment {
                 getActivity().setResult(Activity.RESULT_OK, returnIntent);
                 getActivity().finish();
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         };
         setAdapter(listener);
     }

@@ -280,7 +280,6 @@ public class BookReaderActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        savePageInDB();
         saveCurrentPage();
     }
 
@@ -290,8 +289,9 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void saveCurrentPage() {
+        savePageInDB();
+
         if (isLoadPdf) {
-            savePageInDB();
             isLoadPdf = false;
             if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
                 workAPI.setLastPage(new StatusCallback() {

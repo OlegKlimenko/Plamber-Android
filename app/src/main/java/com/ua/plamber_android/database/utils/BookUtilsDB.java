@@ -40,6 +40,14 @@ public class BookUtilsDB {
         return page;
     }
 
+    public boolean isBookSaveDB(long id) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        BookDB result = realm.where(BookDB.class).equalTo("idServerBook", id).findFirst();
+        realm.commitTransaction();
+        return result != null;
+    }
+
     public String readLastDate(String id) {
         String date = null;
         Realm realm = Realm.getDefaultInstance();

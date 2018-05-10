@@ -85,7 +85,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return books.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
-    public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         @BindView(R.id.book_item_image)
         ImageView img;
@@ -106,12 +106,19 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, v);
             this.view = v;
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             mListener = listener;
         }
 
         @Override
         public void onClick(View view) {
             mListener.onClick(view, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            mListener.onLongClick(v, getAdapterPosition());
+            return true;
         }
     }
 

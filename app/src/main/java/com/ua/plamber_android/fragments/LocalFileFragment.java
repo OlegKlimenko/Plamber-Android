@@ -142,6 +142,11 @@ public class LocalFileFragment extends Fragment {
             public void onClick(View view, int position) {
 
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         };
         if (getActivity() != null) {
             deleteDuplicate();

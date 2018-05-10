@@ -76,11 +76,6 @@ public class BaseDrawerActivity extends AppCompatActivity {
         mHeaderContainer = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_container);
         setHeaderBackground();
         initAccountDetailListener();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         saveProfileData();
     }
 
@@ -192,26 +187,21 @@ public class BaseDrawerActivity extends AppCompatActivity {
     }
 
     private void saveProfileData() {
-        if (preferenceUtils.checkPreference(PreferenceUtils.USER_NAME)) {
-            String name = preferenceUtils.readPreference(PreferenceUtils.USER_NAME);
-            String email = preferenceUtils.readPreference(PreferenceUtils.USER_EMAIL);
-            setProfile(name, email);
-        } else {
-            workAPI.getProfileData(new ProfileCallback() {
-                @Override
-                public void onSuccess(@NonNull User.ProfileData profileData) {
-                    preferenceUtils.writePreference(PreferenceUtils.USER_NAME, profileData.getUserName());
-                    preferenceUtils.writePreference(PreferenceUtils.USER_EMAIL, profileData.getUserEmail());
-                        preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl() + "?" + String.valueOf(System.currentTimeMillis()));
-                    setProfile(profileData.getUserName(), profileData.getUserEmail());
-                }
+        workAPI.getProfileData(new ProfileCallback() {
+            @Override
+            public void onSuccess(@NonNull User.ProfileData profileData) {
+                preferenceUtils.writePreference(PreferenceUtils.USER_NAME, profileData.getUserName());
+                preferenceUtils.writePreference(PreferenceUtils.USER_EMAIL, profileData.getUserEmail());
+                preferenceUtils.writePreference(PreferenceUtils.USER_PHOTO, profileData.getUserPhotoUrl() + "?" + String.valueOf(System.currentTimeMillis()));
+                setProfile(profileData.getUserName(), profileData.getUserEmail());
+            }
 
-                @Override
-                public void onError(@NonNull Throwable t) {
-                    Log.i(TAG, t.getLocalizedMessage());
-                }
-            });
-        }
+            @Override
+            public void onError(@NonNull Throwable t) {
+                Log.i(TAG, t.getLocalizedMessage());
+            }
+        });
+
     }
 
     public SwitchCompat getOfflineSwitcher() {

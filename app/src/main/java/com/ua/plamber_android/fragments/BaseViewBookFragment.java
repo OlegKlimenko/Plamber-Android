@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.BookReaderActivity;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.activitys.LibraryActivity;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
@@ -166,16 +168,23 @@ public abstract class BaseViewBookFragment extends Fragment {
             visible(recyclerView, true);
             mSwipeRefresh.setRefreshing(false);
         }
-
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
-                intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(position).getIdServerBook());
-                intent.putExtra(DetailBookActivity.BOOK_ID, books.get(position).getIdBook());
-                intent.putExtra(DetailBookActivity.BOOK_NAME, books.get(position).getBookName());
-                intent.putExtra(DetailBookActivity.IS_OFFLINE_BOOK, books.get(position).isOfflineBook());
-                startActivity(intent);
+                if (BaseViewBookFragment.this instanceof UserBookFragment && bookUtilsDB.isBookSaveDB(books.get(position).getIdServerBook())) {
+                    Intent intent = BookReaderActivity.startReaderActivity(getActivity());
+                    intent.putExtra(DetailBookActivity.BOOK_ID, bookUtilsDB.getBookPrimaryKey(books.get(position).getIdServerBook()));
+                    intent.putExtra(DetailBookActivity.BOOK_PHOTO, books.get(position).getPhoto());
+                    intent.putExtra(DetailBookActivity.BOOK_AUTHOR, books.get(position).getIdAuthor());
+                    startActivity(intent);
+                    return;
+                }
+                    openDetailBook(books, view, position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                openDetailBook(books, view, position);
             }
         };
         if (recyclerView.getAdapter() == null) {
@@ -184,6 +193,15 @@ public abstract class BaseViewBookFragment extends Fragment {
         } else {
             mAdapter.updateList(books);
         }
+    }
+
+    private void openDetailBook(List<Book.BookData> books, View view, int position) {
+        Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
+        intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(position).getIdServerBook());
+        intent.putExtra(DetailBookActivity.BOOK_ID, books.get(position).getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_NAME, books.get(position).getBookName());
+        intent.putExtra(DetailBookActivity.IS_OFFLINE_BOOK, books.get(position).isOfflineBook());
+        startActivity(intent);
     }
 
     public void viewMessageListEmpty(String message) {

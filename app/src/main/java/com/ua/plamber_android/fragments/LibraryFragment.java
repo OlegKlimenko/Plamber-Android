@@ -141,6 +141,11 @@ public class LibraryFragment extends Fragment {
                 if (getActivity() != null)
                 getActivity().startActivityForResult(intent, MENU_REQUEST);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         };
         setAdapter(listener);
     }

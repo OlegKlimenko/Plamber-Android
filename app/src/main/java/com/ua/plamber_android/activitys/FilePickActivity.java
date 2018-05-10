@@ -73,6 +73,11 @@ public class FilePickActivity extends AppCompatActivity {
                     finish();
                 }
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         };
         mAdapter = new RecyclerFileAdapter(mFiles, listener);
         mRecyclerView.setAdapter(mAdapter);

@@ -31,14 +31,22 @@ public class CategoryFragment extends BaseViewBookFragment {
         idCategory = getArguments().getLong(LibraryFragment.IDCATEGORI);
     }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadCategoryBook();
+    }
+
     @Override
     public void viewMessageListEmpty(String message) {
         super.viewMessageListEmpty(getString(R.string.no_book_in_category_message));
     }
 
+    //don`t remove this
     @Override
     public void viewUserBook() {
-        loadCategoryBook();
+
     }
 
     private void loadCategoryBook() {
@@ -46,8 +54,7 @@ public class CategoryFragment extends BaseViewBookFragment {
             getWorkAPI().getBooksFromCategory(new LoadMoreCallback() {
                 @Override
                 public void onSuccess(@NonNull final LoadMoreBook.LoadMoreBookData data) {
-                    final List<Book.BookData> books = new ArrayList<>();
-                    books.addAll(data.getBookData());
+                    final List<Book.BookData> books = new ArrayList<>(data.getBookData());
                     page = data.getNextPageNumber();
                     initAdapter(books);
                     getmAdapter().setOnLoadMoreListener(new OnLoadMoreListener() {
