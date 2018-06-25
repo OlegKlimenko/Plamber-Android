@@ -122,6 +122,41 @@ public class BookUtilsDB {
         realm.commitTransaction();
     }
 
+    public String getIdLocalBook(String bookName) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        BookDB result = realm.where(BookDB.class).equalTo("bookName", bookName).findFirst();
+        realm.commitTransaction();
+        return result != null ? result.getIdBook() : "";
+    }
+
+    public boolean isLocalBookSaveDB(String bookName) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        BookDB result = realm.where(BookDB.class).equalTo("bookName", bookName).findFirst();
+        realm.commitTransaction();
+        return result != null;
+    }
+
+    public int getLastLocalBookPage(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        BookDB result = realm.where(BookDB.class).equalTo("idBook", id).findFirst();
+        realm.commitTransaction();
+        return result != null ? result.getBookPage() : 0;
+    }
+
+    public String saveBookLocal(String bookName) {
+        String id = Utils.generateIdBook();
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        BookDB data = realm.createObject(BookDB.class, id);
+        data.setBookName(bookName);
+        data.setOfflineBook(true);
+        realm.commitTransaction();
+        return id;
+    }
+
     public Book.BookData readBookFromDB(String id) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

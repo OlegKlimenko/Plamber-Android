@@ -8,11 +8,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.database.utils.BookUtilsDB;
 
 import java.io.File;
 
@@ -35,6 +39,8 @@ public class BookReaderLocalActivity extends AppCompatActivity {
 
     private boolean isLoadPdf;
     private String mBookName;
+    private String mBookId;
+    private BookUtilsDB mBookUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +49,17 @@ public class BookReaderLocalActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         mBookName = getIntent().getStringExtra(LOCAL_BOOK_NAME);
+        mBookUtils = new BookUtilsDB(this);
         initToolbar();
-        viewPdf(0);
-        mReaderDrawer.setEnabled(false);
+        initNavigationView();
+        if (!mBookUtils.isLocalBookSaveDB(mBookName)) {
+            mBookId = mBookUtils.saveBookLocal(mBookName);
+            viewPdf(0);
+            return;
+        }
+
+        mBookId = mBookUtils.getIdLocalBook(mBookName);
+        viewPdf(mBookUtils.getLastLocalBookPage(mBookId));
     }
 
     private void initToolbar() {
@@ -56,6 +70,16 @@ public class BookReaderLocalActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mBookUtils.updatePage(mBookId, mPdfView.getCurrentPage());
+    }
+
+    private void initNavigationView() {
+        setHeaderBackground();
+    }
+
     private void fitWidth() {
         mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
         mPdfView.jumpTo(mPdfView.getCurrentPage());
@@ -63,14 +87,11 @@ public class BookReaderLocalActivity extends AppCompatActivity {
 
     private void viewPdf(final int currentPage) {
         mPdfView.fromFile(new File(getIntent().getStringExtra(LOCAL_BOOK_FILE)))
-                .onRender(new OnRenderListener() {
-                    @Override
-                    public void onInitiallyRendered(int nbPages, float pageWidth, float pageHeight) {
-                        mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
-                        mPdfView.jumpTo(currentPage);
-                        setPages(mPdfView.getCurrentPage(), mPdfView.getPageCount());
-                        isLoadPdf = true;
-                    }
+                .onRender((nbPages, pageWidth, pageHeight) -> {
+                    mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
+                    mPdfView.jumpTo(currentPage);
+                    setPages(mPdfView.getCurrentPage(), mPdfView.getPageCount());
+                    isLoadPdf = true;
                 }).enableAntialiasing(true).spacing(10).load();
 
     }
@@ -84,5 +105,10 @@ public class BookReaderLocalActivity extends AppCompatActivity {
 
     public static Intent startLocalReaderActivity(Context context) {
         return new Intent(context, BookReaderLocalActivity.class);
+    }
+
+    private void setHeaderBackground() {
+        ImageView headerImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_reader_header_image);
+        Glide.with(getApplicationContext()).load(R.drawable.main_background).apply(new RequestOptions().transform(new CenterCrop())).into(headerImage);
     }
 }
