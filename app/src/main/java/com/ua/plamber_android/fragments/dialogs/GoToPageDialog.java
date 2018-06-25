@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BookReaderActivity;
+import com.ua.plamber_android.activitys.BookReaderLocalActivity;
 import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
@@ -63,17 +64,41 @@ public class GoToPageDialog extends DialogFragment {
             public void onClick(View view) {
                 String pageNumber = mPgaeNumber.getText().toString().trim();
                 int page = pageNumber.isEmpty() ? 0 : Integer.parseInt(pageNumber) - 1;
-                if (page > getReaderActivity().getCountPage()) {
-                    Utils.messageSnack(mParentGoTo, getString(R.string.number_of_page_in_this_book) + getReaderActivity().getCountPage());
-                } else {
-                    getReaderActivity().goToPage(page);
-                    dismiss();
+                if (getArguments() != null && getArguments().getBoolean(BookReaderLocalActivity.TAG, false)){
+                    localReader(page);
+                    return;
                 }
+
+                reader(page);
             }
         });
     }
 
+    private void localReader(int page) {
+        if (page > getLocalReaderActivity().getCountPage()) {
+            Utils.messageSnack(mParentGoTo, getString(R.string.number_of_page_in_this_book) + getLocalReaderActivity().getCountPage());
+            return;
+        }
+
+        getLocalReaderActivity().goToPage(page);
+        dismiss();
+    }
+
+    private void reader(int page) {
+        if (page > getReaderActivity().getCountPage()) {
+            Utils.messageSnack(mParentGoTo, getString(R.string.number_of_page_in_this_book) + getReaderActivity().getCountPage());
+            return;
+        }
+
+        getReaderActivity().goToPage(page);
+        dismiss();
+    }
+
     private BookReaderActivity getReaderActivity() {
         return (BookReaderActivity) getActivity();
+    }
+
+    private BookReaderLocalActivity getLocalReaderActivity() {
+        return (BookReaderLocalActivity) getActivity();
     }
 }

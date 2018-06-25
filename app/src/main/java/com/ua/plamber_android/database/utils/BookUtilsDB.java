@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 public class BookUtilsDB {
@@ -27,6 +28,11 @@ public class BookUtilsDB {
     public BookUtilsDB(Context context) {
         Realm.init(context);
         utils = new Utils(context);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .schemaVersion(1)
+                .migration(new MigrationLocalBook())
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     public int readLastPage(String id) {
@@ -120,41 +126,6 @@ public class BookUtilsDB {
         data.setBookName(bookName);
         data.setOfflineBook(true);
         realm.commitTransaction();
-    }
-
-    public String getIdLocalBook(String bookName) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        BookDB result = realm.where(BookDB.class).equalTo("bookName", bookName).findFirst();
-        realm.commitTransaction();
-        return result != null ? result.getIdBook() : "";
-    }
-
-    public boolean isLocalBookSaveDB(String bookName) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        BookDB result = realm.where(BookDB.class).equalTo("bookName", bookName).findFirst();
-        realm.commitTransaction();
-        return result != null;
-    }
-
-    public int getLastLocalBookPage(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        BookDB result = realm.where(BookDB.class).equalTo("idBook", id).findFirst();
-        realm.commitTransaction();
-        return result != null ? result.getBookPage() : 0;
-    }
-
-    public String saveBookLocal(String bookName) {
-        String id = Utils.generateIdBook();
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        BookDB data = realm.createObject(BookDB.class, id);
-        data.setBookName(bookName);
-        data.setOfflineBook(true);
-        realm.commitTransaction();
-        return id;
     }
 
     public Book.BookData readBookFromDB(String id) {
