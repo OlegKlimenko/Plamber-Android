@@ -22,6 +22,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.ViewPagerAdapter;
+import com.ua.plamber_android.fragments.LocalFileFragment;
 import com.ua.plamber_android.fragments.dialogs.ConnectionErrorDialog;
 import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragment;
@@ -71,13 +72,13 @@ public class LibraryActivity extends BaseDrawerActivity {
         setupPager();
         setPagerSwipe();
         setToggle(mToolbar);
-        setPage(0);
+        setPage(1);
         setupNavigationDrawer();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mFabUpload.setElevation(5);
         }
         //view fab on start in offline mode
-        initFabButton(0);
+        initFabButton(1);
     }
 
     private void initGoogleAnalytics() {
@@ -180,7 +181,7 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     public void setupPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        //adapter.addFragment(new LocalFileFragment(), getString(R.string.local_file_title));
+        adapter.addFragment(new LocalFileFragment(), getString(R.string.local_file_title));
         adapter.addFragment(new UserBookFragment(), getString(R.string.my_books));
         adapter.addFragment(new LibraryFragment(), getString(R.string.library));
         adapter.addFragment(new RecommendedFragment(), getString(R.string.recommended));
@@ -224,7 +225,7 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     private void initFabButton(int position) {
         currentPosition = position;
-        if (position == 3 || position == 0) {
+        if (position == 4 || position == 1) {
             mFabUpload.show();
         } else {
             mFabUpload.hide();

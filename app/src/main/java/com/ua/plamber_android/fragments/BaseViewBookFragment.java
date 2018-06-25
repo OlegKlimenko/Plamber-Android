@@ -251,7 +251,7 @@ public abstract class BaseViewBookFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && fab.isShown()) {
                     fab.hide();
-                } else if (LibraryActivity.currentPosition == 3 || LibraryActivity.currentPosition == 0) {
+                } else if (LibraryActivity.currentPosition == 4 || LibraryActivity.currentPosition == 1) {
                     fab.show();
                 }
             }

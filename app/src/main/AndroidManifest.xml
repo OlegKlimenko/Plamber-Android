@@ -35,6 +35,7 @@
         <activity android:name=".activitys.SelectLanguageActivity" />
         <activity android:name=".activitys.SupportActivity" />
         <activity android:name=".activitys.ImagePickActivity"/>
+        <activity android:name=".activitys.BookReaderLocalActivity" />
 
     </application>
 

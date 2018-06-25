@@ -1,5 +1,6 @@
 package com.ua.plamber_android.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.BookReaderLocalActivity;
 import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.adapters.RecyclerLocalBookAdapter;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
@@ -47,10 +49,9 @@ public class LocalFileFragment extends Fragment {
     @BindView(R.id.tv_local_message)
     TextView mMessage;
 
-    List<File> listFile;
-    Utils utils;
-    LoadFiles loadFiles;
-    RecyclerLocalBookAdapter adapter;
+    private volatile List<File> listFile;
+    private Utils utils;
+    private LoadFiles loadFiles;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,14 +87,11 @@ public class LocalFileFragment extends Fragment {
     }
 
     private void setSwipe() {
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (loadFiles != null && !loadFiles.isCancelled())
-                    loadFiles.cancel(true);
-                loadFiles = new LoadFiles();
-                loadFiles.execute(FilePickActivity.BOOK_FORMAT);
-            }
+        mSwipeRefresh.setOnRefreshListener(() -> {
+            if (loadFiles != null && !loadFiles.isCancelled())
+                loadFiles.cancel(true);
+            loadFiles = new LoadFiles();
+            loadFiles.execute(FilePickActivity.BOOK_FORMAT);
         });
     }
 
@@ -127,6 +125,8 @@ public class LocalFileFragment extends Fragment {
 
     private void getAllFilesInDevise(File dir, String[] types) {
         File[] files = dir.listFiles();
+        if (files == null || files.length <= 0)
+            return;
         for (File file : files) {
             if (file.isDirectory()) {
                 getAllFilesInDevise(file, types);
@@ -140,7 +140,10 @@ public class LocalFileFragment extends Fragment {
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-
+                Intent intent = BookReaderLocalActivity.startLocalReaderActivity(getActivity());
+                intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_FILE, listFile.get(position).getAbsolutePath());
+                intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_NAME, listFile.get(position).getName());
+                startActivity(intent);
             }
 
             @Override
@@ -150,7 +153,7 @@ public class LocalFileFragment extends Fragment {
         };
         if (getActivity() != null) {
             deleteDuplicate();
-            adapter = new RecyclerLocalBookAdapter(listFile, listener);
+            RecyclerLocalBookAdapter adapter = new RecyclerLocalBookAdapter(listFile, listener);
             mRecyclerView.setAdapter(adapter);
         }
         visible(mProgressLoad, false);
@@ -161,8 +164,7 @@ public class LocalFileFragment extends Fragment {
     }
 
     private void deleteDuplicate() {
-        Set<File> set = new HashSet<>();
-        set.addAll(listFile);
+        Set<File> set = new HashSet<>(listFile);
         listFile.clear();
         listFile.addAll(set);
     }
