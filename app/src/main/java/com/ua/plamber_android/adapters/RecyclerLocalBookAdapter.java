@@ -32,9 +32,9 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
     private RecyclerViewClickListener mListener;
 
     public RecyclerLocalBookAdapter(List<LocalBookDB> mLocalBooks, RecyclerViewClickListener mListener) {
-        this.mLocalBooks = mLocalBooks;
+        sortList(mLocalBooks);
+        this.mLocalBooks = new ArrayList<>(mLocalBooks);
         this.mListener = mListener;
-        sortList(this.mLocalBooks);
     }
 
     public class LocalBookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

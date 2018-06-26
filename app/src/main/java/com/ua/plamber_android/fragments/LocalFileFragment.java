@@ -85,7 +85,7 @@ public class LocalFileFragment extends Fragment {
             loadFiles = new LoadFiles();
             loadFiles.execute(FilePickActivity.BOOK_FORMAT);
         } else {
-            setAdapter();
+            setAdapter(listFile);
         }
     }
 
@@ -121,7 +121,7 @@ public class LocalFileFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             if (!listFile.isEmpty()) {
-                setAdapter();
+                setAdapter(listFile);
             } else {
                 visible(mProgressLoad, false);
                 visible(mRecyclerView, false);
@@ -142,12 +142,21 @@ public class LocalFileFragment extends Fragment {
                 LocalBookDB book = new LocalBookDB();
                 book.setBookPath(file.getAbsolutePath());
                 book.setBookName(file.getName());
+                book.setLastReadDate(bookUtilsDB.getDate(file.getAbsolutePath()));
                 listFile.add(book);
             }
         }
     }
 
-    private void setAdapter() {
+    private LocalBookDB createBook(String name, String path) {
+        LocalBookDB book = new LocalBookDB();
+        book.setBookName(name);
+        book.setBookPath(path);
+        book.setBookAvatar("");
+        return book;
+    }
+
+    private void setAdapter(List<LocalBookDB> books) {
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -171,13 +180,11 @@ public class LocalFileFragment extends Fragment {
         //deleteDuplicate();
 
         if (mRecyclerView.getAdapter() == null) {
-            adapter = new RecyclerLocalBookAdapter(listFile, listener);
+            adapter = new RecyclerLocalBookAdapter(books, listener);
             mRecyclerView.setAdapter(adapter);
-            hideFindFileProgress();
-            return;
-        }
-        adapter.updateLocalBooks(new ArrayList<>(listFile));
-
+        } else
+            adapter.updateLocalBooks(books);
+        hideFindFileProgress();
     }
 
     private void hideFindFileProgress() {

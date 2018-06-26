@@ -52,10 +52,10 @@ public class LocalBookUtils {
         realm.commitTransaction();
     }
 
-    public void updateDate(String id, long date) {
+    public void updateDate(String path, long date) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        LocalBookDB result = realm.where(LocalBookDB.class).equalTo("bookPath", id).findFirst();
+        LocalBookDB result = realm.where(LocalBookDB.class).equalTo("bookPath", path).findFirst();
         if (result != null)
             result.setLastReadDate(date);
         realm.commitTransaction();
