@@ -29,7 +29,7 @@ public class BookUtilsDB {
         Realm.init(context);
         utils = new Utils(context);
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .migration(new MigrationLocalBook())
                 .build();
         Realm.setDefaultConfiguration(config);

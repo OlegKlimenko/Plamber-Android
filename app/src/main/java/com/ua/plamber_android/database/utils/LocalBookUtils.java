@@ -13,7 +13,7 @@ public class LocalBookUtils {
     public LocalBookUtils(Context context) {
         Realm.init(context);
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .migration(new MigrationLocalBook())
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -51,6 +51,24 @@ public class LocalBookUtils {
             result.setLastPage(page);
         realm.commitTransaction();
     }
+
+    public void updateDate(String id, long date) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        LocalBookDB result = realm.where(LocalBookDB.class).equalTo("bookPath", id).findFirst();
+        if (result != null)
+            result.setLastReadDate(date);
+        realm.commitTransaction();
+    }
+
+    public long getDate(String path) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        LocalBookDB result = realm.where(LocalBookDB.class).equalTo("bookPath", path).findFirst();
+        realm.commitTransaction();
+        return result != null ? result.getLastReadDate() : 0;
+    }
+
 
     public String saveBookLocal(LocalBookDB bookDB) {
         String id = Utils.generateIdBook();

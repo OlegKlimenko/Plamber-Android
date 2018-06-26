@@ -1,6 +1,10 @@
 package com.ua.plamber_android.adapters;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +13,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.database.model.LocalBookDB;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.LocalFilesSortUpdate;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,13 +28,13 @@ import butterknife.ButterKnife;
 
 public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocalBookAdapter.LocalBookHolder>{
 
-    private List<File> mFiles;
+    private List<LocalBookDB> mLocalBooks;
     private RecyclerViewClickListener mListener;
 
-
-    public RecyclerLocalBookAdapter(List<File> mFiles, RecyclerViewClickListener mListener) {
-        this.mFiles = mFiles;
+    public RecyclerLocalBookAdapter(List<LocalBookDB> mLocalBooks, RecyclerViewClickListener mListener) {
+        this.mLocalBooks = mLocalBooks;
         this.mListener = mListener;
+        sortList(this.mLocalBooks);
     }
 
     public class LocalBookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -64,14 +72,26 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
 
     @Override
     public void onBindViewHolder(LocalBookHolder holder, int position) {
-        File file = mFiles.get(position);
-        holder.bookName.setText(file.getName());
-        holder.bookSize.setText(FileUtils.getFileSize(file));
+        LocalBookDB book = mLocalBooks.get(position);
+        holder.bookName.setText(book.getBookName());
+        holder.bookSize.setText(FileUtils.getFileSize(new File(book.getBookPath())));
         Glide.with(holder.view).load(R.drawable.pdf_book).into(holder.img);
+    }
+
+    public void updateLocalBooks(List<LocalBookDB> newList) {
+        sortList(newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new LocalFilesSortUpdate(mLocalBooks, newList), false);
+        mLocalBooks.clear();
+        mLocalBooks.addAll(newList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override
     public int getItemCount() {
-        return mFiles.size();
+        return mLocalBooks.size();
+    }
+
+    private void sortList(List<LocalBookDB> list) {
+        Collections.sort(list, (o1, o2) -> Long.compare(o2.getLastReadDate(), o1.getLastReadDate()));
     }
 }

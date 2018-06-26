@@ -15,13 +15,23 @@ public class MigrationLocalBook implements RealmMigration {
                     .addField("bookName", String.class)
                     .addField("bookPath", String.class)
                     .addField("bookAvatar", String.class)
-                    .addField("lastPage", int.class);
+                    .addField("lastPage", int.class)
+                    .addField("lastReadDate", long.class);
+            oldVersion++;
+            return;
+        }
+
+        if (oldVersion == 1) {
+            schema.get("LocalBookDB")
+                    .addField("lastReadDate", long.class);
             oldVersion++;
         }
+
+
     }
     @Override
     public int hashCode() {
-        return 37;
+        return 38;
     }
 
     @Override

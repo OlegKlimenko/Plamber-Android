@@ -1,5 +1,7 @@
 package com.ua.plamber_android.database.model;
 
+import java.util.Objects;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -14,6 +16,16 @@ public class LocalBookDB extends RealmObject {
     private String bookAvatar;
 
     private int lastPage;
+
+    private long lastReadDate;
+
+    public long getLastReadDate() {
+        return lastReadDate;
+    }
+
+    public void setLastReadDate(long lastReadDate) {
+        this.lastReadDate = lastReadDate;
+    }
 
     public int getLastPage() {
         return lastPage;
@@ -33,10 +45,6 @@ public class LocalBookDB extends RealmObject {
 
     public String getIdBook() {
         return idBook;
-    }
-
-    public void setIdBook(String idBook) {
-        this.idBook = idBook;
     }
 
     public String getBookName() {

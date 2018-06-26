@@ -22,6 +22,8 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BookReaderLocalActivity;
 import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.adapters.RecyclerLocalBookAdapter;
+import com.ua.plamber_android.database.model.LocalBookDB;
+import com.ua.plamber_android.database.utils.LocalBookUtils;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.utils.FileUtils;
 import com.ua.plamber_android.utils.Utils;
@@ -49,18 +51,20 @@ public class LocalFileFragment extends Fragment {
     @BindView(R.id.tv_local_message)
     TextView mMessage;
 
-    private volatile List<File> listFile;
+    private List<LocalBookDB> listFile;
     private Utils utils;
     private LoadFiles loadFiles;
+    private RecyclerLocalBookAdapter adapter;
+    private LocalBookUtils bookUtilsDB;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         utils = new Utils(getActivity());
+        bookUtilsDB = new LocalBookUtils(getActivity());
         listFile = new ArrayList<>();
         if (savedInstanceState != null)
-            listFile = new Gson().fromJson(savedInstanceState.getString(FILE_LIST), new TypeToken<List<File>>() {
-            }.getType());
+            listFile = new Gson().fromJson(savedInstanceState.getString(FILE_LIST), new TypeToken<List<File>>() {}.getType());
     }
 
     @Nullable
@@ -68,16 +72,21 @@ public class LocalFileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.local_file_fragment, container, false);
         ButterKnife.bind(this, v);
+        setSwipe();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (listFile.isEmpty()) {
             loadFiles = new LoadFiles();
             loadFiles.execute(FilePickActivity.BOOK_FORMAT);
         } else {
             setAdapter();
         }
-        setSwipe();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        return v;
     }
 
     @Override
@@ -111,10 +120,9 @@ public class LocalFileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (!listFile.isEmpty()){
+            if (!listFile.isEmpty()) {
                 setAdapter();
-            }
-            else{
+            } else {
                 visible(mProgressLoad, false);
                 visible(mRecyclerView, false);
                 visible(mMessage, true);
@@ -131,7 +139,10 @@ public class LocalFileFragment extends Fragment {
             if (file.isDirectory()) {
                 getAllFilesInDevise(file, types);
             } else if (FileUtils.isCorrectType(file, types)) {
-                listFile.add(file);
+                LocalBookDB book = new LocalBookDB();
+                book.setBookPath(file.getAbsolutePath());
+                book.setBookName(file.getName());
+                listFile.add(book);
             }
         }
     }
@@ -141,8 +152,11 @@ public class LocalFileFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Intent intent = BookReaderLocalActivity.startLocalReaderActivity(getActivity());
-                intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_FILE, listFile.get(position).getAbsolutePath());
-                intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_NAME, listFile.get(position).getName());
+                intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_FILE, listFile.get(position).getBookPath());
+                intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_NAME, listFile.get(position).getBookName());
+                long time = System.currentTimeMillis();
+                bookUtilsDB.updateDate(listFile.get(position).getBookPath(), time);
+                listFile.get(position).setLastReadDate(time);
                 startActivity(intent);
             }
 
@@ -151,20 +165,31 @@ public class LocalFileFragment extends Fragment {
 
             }
         };
-        if (getActivity() != null) {
-            deleteDuplicate();
-            RecyclerLocalBookAdapter adapter = new RecyclerLocalBookAdapter(listFile, listener);
+        if (getActivity() == null)
+            return;
+
+        //deleteDuplicate();
+
+        if (mRecyclerView.getAdapter() == null) {
+            adapter = new RecyclerLocalBookAdapter(listFile, listener);
             mRecyclerView.setAdapter(adapter);
+            hideFindFileProgress();
+            return;
         }
+        adapter.updateLocalBooks(new ArrayList<>(listFile));
+
+    }
+
+    private void hideFindFileProgress() {
+
         visible(mProgressLoad, false);
         visible(mRecyclerView, true);
         visible(mMessage, false);
         mSwipeRefresh.setRefreshing(false);
-
     }
 
     private void deleteDuplicate() {
-        Set<File> set = new HashSet<>(listFile);
+        Set<LocalBookDB> set = new HashSet<>(listFile);
         listFile.clear();
         listFile.addAll(set);
     }
