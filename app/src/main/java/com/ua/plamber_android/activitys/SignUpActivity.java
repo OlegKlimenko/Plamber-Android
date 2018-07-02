@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
@@ -31,8 +32,6 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    @BindView(R.id.iv_singup_background)
-    ImageView backgroundSing;
     @BindView(R.id.singup_progress_bar)
     LinearLayout mSingUpProgressBar;
     @BindView(R.id.et_sing_up_password_again)
@@ -68,8 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         apiUtils = new APIUtils(getApplicationContext());
         preferenceUtils = new PreferenceUtils(getApplicationContext());
-        Utils utils = new Utils(getApplicationContext());
-        utils.initBackgroundImage(backgroundSing);
+        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.main_background));
         Glide.with(getApplicationContext()).load(R.drawable.plamber_logo_mini).into(mSingUpLogo);
     }
 

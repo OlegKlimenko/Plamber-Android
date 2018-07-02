@@ -11,6 +11,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -158,9 +160,9 @@ public class BookUtilsDB {
     public List<Book.BookData> getListBookFromDB() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        List<BookDB> offlineBooks = new ArrayList<>();
-        offlineBooks.addAll(realm.where(BookDB.class).findAll());
+        List<BookDB> offlineBooks = new ArrayList<>(realm.where(BookDB.class).findAll());
         realm.commitTransaction();
+        Collections.sort(offlineBooks, (o1, o2) -> o2.getLastReadDate().compareTo(o1.getLastReadDate()));
         return convertBookListForDB(offlineBooks);
     }
 

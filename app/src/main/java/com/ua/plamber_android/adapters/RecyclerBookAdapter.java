@@ -167,7 +167,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void updateList(List<Book.BookData> newLsit) {
         JumpToChangeItem jumpToChange = new JumpToChangeItem();
         jumpToChange.bind(this);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RecyclerUserBooksUpdate(this.books, newLsit));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RecyclerUserBooksUpdate(this.books, newLsit), false);
         books.clear();
         books.addAll(newLsit);
         diffResult.dispatchUpdatesTo(jumpToChange);

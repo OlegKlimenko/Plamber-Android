@@ -29,8 +29,6 @@ import retrofit2.Response;
 
 public class RestoreAccountActivity extends AppCompatActivity {
 
-    @BindView(R.id.iv_restore_background)
-    ImageView mBackgroundRestore;
     @BindView(R.id.restore_progress_bar)
     LinearLayout mRestoreProgressBar;
     @BindView(R.id.et_email_restore)
@@ -52,8 +50,7 @@ public class RestoreAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restore_account);
         ButterKnife.bind(this);
         apiUtils = new APIUtils(getApplicationContext());
-        Utils utils = new Utils(getApplicationContext());
-        utils.initBackgroundImage(mBackgroundRestore);
+        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.main_background));
         Glide.with(getApplicationContext()).load(R.drawable.plamber_logo_mini).into(mRestoreLogo);
     }
 

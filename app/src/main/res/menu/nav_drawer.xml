@@ -5,6 +5,11 @@
         android:id="@+id/group_first"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_local_books"
+            android:icon="@drawable/baseline_sd_storage_24"
+            android:title="@string/local_files" />
+
+        <item
             android:id="@+id/nav_user_books"
             android:checked="true"
             android:icon="@drawable/ic_book_black_24dp"

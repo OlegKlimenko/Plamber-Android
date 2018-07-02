@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +22,6 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -257,10 +257,12 @@ public class BookReaderActivity extends AppCompatActivity {
         workAPI.getLastPageFromCloud(new PageCallback() {
             @Override
             public void onSuccess(@NonNull Page.PageData page) {
-                if (bookUtilsDB.readLastDate(bookDB.getIdBook()) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookDB.getIdBook())).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime() ) {
+                Log.i(TAG, "Server " + page.getLastReadData());
+                Log.i(TAG, "Local " + bookUtilsDB.readLastDate(bookDB.getIdBook()));
+                if (bookUtilsDB.readLastDate(bookDB.getIdBook()) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookDB.getIdBook())).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime()) {
                     viewFromDB();
                 } else {
-                    bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), page.getLastReadData());
+                    //bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), page.getLastReadData());
                     bookUtilsDB.updatePage(bookDB.getIdBook(), page.getLastPage());
                     viewFromDB();
                 }
@@ -274,6 +276,7 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void viewFromDB() {
+        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
         viewPdf(bookUtilsDB.readLastPage(bookDB.getIdBook()) - 1);
     }
 
@@ -285,27 +288,27 @@ public class BookReaderActivity extends AppCompatActivity {
 
     private void savePageInDB() {
         bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
-        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
+        //bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
     }
 
     private void saveCurrentPage() {
-        savePageInDB();
+        //savePageInDB();
+        if (!isLoadPdf)
+            return;
+        bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
+        isLoadPdf = false;
+        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
+            workAPI.setLastPage(new StatusCallback() {
+                @Override
+                public void onSuccess(@NonNull int status) {
 
-        if (isLoadPdf) {
-            isLoadPdf = false;
-            if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
-                workAPI.setLastPage(new StatusCallback() {
-                    @Override
-                    public void onSuccess(@NonNull int status) {
+                }
 
-                    }
+                @Override
+                public void onError(@NonNull Throwable t) {
 
-                    @Override
-                    public void onError(@NonNull Throwable t) {
-
-                    }
-                }, bookDB.getIdServerBook(), getCurrentPage());
-        }
+                }
+            }, bookDB.getIdServerBook(), getCurrentPage());
     }
 
     private int getCurrentPage() {
@@ -314,14 +317,11 @@ public class BookReaderActivity extends AppCompatActivity {
 
     private void viewPdf(final int currentPage) {
         mPdfView.fromFile(new File(utils.getPdfFileWithPath(bookDB.getIdBook())))
-                .onRender(new OnRenderListener() {
-                    @Override
-                    public void onInitiallyRendered(int nbPages, float pageWidth, float pageHeight) {
-                        mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
-                        mPdfView.jumpTo(currentPage);
-                        setPages(getCurrentPage(), getCountPage());
-                        isLoadPdf = true;
-                    }
+                .onRender((nbPages, pageWidth, pageHeight) -> {
+                    mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
+                    mPdfView.jumpTo(currentPage);
+                    setPages(getCurrentPage(), getCountPage());
+                    isLoadPdf = true;
                 }).enableAntialiasing(true).spacing(10).load();
 
     }

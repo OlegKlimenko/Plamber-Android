@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.ua.plamber_android.activitys.RestoreAccountActivity">
 
-    <ImageView
-        android:id="@+id/iv_restore_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:keyboardNavigationCluster="false"/>
-
     <include layout="@layout/empty_restore_account" />
 
     <LinearLayout

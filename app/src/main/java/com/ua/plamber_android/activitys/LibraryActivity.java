@@ -139,17 +139,20 @@ public class LibraryActivity extends BaseDrawerActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 switch (id) {
-                    case R.id.nav_user_books:
+                    case R.id.nav_local_books:
                         setPage(0);
                         break;
-                    case R.id.nav_library:
+                    case R.id.nav_user_books:
                         setPage(1);
                         break;
-                    case R.id.nav_recommended:
+                    case R.id.nav_library:
                         setPage(2);
                         break;
-                    case R.id.nav_upload_book:
+                    case R.id.nav_recommended:
                         setPage(3);
+                        break;
+                    case R.id.nav_upload_book:
+                        setPage(4);
                         break;
                     case R.id.nav_setting:
                         startSetting();

@@ -7,11 +7,6 @@
     android:id="@+id/sing_up_parent_layout"
     tools:context="com.ua.plamber_android.activitys.SignUpActivity">
 
-    <ImageView
-        android:id="@+id/iv_singup_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <include layout="@layout/empty_sing_up"/>
 
     <LinearLayout

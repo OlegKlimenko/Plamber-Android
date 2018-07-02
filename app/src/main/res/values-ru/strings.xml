@@ -175,5 +175,6 @@
     <string name="current_book_was_uplopad_offline">Это книга была загружена в оффлайн режиме. Для того что бы загрузить ее на сервер нажмите это сообщение или выберите соответствующий пункт меню</string>
     <string name="upload_book_to_server_menu">Загрузить книгу на сервер</string>
     <string name="saving_file">Сохранение файла</string>
+    <string name="local_files">Локальные файлы</string>
 
 </resources>

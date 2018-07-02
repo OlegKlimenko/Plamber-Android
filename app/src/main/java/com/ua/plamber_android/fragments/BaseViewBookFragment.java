@@ -103,15 +103,12 @@ public abstract class BaseViewBookFragment extends Fragment {
     }
 
     public void initSwipeRefresh() {
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
-                    viewBookOffline();
-                } else {
-                      viewUserBook();
-                }     isShowError = false;
-            }
+        mSwipeRefresh.setOnRefreshListener(() -> {
+            if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
+                viewBookOffline();
+            } else {
+                  viewUserBook();
+            }     isShowError = false;
         });
     }
 
@@ -173,7 +170,8 @@ public abstract class BaseViewBookFragment extends Fragment {
             public void onClick(View view, int position) {
                 if (BaseViewBookFragment.this instanceof UserBookFragment && bookUtilsDB.isBookSaveDB(books.get(position).getIdServerBook())) {
                     Intent intent = BookReaderActivity.startReaderActivity(getActivity());
-                    intent.putExtra(DetailBookActivity.BOOK_ID, bookUtilsDB.getBookPrimaryKey(books.get(position).getIdServerBook()));
+                    String id = bookUtilsDB.getBookPrimaryKey(books.get(position).getIdServerBook());
+                    intent.putExtra(DetailBookActivity.BOOK_ID, id);
                     intent.putExtra(DetailBookActivity.BOOK_PHOTO, books.get(position).getPhoto());
                     intent.putExtra(DetailBookActivity.BOOK_AUTHOR, books.get(position).getIdAuthor());
                     startActivity(intent);

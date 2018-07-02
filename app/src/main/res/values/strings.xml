@@ -178,6 +178,7 @@
     <string name="current_book_was_uplopad_offline">This book was downloaded offline. To download it to the server, click this message or select the appropriate menu item</string>
     <string name="upload_book_to_server_menu">Upload book to server</string>
     <string name="saving_file">Saving file</string>
+    <string name="local_files">Local files</string>
 
 
 </resources>

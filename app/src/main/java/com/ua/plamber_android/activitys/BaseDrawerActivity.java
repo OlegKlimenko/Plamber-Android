@@ -112,20 +112,23 @@ public class BaseDrawerActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 switch (id) {
-                    case R.id.nav_user_books:
+                    case R.id.nav_local_books:
                         returnItemMenu(0);
                         break;
-                    case R.id.nav_library:
+                    case R.id.nav_user_books:
                         returnItemMenu(1);
                         break;
-                    case R.id.nav_recommended:
+                    case R.id.nav_library:
                         returnItemMenu(2);
                         break;
-                    case R.id.nav_upload_book:
+                    case R.id.nav_recommended:
                         returnItemMenu(3);
                         break;
+                    case R.id.nav_upload_book:
+                        returnItemMenu(4);
+                        break;
                     case R.id.nav_setting:
-                        returnItemMenu(0);
+                        returnItemMenu(1);
                         startSetting();
                         break;
 

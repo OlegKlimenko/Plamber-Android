@@ -34,9 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private final static String TAG = "LoginActivity";
 
-
-    @BindView(R.id.iv_login_background)
-    ImageView mBackgroundLogin;
     @BindView(R.id.login_progress_bar)
     LinearLayout mLoginProgressBar;
     @BindView(R.id.et_login_email)
@@ -64,14 +61,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        Utils utils = new Utils(getApplicationContext());
         preferenceUtils = new PreferenceUtils(getApplicationContext());
         apiUtils = new APIUtils(getApplicationContext());
 
         if (!checkPermission())
             runQuestionPermissions();
-
-        utils.initBackgroundImage(mBackgroundLogin);
+        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.main_background));
         Glide.with(getApplicationContext()).load(R.drawable.plamber_logo_mini).into(mPlamberLogo);
 
         if (preferenceUtils.checkPreference(PreferenceUtils.TOKEN)) {

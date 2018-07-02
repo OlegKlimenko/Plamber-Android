@@ -5,12 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.ua.plamber_android.activitys.LoginActivity">
 
-    <ImageView
-        android:id="@+id/iv_login_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:keyboardNavigationCluster="false"/>
-
     <include layout="@layout/empty_login"/>
 
     <LinearLayout
