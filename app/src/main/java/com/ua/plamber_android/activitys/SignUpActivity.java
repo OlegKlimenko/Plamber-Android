@@ -79,6 +79,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.ib_support)
+    public void startSupport() {
+        startActivity(SupportActivity.startSupportActivity(this));
+    }
+
     private boolean checkFieldsValid() {
         Validate valid = new Validate(getApplicationContext());
         return valid.userNameValidate(mUserNameSingUpEdit, mTilUserNameSingUpEdit) & valid.emailValidate(mEmailSingUpEdit, mTilEmailSingUpEdit)

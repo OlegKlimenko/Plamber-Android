@@ -64,6 +64,11 @@ public class RestoreAccountActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.ib_support)
+    public void startSupport() {
+        startActivity(SupportActivity.startSupportActivity(this));
+    }
+
     @OnClick(R.id.tv_restore_back_login)
     public void backToLoginPage() {
         finish();

@@ -18,12 +18,21 @@
             android:layout_marginLeft="@dimen/logo_margin"
             android:layout_marginRight="@dimen/logo_margin">
 
+            <ImageButton
+                android:id="@+id/ib_support"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/baseline_contact_support_black_24"
+                android:background="@android:color/transparent"
+                android:tint="@android:color/white"
+                android:layout_margin="16dp"
+                android:layout_gravity="end"/>
+
             <ImageView
                 android:id="@+id/iv_login_plamber_logo"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_margin"
                 android:layout_marginBottom="@dimen/logo_margin"
-                android:layout_marginTop="@dimen/logo_margin"
                 android:layout_gravity="center_horizontal"/>
 
             <android.support.design.widget.TextInputLayout
