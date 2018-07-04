@@ -62,6 +62,7 @@ public class SplashFragment extends Fragment {
                 @Override
                 public void onError(@NonNull Throwable t) {
                     hideProgress();
+                    startApp();
                 }
             });
             return view;
@@ -72,6 +73,10 @@ public class SplashFragment extends Fragment {
         return view;
     }
 
+    private void startApp() {
+        startActivity(LibraryActivity.startLibraryActivity(getActivity()));
+    }
+
     private void getAllLanguage() {
         workAPI.getAllLanguage(new StringListCallback() {
             @Override
@@ -79,12 +84,13 @@ public class SplashFragment extends Fragment {
                 languageDBUtils.addLanguageToDB(stringsList);
                 hideProgress();
                 if (getActivity() != null)
-                    startActivity(LibraryActivity.startLibraryActivity(getActivity()));
+                    startApp();
             }
 
             @Override
             public void onError(@NonNull Throwable t) {
                 hideProgress();
+                startApp();
             }
         });
     }
