@@ -40,4 +40,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Progress.SplashScreen" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>
