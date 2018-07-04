@@ -29,8 +29,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SplashFragment extends Fragment {
-    @BindView(R.id.iv_splash_background)
-    ImageView mSplashBackground;
     @BindView(R.id.iv_spash_plamber_logo)
     ImageView mLogo;
     @BindView(R.id.progress_load_splash)
@@ -46,10 +44,8 @@ public class SplashFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.splash_fragment, container, false);
         ButterKnife.bind(this, view);
-        if (getActivity() != null) {
-            Glide.with(getActivity()).load(R.drawable.main_background).into(mSplashBackground);
+        if (getActivity() != null)
             Glide.with(getActivity()).load(R.drawable.plamber_logo_mini).into(mLogo);
-        }
         shared = new PreferenceUtils(getActivity());
         workAPI = new WorkAPI(getActivity());
         categoryDBUtils = new CategoryDBUtils(getActivity());

@@ -6,12 +6,6 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/iv_splash_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
-
-    <ImageView
         android:id="@+id/iv_spash_plamber_logo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_margin"

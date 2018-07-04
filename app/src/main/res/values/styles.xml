@@ -31,7 +31,7 @@
     </style>
 
     <style name="windowBackgroundSplash" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/colorAccent</item>
+        <item name="android:windowBackground">@drawable/main_background</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
