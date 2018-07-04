@@ -57,28 +57,25 @@ public class CategoryFragment extends BaseViewBookFragment {
                     final List<Book.BookData> books = new ArrayList<>(data.getBookData());
                     page = data.getNextPageNumber();
                     initAdapter(books);
-                    getmAdapter().setOnLoadMoreListener(new OnLoadMoreListener() {
-                        @Override
-                        public void onLoadMore() {
-                            if (page != 0) {
-                                books.add(null);
-                                getmAdapter().notifyItemInserted(books.size() - 1);
-                                getWorkAPI().getBooksFromCategory(new LoadMoreCallback() {
-                                    @Override
-                                    public void onSuccess(@NonNull LoadMoreBook.LoadMoreBookData data) {
-                                        books.remove(books.size() - 1);
-                                        getmAdapter().notifyItemRemoved(books.size());
-                                        getmAdapter().stopLoading();
-                                        books.addAll(data.getBookData());
-                                        page = data.getNextPageNumber();
-                                    }
+                    getmAdapter().setOnLoadMoreListener(() -> {
+                        if (page != 0) {
+                            books.add(null);
+                            getmAdapter().notifyItemInserted(books.size() - 1);
+                            getWorkAPI().getBooksFromCategory(new LoadMoreCallback() {
+                                @Override
+                                public void onSuccess(@NonNull LoadMoreBook.LoadMoreBookData data1) {
+                                    books.remove(books.size() - 1);
+                                    getmAdapter().notifyItemRemoved(books.size());
+                                    getmAdapter().stopLoading();
+                                    books.addAll(data1.getBookData());
+                                    page = data1.getNextPageNumber();
+                                }
 
-                                    @Override
-                                    public void onError(@NonNull Throwable t) {
-                                        errorViewBook(t);
-                                    }
-                                }, page, idCategory);
-                            }
+                                @Override
+                                public void onError(@NonNull Throwable t) {
+                                    errorViewBook(t);
+                                }
+                            }, page, idCategory);
                         }
                     });
                 }

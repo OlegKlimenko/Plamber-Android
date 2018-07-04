@@ -54,7 +54,7 @@ public class DownloadDialogFragmant extends DialogFragment {
         bookData = new Gson().fromJson(getArguments().getString(DOWNLOADBOOK), Book.BookData.class);
         apiUtils = new APIUtils(getActivity());
         utils = new Utils(getActivity());
-        bookId = Utils.generateIdBook();
+        bookId = Utils.generateId();
         setRetainInstance(true);
     }
 

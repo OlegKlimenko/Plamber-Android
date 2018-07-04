@@ -15,12 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activitys.LoginActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.SignUpActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.LibraryActivity" />
@@ -40,6 +35,15 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.ImagePickActivity"/>
         <activity android:name=".activitys.BookReaderLocalActivity" />
+
+        <activity android:name=".activitys.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/windowBackgroundSplash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

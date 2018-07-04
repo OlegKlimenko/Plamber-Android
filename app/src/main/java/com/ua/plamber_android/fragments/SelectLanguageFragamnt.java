@@ -18,6 +18,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.UploadActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.database.utils.LanguageDBUtils;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.utils.PreferenceUtils;
@@ -38,15 +39,19 @@ public class SelectLanguageFragamnt extends Fragment {
     private List<String> languages;
     private RecyclerSimpleAdapter mLanguageAdapter;
 
-    WorkAPI workAPI;
-    PreferenceUtils preferenceUtils;
+    private WorkAPI workAPI;
+    private PreferenceUtils preferenceUtils;
+    private LanguageDBUtils languageDBUtils;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getActivity() == null)
+            return;
         workAPI = new WorkAPI(getActivity());
         preferenceUtils = new PreferenceUtils(getActivity());
         languages = new ArrayList<>();
+        languageDBUtils = new LanguageDBUtils(getActivity());
     }
 
     @Nullable
@@ -58,10 +63,23 @@ public class SelectLanguageFragamnt extends Fragment {
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         visibleProgress(mProgress, true);
+        getAllLanguages();
+        return v;
+    }
+
+    private void getAllLanguages() {
+        if (languageDBUtils.languageIsSave()) {
+            languages.clear();
+            languages.addAll(languageDBUtils.getLanguageFromDB());
+            actionSelectLanguage();
+            return;
+        }
+
         workAPI.getAllLanguage(new StringListCallback() {
             @Override
             public void onSuccess(@NonNull List<String> stringsList) {
                 languages.clear();
+                languageDBUtils.addLanguageToDB(stringsList);
                 languages.addAll(stringsList);
                 actionSelectLanguage();
             }
@@ -71,7 +89,6 @@ public class SelectLanguageFragamnt extends Fragment {
 
             }
         });
-        return v;
     }
 
     private void setAdapter(RecyclerViewClickListener listener) {

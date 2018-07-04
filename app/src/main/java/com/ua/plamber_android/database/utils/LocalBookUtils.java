@@ -13,7 +13,7 @@ public class LocalBookUtils {
     public LocalBookUtils(Context context) {
         Realm.init(context);
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(2)
+                .schemaVersion(RealmConst.REALM_VERSION)
                 .migration(new MigrationLocalBook())
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -71,7 +71,7 @@ public class LocalBookUtils {
 
 
     public String saveBookLocal(LocalBookDB bookDB) {
-        String id = Utils.generateIdBook();
+        String id = Utils.generateId();
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         LocalBookDB data = realm.createObject(LocalBookDB.class, id);

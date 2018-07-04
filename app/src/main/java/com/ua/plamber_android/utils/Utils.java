@@ -57,7 +57,7 @@ public class Utils {
 
     }
 
-    public static String generateIdBook() {
+    public static String generateId() {
         return UUID.randomUUID().toString();
     }
 

@@ -8,21 +8,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.activitys.UploadActivity;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.UploadFileOfflineFragment;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -48,7 +45,7 @@ public class UploadOfflineDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         utils = new Utils(getActivity());
         bookUtilsDB = new BookUtilsDB(getActivity());
-        bookId = Utils.generateIdBook();
+        bookId = Utils.generateId();
         bookFile = new File(getArguments().getString(UploadFileOfflineFragment.FILE_PATH));
         setRetainInstance(true);
     }

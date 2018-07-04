@@ -22,6 +22,7 @@ import com.ua.plamber_android.activitys.CategoryActivity;
 import com.ua.plamber_android.activitys.LibraryActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.database.utils.CategoryDBUtils;
 import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.model.Library;
@@ -47,8 +48,9 @@ public class LibraryFragment extends Fragment {
 
     private RecyclerSimpleAdapter mLibraryAdapter;
 
-    PreferenceUtils preferenceUtils;
-    WorkAPI workAPI;
+    private PreferenceUtils preferenceUtils;
+    private WorkAPI workAPI;
+    private CategoryDBUtils categoryDBUtils;
 
     private static final String TAG = "LibraryFragment";
     public static final String IDCATEGORI = "IdCategory";
@@ -62,6 +64,7 @@ public class LibraryFragment extends Fragment {
         preferenceUtils = new PreferenceUtils(getActivity());
         workAPI = new WorkAPI(getActivity());
         categoriesList = new ArrayList<>();
+        categoryDBUtils = new CategoryDBUtils(getActivity());
     }
 
     @Override
@@ -77,17 +80,15 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
-                    viewCategoryOffline();
-                } else {
-                    BaseViewBookFragment.isShowError = false;
-                    viewCategory();
-                }
+        mSwipeRefresh.setOnRefreshListener(() -> {
+            if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE)) {
+                viewCategoryOffline();
+            } else {
+                BaseViewBookFragment.isShowError = false;
+                viewCategoryFromServer();
             }
         });
+
         if (preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE))
             viewCategoryOffline();
         else
@@ -107,11 +108,12 @@ public class LibraryFragment extends Fragment {
         mMessageAgain.setText(R.string.now_in_offlane_mode);
     }
 
-    private void viewCategory() {
+    private void viewCategoryFromServer() {
         workAPI.getAllCategory(new CategoryCallback() {
             @Override
             public void onSuccess(@NonNull List<Library.LibraryData> categories) {
                 categoriesList.clear();
+                categoryDBUtils.addCategoryToDB(categories);
                 categoriesList.addAll(categories);
                 actionSelectCategory();
             }
@@ -129,6 +131,17 @@ public class LibraryFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void viewCategory() {
+        if (categoryDBUtils.categoryIsSave()) {
+            categoriesList.clear();
+            categoriesList.addAll(categoryDBUtils.getCategoriesFromDB());
+            actionSelectCategory();
+            return;
+        }
+
+       viewCategoryFromServer();
     }
 
     public void actionSelectCategory() {

@@ -35,7 +35,7 @@ public class Library {
         }
     }
 
-    public class LibraryData {
+    public static class LibraryData {
         @SerializedName("id")
         private long id;
 
@@ -44,6 +44,12 @@ public class Library {
 
         @SerializedName("url")
         private String url;
+
+        public LibraryData(long id, String categoryName, String url) {
+            this.id = id;
+            this.categoryName = categoryName;
+            this.url = url;
+        }
 
         public long getId() {
             return id;
