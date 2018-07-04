@@ -32,8 +32,7 @@
 
     <style name="windowBackgroundSplash" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/main_background</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
     <style name="fullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
