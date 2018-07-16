@@ -3,6 +3,10 @@
     <!--no localization-->
     <string name="plamber_web_page" translatable="false">https://plamber.com.ua/</string>
     <string name="plamber_page_about" translatable="false">https://plamber.com.ua/about</string>
+    <string name="plamber_page_vk" translatable="false">https://vk.com/plamber.reading</string>
+    <string name="plamber_page_twitter" translatable="false">https://twitter.com/plamber_reading</string>
+    <string name="plamber_page_fb_page" translatable="false">https://www.facebook.com/plamber.reading/</string>
+    <string name="plamber_page_fb_group" translatable="false">https://www.facebook.com/groups/960328440785420/</string>
 
 
     <string name="app_name">Plamber</string>
@@ -179,6 +183,17 @@
     <string name="upload_book_to_server_menu">Upload book to server</string>
     <string name="saving_file">Saving file</string>
     <string name="local_files">Local files</string>
+    <string name="rate_app_btn">Rate app</string>
+    <string name="follow_btn">Follow</string>
+    <string name="later_btn">Later</string>
+    <string name="never_btn">Never</string>
+    <string name="follow_vk">If you like the app please follow to our group in VK</string>
+    <string name="follow_twitter">If you like the app please follow to us in Twitter</string>
+    <string name="follow_fb_page">If you like the app please follow to us in facebook</string>
+    <string name="follow_fb_group">If you like the app please follow to our group in facebook group</string>
+    <string name="rate_app_dialog">If you like the app please rate this in google play</string>
+    <string name="follow_title_dialog">Follow</string>
+    <string name="rate_title_dialog">Rate plamber</string>
 
 
 </resources>

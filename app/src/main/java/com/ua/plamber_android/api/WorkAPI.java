@@ -11,6 +11,7 @@ import com.ua.plamber_android.interfaces.callbacks.CategoryCallback;
 import com.ua.plamber_android.interfaces.callbacks.CommentCallback;
 import com.ua.plamber_android.interfaces.callbacks.PageCallback;
 import com.ua.plamber_android.interfaces.callbacks.ProfileCallback;
+import com.ua.plamber_android.interfaces.callbacks.ReminderCallback;
 import com.ua.plamber_android.interfaces.callbacks.StatusCallback;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
 import com.ua.plamber_android.interfaces.callbacks.LoadMoreCallback;
@@ -18,15 +19,22 @@ import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
+import com.ua.plamber_android.model.GetReminder;
 import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Rating;
+import com.ua.plamber_android.model.ReminderList;
 import com.ua.plamber_android.model.Support;
+import com.ua.plamber_android.model.UpdateReminder;
 import com.ua.plamber_android.model.User;
 import com.ua.plamber_android.utils.PreferenceUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,9 +45,11 @@ public class WorkAPI {
     private APIUtils apiUtils;
     private static final String TAG = "WorkAPI";
     private String appKey;
+    private Context context;
 
     public WorkAPI(Context context) {
         appKey = context.getString(R.string.app_key);
+        this.context = context;
         preferenceUtils = new PreferenceUtils(context);
         apiUtils = new APIUtils(context);
     }
@@ -344,4 +354,69 @@ public class WorkAPI {
         }
     }
 
+    public void getAllReminder(ReminderCallback callback) {
+        if (callback == null)
+            return;
+        GetReminder.GetReminderRequest reminder = new GetReminder.GetReminderRequest(appKey, preferenceUtils.readPreference(PreferenceUtils.TOKEN));
+        Call<GetReminder.GetReminderRespond> request = apiUtils.initializePlamberAPI().getAllReminders(reminder);
+        request.enqueue(new Callback<GetReminder.GetReminderRespond>() {
+            @Override
+            public void onResponse(Call<GetReminder.GetReminderRespond> call, Response<GetReminder.GetReminderRespond> response) {
+                if (!response.isSuccessful())
+                    return;
+
+                if (response.body().getData().isDisabelAll()) {
+                    callback.onSuccess(new ArrayList<>());
+                    return;
+                }
+
+                GetReminder.GetReminderData data = response.body().getData();
+                List<ReminderList.Data> reminders = new ArrayList<>();
+                reminders.add(new ReminderList.Data(getString(R.string.follow_vk), ReminderList.VK, getString(R.string.plamber_page_vk), data.isVk()));
+                reminders.add(new ReminderList.Data(getString(R.string.follow_twitter), ReminderList.TWITTER, getString(R.string.plamber_page_twitter), data.isTwitter()));
+                reminders.add(new ReminderList.Data(getString(R.string.follow_fb_page), ReminderList.FB_PAGE, getString(R.string.plamber_page_fb_page), data.isFbPage()));
+                reminders.add(new ReminderList.Data(getString(R.string.follow_fb_group), ReminderList.FB_GROUP, getString(R.string.plamber_page_fb_group), data.isFbGroup()));
+                reminders.add(new ReminderList.Data(getString(R.string.rate_app_dialog), ReminderList.APP_RATE, getString(R.string.plamber_page_fb_group), data.isAppRate()));
+
+                List<ReminderList.Data> onlyEnableReminders = new ArrayList<>();
+
+                for (ReminderList.Data r : reminders) {
+                    if (r.isStatus())
+                        onlyEnableReminders.add(r);
+                }
+
+                callback.onSuccess(onlyEnableReminders);
+            }
+
+            @Override
+            public void onFailure(Call<GetReminder.GetReminderRespond> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void disableReminder(StatusCallback callback, String id) {
+        if (callback == null)
+            return;
+        UpdateReminder.UpdateReminderRequest reminder = new UpdateReminder.UpdateReminderRequest(appKey,
+                preferenceUtils.readPreference(PreferenceUtils.TOKEN), id, false);
+        Call<ResponseBody> request = apiUtils.initializePlamberAPI().disableReminder(reminder);
+        request.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (!response.isSuccessful())
+                    return;
+                callback.onSuccess(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    private String getString(int res) {
+        return context.getString(res);
+    }
 }

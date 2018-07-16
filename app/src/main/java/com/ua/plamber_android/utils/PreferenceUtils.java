@@ -13,6 +13,8 @@ public class PreferenceUtils {
     public final static String OFFLINE_MODE = "Offline_mode";
     public final static String TOOLBAR_HIDE = "Toolbar_hide";
     public final static String STATUS_BAR_HIDE = "Status_bar_hide";
+    public final static String COUNT_SHOW_REMINDER = "Show_reminder";
+    public final static String DISABLE_SHOW_REMINDER = "Disable_show_reminder";
 
     private Context context;
 
@@ -38,6 +40,23 @@ public class PreferenceUtils {
 
     public String readPreference(String preference) {
         return getPreference().getString(preference, "default");
+    }
+
+    public int readReminderCount() {
+        return getPreference().getInt(COUNT_SHOW_REMINDER, 0);
+    }
+
+    public void incrementReminderCount() {
+        int current = readReminderCount();
+        SharedPreferences.Editor editor = getPreference().edit();
+        editor.putInt(COUNT_SHOW_REMINDER, ++current);
+        editor.apply();
+    }
+
+    public void reminderReset() {
+        SharedPreferences.Editor editor = getPreference().edit();
+        editor.putInt(COUNT_SHOW_REMINDER, 0);
+        editor.apply();
     }
 
     public void writeLogic(String preference, boolean status) {

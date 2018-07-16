@@ -4,6 +4,7 @@ import com.ua.plamber_android.model.Account;
 import com.ua.plamber_android.model.AutoComplete;
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.model.Comment;
+import com.ua.plamber_android.model.GetReminder;
 import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.model.LoadMoreBook;
 import com.ua.plamber_android.model.Library;
@@ -11,6 +12,7 @@ import com.ua.plamber_android.model.Page;
 import com.ua.plamber_android.model.Password;
 import com.ua.plamber_android.model.Rating;
 import com.ua.plamber_android.model.Support;
+import com.ua.plamber_android.model.UpdateReminder;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.model.User;
 
@@ -30,8 +32,8 @@ import retrofit2.http.Url;
 
 public interface PlamberAPI {
 
-    //String ENDPOINT = "http://ec2-52-201-246-230.compute-1.amazonaws.com/";
-    String ENDPOINT = "https://plamber.com.ua/";
+    String ENDPOINT = "http://ec2-52-201-246-230.compute-1.amazonaws.com/";
+    //String ENDPOINT = "https://plamber.com.ua/";
     //String ENDPOINT = "http://192.168.0.103:8000/";
 
     @Headers("Content-Type: application/json")
@@ -146,4 +148,12 @@ public interface PlamberAPI {
 
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/get-reminders/")
+    Call<GetReminder.GetReminderRespond> getAllReminders(@Body GetReminder.GetReminderRequest request);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/update-reminder/")
+    Call<ResponseBody> disableReminder(@Body UpdateReminder.UpdateReminderRequest request);
 }

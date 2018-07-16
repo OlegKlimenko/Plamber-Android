@@ -30,6 +30,7 @@ import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
 import com.ua.plamber_android.utils.PlamberAnalytics;
 import com.ua.plamber_android.utils.PreferenceUtils;
+import com.ua.plamber_android.utils.Reminder;
 import com.ua.plamber_android.utils.Utils;
 
 import butterknife.BindView;
@@ -65,7 +66,6 @@ public class LibraryActivity extends BaseDrawerActivity {
         ButterKnife.bind(this);
         utils = new Utils(this);
         preferenceUtils = new PreferenceUtils(this);
-
         initGoogleAnalytics();
 
         setSupportActionBar(mToolbar);
@@ -100,6 +100,8 @@ public class LibraryActivity extends BaseDrawerActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !preferenceUtils.readLogic(PreferenceUtils.DISABLE_SHOW_REMINDER))
+            Reminder.init(this, getSupportFragmentManager(), 2);
         initOfflineModeSwitch();
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory(getString(R.string.view_activity))
@@ -134,36 +136,33 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     public void setupNavigationDrawer() {
-        getNavigationView().setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.nav_local_books:
-                        setPage(0);
-                        break;
-                    case R.id.nav_user_books:
-                        setPage(1);
-                        break;
-                    case R.id.nav_library:
-                        setPage(2);
-                        break;
-                    case R.id.nav_recommended:
-                        setPage(3);
-                        break;
-                    case R.id.nav_upload_book:
-                        setPage(4);
-                        break;
-                    case R.id.nav_setting:
-                        startSetting();
-                        break;
+        getNavigationView().setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.nav_local_books:
+                    setPage(0);
+                    break;
+                case R.id.nav_user_books:
+                    setPage(1);
+                    break;
+                case R.id.nav_library:
+                    setPage(2);
+                    break;
+                case R.id.nav_recommended:
+                    setPage(3);
+                    break;
+                case R.id.nav_upload_book:
+                    setPage(4);
+                    break;
+                case R.id.nav_setting:
+                    startSetting();
+                    break;
 
-                    case R.id.nav_logout:
-                        logoutApplication();
-                        break;
-                }
-                return true;
+                case R.id.nav_logout:
+                    logoutApplication();
+                    break;
             }
+            return true;
         });
     }
 
