@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BookReaderActivity;
 import com.ua.plamber_android.activitys.DetailBookActivity;
@@ -192,7 +193,7 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void initDetailBook(Book.BookData book) {
-        String url = PlamberAPI.ENDPOINT;
+        String url = BuildConfig.END_POINT;
         String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
         if (getActivity() != null)
             Glide.with(getActivity()).load(currentUrl).into(mImageBook);
@@ -236,7 +237,7 @@ public class DetailBookFragment extends Fragment {
         if (bookDataDetail != null) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, PlamberAPI.ENDPOINT + "book/" + bookDataDetail.getBookData().getIdServerBook());
+            intent.putExtra(Intent.EXTRA_TEXT, BuildConfig.END_POINT + "book/" + bookDataDetail.getBookData().getIdServerBook());
             startActivity(intent);
         }
     }

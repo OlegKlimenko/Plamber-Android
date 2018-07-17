@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BookReaderActivity;
 import com.ua.plamber_android.activitys.DetailBookActivity;
@@ -110,7 +111,7 @@ public class DetailBookFragmentOffline extends Fragment {
     }
 
     private void viewDetailBook() {
-        String url = PlamberAPI.ENDPOINT;
+        String url = BuildConfig.END_POINT;
         String currentUrl = url.substring(0, url.length() - 1) + bookData.getPhoto();
         viewPhotoBook(currentUrl);
 

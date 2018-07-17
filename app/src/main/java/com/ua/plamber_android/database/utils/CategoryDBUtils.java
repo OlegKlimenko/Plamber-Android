@@ -11,6 +11,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class CategoryDBUtils {
 
@@ -41,6 +42,14 @@ public class CategoryDBUtils {
         List<CategoryDB> categoryDB = new ArrayList<>(realm.where(CategoryDB.class).findAll());
         realm.commitTransaction();
         return categoryDB.size() > 20;
+    }
+
+    public void removeAllCategory() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<CategoryDB> results = realm.where(CategoryDB.class).findAll();
+        results.deleteAllFromRealm();
+        realm.commitTransaction();
     }
 
     public List<Library.LibraryData> getCategoriesFromDB() {

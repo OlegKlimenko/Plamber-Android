@@ -176,5 +176,16 @@
     <string name="upload_book_to_server_menu">Загрузить книгу на сервер</string>
     <string name="saving_file">Сохранение файла</string>
     <string name="local_files">Локальные файлы</string>
+    <string name="rate_app_btn">Оценить приложение</string>
+    <string name="follow_btn">Подписаться</string>
+    <string name="later_btn">Позже</string>
+    <string name="never_btn">Никогда</string>
+    <string name="follow_vk">Если вам нравится наше приложение подпишитесь на нашу группу Вконтакте</string>
+    <string name="follow_twitter">Если вам нравится наше приложение подпишитесь на нас в Twitter</string>
+    <string name="follow_fb_page">Если вам нравится наше приложение подпишитесь на нас в facebook</string>
+    <string name="follow_fb_group">Если вам нравится наше приложение подпишитесь на нашу группу facebook</string>
+    <string name="rate_app_dialog">Пожалуйста оцените наше приложение</string>
+    <string name="follow_title_dialog">Подписаться</string>
+    <string name="rate_title_dialog">Оценить</string>
 
 </resources>

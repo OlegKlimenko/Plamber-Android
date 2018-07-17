@@ -30,6 +30,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
@@ -365,7 +366,7 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void setBookInformation() {
-        String url = PlamberAPI.ENDPOINT;
+        String url = BuildConfig.END_POINT;
         String currentUrl = url.substring(0, url.length() - 1) + bookDB.getPhoto();
         if (bookDB.isOfflineBook())
             viewPhoto(utils.getPngFileWithPath(bookUtilsDB.getBookPrimaryKey(bookDB.getIdServerBook())));

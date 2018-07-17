@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
@@ -168,7 +169,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
     }
 
     public void setAvatar() {
-        String url = PlamberAPI.ENDPOINT;
+        String url = BuildConfig.END_POINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
         Glide.with(getApplicationContext()).load(currentUrl).into(mProfileImage);
     }

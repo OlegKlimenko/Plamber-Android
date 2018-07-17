@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.utils.Utils;
 
@@ -31,7 +32,7 @@ public class APIUtils {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(PlamberAPI.ENDPOINT)
+                .baseUrl(BuildConfig.END_POINT)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

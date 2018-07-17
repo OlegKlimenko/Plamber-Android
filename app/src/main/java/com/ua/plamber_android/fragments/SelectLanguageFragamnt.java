@@ -79,6 +79,7 @@ public class SelectLanguageFragamnt extends Fragment {
             @Override
             public void onSuccess(@NonNull List<String> stringsList) {
                 languages.clear();
+                languageDBUtils.removeAllLanguage();
                 languageDBUtils.addLanguageToDB(stringsList);
                 languages.addAll(stringsList);
                 actionSelectLanguage();

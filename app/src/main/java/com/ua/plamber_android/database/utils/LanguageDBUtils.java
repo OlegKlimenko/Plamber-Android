@@ -13,6 +13,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class LanguageDBUtils {
 
@@ -41,6 +42,14 @@ public class LanguageDBUtils {
         List<LanguageDB> language = new ArrayList<>(realm.where(LanguageDB.class).findAll());
         realm.commitTransaction();
         return language.size() > 10;
+    }
+
+     public void removeAllLanguage() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<LanguageDB> results = realm.where(LanguageDB.class).findAll();
+        results.deleteAllFromRealm();
+        realm.commitTransaction();
     }
 
     public List<String> getLanguageFromDB() {

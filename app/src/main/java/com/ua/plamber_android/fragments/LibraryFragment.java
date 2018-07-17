@@ -113,6 +113,7 @@ public class LibraryFragment extends Fragment {
             @Override
             public void onSuccess(@NonNull List<Library.LibraryData> categories) {
                 categoriesList.clear();
+                categoryDBUtils.removeAllCategory();
                 categoryDBUtils.addCategoryToDB(categories);
                 categoriesList.addAll(categories);
                 actionSelectCategory();

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.model.Comment;
@@ -61,7 +62,7 @@ public class RecyclerCommentAdapter extends RecyclerView.Adapter<RecyclerComment
         holder.authorName.setText(comment.getUserName());
         holder.commentDate.setText(comment.getPostedDate());
         holder.commentText.setText(comment.getCommentText());
-        String url = PlamberAPI.ENDPOINT;
+        String url = BuildConfig.END_POINT;
         String currentUrl = url.substring(0, url.length() - 1) + comment.getUserPhotoUrl();
         Glide.with(holder.view).load(currentUrl).apply(RequestOptions.skipMemoryCacheOf(true))
                 .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))

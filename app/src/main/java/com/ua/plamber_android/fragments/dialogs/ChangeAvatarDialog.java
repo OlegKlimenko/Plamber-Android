@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.ImagePickActivity;
 import com.ua.plamber_android.activitys.SettingActivity;
@@ -90,7 +91,7 @@ public class ChangeAvatarDialog extends DialogFragment {
     }
 
     public void updateAvatar() {
-        String url = PlamberAPI.ENDPOINT;
+        String url = BuildConfig.END_POINT;
         String currentUrl = url.substring(0, url.length() - 1) + preferenceUtils.readPreference(PreferenceUtils.USER_PHOTO);
         if (getActivity() != null)
         Glide.with(getActivity()).load(currentUrl).into(mCurrentAvatar);

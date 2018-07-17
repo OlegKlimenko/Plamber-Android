@@ -17,6 +17,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.ua.plamber_android.BuildConfig;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
@@ -143,7 +144,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             final BookHolder bookHolder = (BookHolder) holder;
             Book.BookData book = books.get(position);
             if (!book.isOfflineBook()) {
-                String url = PlamberAPI.ENDPOINT;
+                String url = BuildConfig.END_POINT;
                 String currentUrl = url.substring(0, url.length() - 1) + book.getPhoto();
                 viewPhotoBook(currentUrl, bookHolder);
             } else {
