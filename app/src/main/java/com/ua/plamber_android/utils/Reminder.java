@@ -1,6 +1,9 @@
 package com.ua.plamber_android.utils;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -68,6 +71,9 @@ public class Reminder implements ReminderListenerDialog {
     public void onPositiveClick(DialogFragment dialog, ReminderList.Data data) {
         if (dialog == null || dialog.getContext() == null)
             return;
+
+        new PreferenceUtils(dialog.getContext()).reminderReset();
+
         WorkAPI workAPI = new WorkAPI(dialog.getContext());
         workAPI.disableReminder(new StatusCallback() {
             @Override
@@ -80,6 +86,14 @@ public class Reminder implements ReminderListenerDialog {
                 Log.i(TAG, t.getLocalizedMessage());
             }
         }, data.getNameId());
+
+        if (data.getNameId().equals(ReminderList.APP_RATE)) {
+            openRateApp(dialog.getContext());
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getUrl()));
+        dialog.getContext().startActivity(intent);
     }
 
     @Override
@@ -115,5 +129,17 @@ public class Reminder implements ReminderListenerDialog {
                 Log.i(TAG, t.getLocalizedMessage());
             }
         }, ReminderList.DISABLE_ALL);
+    }
+
+    private void openRateApp(Context context) {
+        Uri uri = Uri.parse("market://details?id=" + context.getPackageName());
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context.getPackageName())));
+        }
     }
 }
