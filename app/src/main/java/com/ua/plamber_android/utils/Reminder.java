@@ -59,6 +59,8 @@ public class Reminder implements ReminderListenerDialog {
     }
 
     private void showDialog(ReminderList.Data date, FragmentManager fm) {
+        if (fm == null)
+            return;
         Bundle args = new Bundle();
         args.putString(ReminderDialog.REMINDER_DATA, new Gson().toJson(date));
         ReminderDialog reminderDialog = new ReminderDialog();

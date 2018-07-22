@@ -7,7 +7,7 @@ public class UpdateReminder {
         @SerializedName("app_key")
         private String appKey;
 
-        @SerializedName("token")
+        @SerializedName("user_token")
         private String token;
 
         @SerializedName("field")

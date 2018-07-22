@@ -13,6 +13,7 @@ import com.ua.plamber_android.utils.Utils;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,6 +30,7 @@ public class APIUtils {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
+                //.addInterceptor(getLogger())
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -50,5 +52,9 @@ public class APIUtils {
             Utils.messageSnack(view, context.getString(R.string.no_internet_connection));
             return false;
         }
+    }
+
+    private HttpLoggingInterceptor getLogger() {
+        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     }
 }

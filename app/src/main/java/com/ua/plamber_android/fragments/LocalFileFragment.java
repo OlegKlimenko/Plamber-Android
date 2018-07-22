@@ -1,8 +1,12 @@
 package com.ua.plamber_android.fragments;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -81,12 +86,23 @@ public class LocalFileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (listFile.isEmpty()) {
-            loadFiles = new LoadFiles();
-            loadFiles.execute(FilePickActivity.BOOK_FORMAT);
-        } else {
-            setAdapter(listFile);
-        }
+//        if (listFile.isEmpty()) {
+//            loadFiles = new LoadFiles();
+//            loadFiles.execute(FilePickActivity.BOOK_FORMAT);
+//        } else {
+//            setAdapter(listFile);
+//        }
+        findAllPDF();
+    }
+
+    private void findAllPDF() {
+        ContentResolver cr = getActivity().getContentResolver();
+        Uri uri = MediaStore.Files.getContentUri("external");
+        String[] projection = null;
+        String selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
+        String[] selectionArgsPdf = new String[]{ mimeType };
+        Cursor allPdfFiles = cr.query(uri, projection, selectionMimeType, selectionArgsPdf, null);
     }
 
     @Override
@@ -146,14 +162,6 @@ public class LocalFileFragment extends Fragment {
                 listFile.add(book);
             }
         }
-    }
-
-    private LocalBookDB createBook(String name, String path) {
-        LocalBookDB book = new LocalBookDB();
-        book.setBookName(name);
-        book.setBookPath(path);
-        book.setBookAvatar("");
-        return book;
     }
 
     private void setAdapter(List<LocalBookDB> books) {

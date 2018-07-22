@@ -6,16 +6,16 @@ android {
         config {
             keyAlias 'plamber'
             keyPassword 'andrey1993_28!qce689kh'
-            storeFile file('D:/plamber_key.jks')
+            storeFile file('/Users/andrejmatveev/Documents/jks/plamber_key.jks')
             storePassword 'andrey1993_28!qce689kh'
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 8
         versionName "0.4.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -70,6 +70,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'me.zhanghai.android.materialratingbar:library:1.2.0'
     implementation 'com.google.android.gms:play-services-analytics:16.0.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
