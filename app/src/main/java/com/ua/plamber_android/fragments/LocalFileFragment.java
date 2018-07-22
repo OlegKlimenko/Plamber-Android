@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,23 +87,31 @@ public class LocalFileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        if (listFile.isEmpty()) {
-//            loadFiles = new LoadFiles();
-//            loadFiles.execute(FilePickActivity.BOOK_FORMAT);
-//        } else {
-//            setAdapter(listFile);
-//        }
-        findAllPDF();
+        if (listFile.isEmpty()) {
+            loadFiles = new LoadFiles();
+            loadFiles.execute(FilePickActivity.BOOK_FORMAT);
+        } else {
+            setAdapter(listFile);
+        }
+        //findAllPDF();
     }
 
     private void findAllPDF() {
-        ContentResolver cr = getActivity().getContentResolver();
-        Uri uri = MediaStore.Files.getContentUri("external");
-        String[] projection = null;
+        if (getActivity() == null)
+            return;
+        Log.i(TAG, String.valueOf(System.currentTimeMillis()));
         String selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
-        String[] selectionArgsPdf = new String[]{ mimeType };
-        Cursor allPdfFiles = cr.query(uri, projection, selectionMimeType, selectionArgsPdf, null);
+        String[] types = new String[]{mimeType};
+        Cursor cursor = getActivity().getContentResolver()
+                .query(MediaStore.Files.getContentUri("external"), null, selectionMimeType, types, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Log.i(TAG, cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        Log.i(TAG, String.valueOf(System.currentTimeMillis()));
     }
 
     @Override
@@ -132,10 +141,12 @@ public class LocalFileFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             listFile.clear();
+            Log.i(TAG, String.valueOf(System.currentTimeMillis()));
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            Log.i(TAG, String.valueOf(System.currentTimeMillis()));
             if (!listFile.isEmpty()) {
                 setAdapter(listFile);
             } else {
