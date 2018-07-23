@@ -80,6 +80,8 @@ public class BookReaderLocalActivity extends AppCompatActivity {
         }
 
         mBookId = mBookUtils.getIdLocalBook(mBookPath);
+        //maybe work better??????????
+        mBookUtils.updateDate(mBookPath, System.currentTimeMillis());
         viewPdf(mBookUtils.getLastLocalBookPage(mBookId));
     }
 

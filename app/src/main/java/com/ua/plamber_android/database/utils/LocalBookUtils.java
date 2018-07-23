@@ -77,6 +77,7 @@ public class LocalBookUtils {
         LocalBookDB data = realm.createObject(LocalBookDB.class, id);
         data.setBookName(bookDB.getBookName());
         data.setBookPath(bookDB.getBookPath());
+        data.setLastReadDate(System.currentTimeMillis());
         data.setBookAvatar(bookDB.getBookAvatar());
         realm.commitTransaction();
         return id;

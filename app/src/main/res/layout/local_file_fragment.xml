@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/local_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/local_recycler_view"
@@ -20,18 +18,15 @@
             android:id="@+id/local_progress_load"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"/>
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/tv_local_message"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:text="@string/no_find_pdf_files_in_your_device"
             android:textSize="19sp"/>
 
-    </FrameLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

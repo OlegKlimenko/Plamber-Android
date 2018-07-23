@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'plamber'
             keyPassword 'andrey1993_28!qce689kh'
-            storeFile file('/Users/andrejmatveev/Documents/jks/plamber_key.jks')
+            storeFile file('D:/plamber_key.jks')
             storePassword 'andrey1993_28!qce689kh'
         }
     }
