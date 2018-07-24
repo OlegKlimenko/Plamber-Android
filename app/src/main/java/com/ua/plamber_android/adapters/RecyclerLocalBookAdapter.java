@@ -16,6 +16,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.database.model.LocalBookDB;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.JumpToChangeItem;
 import com.ua.plamber_android.utils.LocalFilesSortUpdate;
 
 import java.io.File;
@@ -30,11 +31,13 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
 
     private List<LocalBookDB> mLocalBooks;
     private RecyclerViewClickListener mListener;
+    private RecyclerView mRecyclerView;
 
-    public RecyclerLocalBookAdapter(List<LocalBookDB> mLocalBooks, RecyclerViewClickListener mListener) {
+    public RecyclerLocalBookAdapter(RecyclerView mRecyclerView, List<LocalBookDB> mLocalBooks, RecyclerViewClickListener mListener) {
         sortList(mLocalBooks);
         this.mLocalBooks = new ArrayList<>(mLocalBooks);
         this.mListener = mListener;
+        this.mRecyclerView = mRecyclerView;
     }
 
     public class LocalBookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -80,10 +83,13 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
 
     public void updateLocalBooks(List<LocalBookDB> newList) {
         sortList(newList);
+        JumpToChangeItem jumpToChange = new JumpToChangeItem();
+        jumpToChange.bind(this);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new LocalFilesSortUpdate(mLocalBooks, newList), false);
         mLocalBooks.clear();
         mLocalBooks.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
+        diffResult.dispatchUpdatesTo(jumpToChange);
+        mRecyclerView.scrollToPosition(jumpToChange.getFirstInsert());
     }
 
     @Override

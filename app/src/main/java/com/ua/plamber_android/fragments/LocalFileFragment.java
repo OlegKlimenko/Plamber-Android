@@ -112,7 +112,7 @@ public class LocalFileFragment extends Fragment {
             }
         };
         if (mRecyclerView.getAdapter() == null) {
-            adapter = new RecyclerLocalBookAdapter(localBooks, listener);
+            adapter = new RecyclerLocalBookAdapter(mRecyclerView, localBooks, listener);
             mRecyclerView.setAdapter(adapter);
             hideFindFileProgress();
             return;

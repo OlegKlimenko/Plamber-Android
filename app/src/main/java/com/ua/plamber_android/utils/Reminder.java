@@ -123,7 +123,7 @@ public class Reminder implements ReminderListenerDialog {
         workAPI.disableReminder(new StatusCallback() {
             @Override
             public void onSuccess(@NonNull int status) {
-                Log.i(TAG, "Reminder disabled");
+                Log.i(TAG, "All Reminder disabled");
             }
 
             @Override
