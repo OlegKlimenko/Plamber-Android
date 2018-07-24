@@ -395,11 +395,11 @@ public class WorkAPI {
         });
     }
 
-    public void disableReminder(StatusCallback callback, String id) {
+    public void disableReminder(StatusCallback callback, String id, boolean status) {
         if (callback == null)
             return;
         UpdateReminder.UpdateReminderRequest reminder = new UpdateReminder.UpdateReminderRequest(appKey,
-                preferenceUtils.readPreference(PreferenceUtils.TOKEN), id, false);
+                preferenceUtils.readPreference(PreferenceUtils.TOKEN), id, status);
         Call<ResponseBody> request = apiUtils.initializePlamberAPI().disableReminder(reminder);
         request.enqueue(new Callback<ResponseBody>() {
             @Override

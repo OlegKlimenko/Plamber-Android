@@ -87,7 +87,7 @@ public class Reminder implements ReminderListenerDialog {
             public void onError(@NonNull Throwable t) {
                 Log.i(TAG, t.getLocalizedMessage());
             }
-        }, data.getNameId());
+        }, data.getNameId(), false);
 
         if (data.getNameId().equals(ReminderList.APP_RATE)) {
             openRateApp(dialog.getContext());
@@ -130,7 +130,7 @@ public class Reminder implements ReminderListenerDialog {
             public void onError(@NonNull Throwable t) {
                 Log.i(TAG, t.getLocalizedMessage());
             }
-        }, ReminderList.DISABLE_ALL);
+        }, ReminderList.DISABLE_ALL, true);
     }
 
     private void openRateApp(Context context) {
