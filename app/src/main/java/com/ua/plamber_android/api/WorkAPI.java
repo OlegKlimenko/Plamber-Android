@@ -372,11 +372,11 @@ public class WorkAPI {
 
                 GetReminder.GetReminderData data = response.body().getData();
                 List<ReminderList.Data> reminders = new ArrayList<>();
-                reminders.add(new ReminderList.Data(getString(R.string.follow_vk), ReminderList.VK, getString(R.string.plamber_page_vk), data.isVk()));
-                reminders.add(new ReminderList.Data(getString(R.string.follow_twitter), ReminderList.TWITTER, getString(R.string.plamber_page_twitter), data.isTwitter()));
-                reminders.add(new ReminderList.Data(getString(R.string.follow_fb_page), ReminderList.FB_PAGE, getString(R.string.plamber_page_fb_page), data.isFbPage()));
-                reminders.add(new ReminderList.Data(getString(R.string.follow_fb_group), ReminderList.FB_GROUP, getString(R.string.plamber_page_fb_group), data.isFbGroup()));
-                reminders.add(new ReminderList.Data(getString(R.string.rate_app_dialog), ReminderList.APP_RATE, getString(R.string.plamber_page_fb_group), data.isAppRate()));
+                reminders.add(new ReminderList.Data(R.layout.reminder_layout_vk, ReminderList.VK, getString(R.string.plamber_page_vk), data.isVk()));
+                reminders.add(new ReminderList.Data(R.layout.reminder_layout_twitter, ReminderList.TWITTER, getString(R.string.plamber_page_twitter), data.isTwitter()));
+                reminders.add(new ReminderList.Data(R.layout.reminder_layout_fb_page, ReminderList.FB_PAGE, getString(R.string.plamber_page_fb_page), data.isFbPage()));
+                reminders.add(new ReminderList.Data(R.layout.reminder_layout_fb_group, ReminderList.FB_GROUP, getString(R.string.plamber_page_fb_group), data.isFbGroup()));
+                reminders.add(new ReminderList.Data(R.layout.reminder_layout_rate, ReminderList.APP_RATE, null, data.isAppRate()));
 
                 List<ReminderList.Data> onlyEnableReminders = new ArrayList<>();
 

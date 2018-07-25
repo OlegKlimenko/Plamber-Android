@@ -34,7 +34,6 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
     private RecyclerView mRecyclerView;
 
     public RecyclerLocalBookAdapter(RecyclerView mRecyclerView, List<LocalBookDB> mLocalBooks, RecyclerViewClickListener mListener) {
-        sortList(mLocalBooks);
         this.mLocalBooks = new ArrayList<>(mLocalBooks);
         this.mListener = mListener;
         this.mRecyclerView = mRecyclerView;
@@ -82,7 +81,6 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
     }
 
     public void updateLocalBooks(List<LocalBookDB> newList) {
-        sortList(newList);
         JumpToChangeItem jumpToChange = new JumpToChangeItem();
         jumpToChange.bind(this);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new LocalFilesSortUpdate(mLocalBooks, newList), false);
@@ -95,9 +93,5 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
     @Override
     public int getItemCount() {
         return mLocalBooks.size();
-    }
-
-    private void sortList(List<LocalBookDB> list) {
-        Collections.sort(list, (o1, o2) -> Long.compare(o2.getLastReadDate(), o1.getLastReadDate()));
     }
 }

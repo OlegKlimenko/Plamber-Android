@@ -180,11 +180,11 @@
     <string name="follow_btn">Подписаться</string>
     <string name="later_btn">Позже</string>
     <string name="never_btn">Никогда</string>
-    <string name="follow_vk">Если вам нравится наше приложение подпишитесь на нашу группу Вконтакте</string>
-    <string name="follow_twitter">Если вам нравится наше приложение подпишитесь на нас в Twitter</string>
-    <string name="follow_fb_page">Если вам нравится наше приложение подпишитесь на нас в facebook</string>
-    <string name="follow_fb_group">Если вам нравится наше приложение подпишитесь на нашу группу facebook</string>
-    <string name="rate_app_dialog">Пожалуйста оцените наше приложение</string>
+    <string name="follow_vk">Наша группа Вконтакте ждет именно Вас!</string>
+    <string name="follow_twitter">Читайте нас в Twitter!</string>
+    <string name="follow_fb_page">Поставьте Like нашей странице на Facebook</string>
+    <string name="follow_fb_group">В нашей группе на Facebook много интересного!</string>
+    <string name="rate_app_dialog">Оцените наше приложение в PlayMarket!</string>
     <string name="follow_title_dialog">Подписаться</string>
     <string name="rate_title_dialog">Оценить</string>
 

@@ -186,11 +186,11 @@
     <string name="follow_btn">Follow</string>
     <string name="later_btn">Later</string>
     <string name="never_btn">Never</string>
-    <string name="follow_vk">If you like the app please follow to our group in VK</string>
-    <string name="follow_twitter">If you like the app please follow to us in Twitter</string>
-    <string name="follow_fb_page">If you like the app please follow to us in facebook</string>
-    <string name="follow_fb_group">If you like the app please follow to our group in facebook group</string>
-    <string name="rate_app_dialog">If you like the app please rate this in google play</string>
+    <string name="follow_vk">Our vk.com group is waiting for you!</string>
+    <string name="follow_twitter">Read us on Twitter!</string>
+    <string name="follow_fb_page">Like our page on Facebook!</string>
+    <string name="follow_fb_group">We have a lot interesting at our Facebook group!</string>
+    <string name="rate_app_dialog">Rate our app at PlayMarket!</string>
     <string name="follow_title_dialog">Follow</string>
     <string name="rate_title_dialog">Rate plamber</string>
 

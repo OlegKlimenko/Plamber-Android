@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.database.model.LocalBookDB;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,7 +31,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;

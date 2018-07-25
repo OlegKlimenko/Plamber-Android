@@ -9,20 +9,20 @@ public class ReminderList {
     public static final String DISABLE_ALL = "disabled_all";
 
     public static class Data {
-        private String message;
+        private int layout;
         private String nameId;
         private String url;
         private boolean status;
 
-        public Data(String message, String nameId, String url, boolean status) {
-            this.message = message;
+        public Data(int layout, String nameId, String url, boolean status) {
+            this.layout = layout;
             this.nameId = nameId;
             this.url = url;
             this.status = status;
         }
 
-        public String getMessage() {
-            return message;
+        public int getLayout() {
+            return layout;
         }
 
         public String getNameId() {

@@ -6,4 +6,10 @@
     <color name="colorDark">#717171</color>
     <color name="TrasperentWhite">#c8ffffff</color>
     <color name="screenLock">#B0000000</color>
+    <color name="facebook_background">#3B579D</color>
+    <color name="twitter_background">#1DA0F2</color>
+    <color name="vk_background">#5181B8</color>
+    <color name="color_follow_btn">#ff8f0c</color>
+    <color name="color_later_btn">#31a445</color>
+    <color name="color_never_btn">#9aa6ad</color>
 </resources>

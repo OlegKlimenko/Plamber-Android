@@ -2,6 +2,7 @@ package com.ua.plamber_android.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -24,9 +25,11 @@ import com.ua.plamber_android.adapters.RecyclerLocalBookAdapter;
 import com.ua.plamber_android.database.model.LocalBookDB;
 import com.ua.plamber_android.database.utils.LocalBookUtils;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
+import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,15 +61,14 @@ public class LocalFileFragment extends Fragment {
         localBooks = new ArrayList<>();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        localBooks = new ArrayList<>();
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        localBooks.clear();
-        findAllFiles();
-        setAdapter();
+        new LoadLocalBooks().execute();
     }
 
     private void findAllFiles() {
@@ -94,6 +96,34 @@ public class LocalFileFragment extends Fragment {
         cursor.close();
     }
 
+    private class LoadLocalBooks extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            localBooks.clear();
+        }
+
+        @Override
+        protected Void doInBackground(Void... v) {
+            findAllFiles();
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+            if (localBooks.isEmpty()) {
+                noFindBookMessage();
+                return;
+            }
+            sortList(localBooks);
+            setAdapter();
+            hideFindFileProgress();
+        }
+    }
+
+
     private void setAdapter() {
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
@@ -101,8 +131,6 @@ public class LocalFileFragment extends Fragment {
                 Intent intent = BookReaderLocalActivity.startLocalReaderActivity(getActivity());
                 intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_FILE, localBooks.get(position).getBookPath());
                 intent.putExtra(BookReaderLocalActivity.LOCAL_BOOK_NAME, localBooks.get(position).getBookName());
-                //long time = System.currentTimeMillis();
-                //bookUtilsDB.updateDate(localBooks.get(position).getBookPath(), time);
                 startActivity(intent);
             }
 
@@ -114,12 +142,10 @@ public class LocalFileFragment extends Fragment {
         if (mRecyclerView.getAdapter() == null) {
             adapter = new RecyclerLocalBookAdapter(mRecyclerView, localBooks, listener);
             mRecyclerView.setAdapter(adapter);
-            hideFindFileProgress();
             return;
         }
 
         adapter.updateLocalBooks(localBooks);
-        hideFindFileProgress();
     }
 
     private void hideFindFileProgress() {
@@ -128,11 +154,21 @@ public class LocalFileFragment extends Fragment {
         visible(mMessage, false);
     }
 
+    private void noFindBookMessage() {
+        visible(mProgressLoad, false);
+        visible(mRecyclerView, false);
+        visible(mMessage, true);
+    }
+
     public void visible(View v, boolean status) {
         if (status) {
             v.setVisibility(View.VISIBLE);
         } else {
             v.setVisibility(View.GONE);
         }
+    }
+
+    public void sortList(List<LocalBookDB> list) {
+        Collections.sort(list, (o1, o2) -> Long.compare(o2.getLastReadDate(), o1.getLastReadDate()));
     }
 }

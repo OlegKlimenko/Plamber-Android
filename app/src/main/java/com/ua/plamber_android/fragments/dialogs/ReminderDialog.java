@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Button;
@@ -38,14 +39,10 @@ public class ReminderDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int positiveTitle = R.string.follow_btn;
-        int title = R.string.follow_title_dialog;
-        if (reminder.getNameId().equals(ReminderList.APP_RATE)) {
+        if (reminder.getNameId().equals(ReminderList.APP_RATE))
             positiveTitle = R.string.rate_app_btn;
-            title = R.string.rate_title_dialog;
-        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title)
-                .setMessage(reminder.getMessage())
+        builder.setView(reminder.getLayout())
                 .setPositiveButton(positiveTitle, null)
                 .setNegativeButton(R.string.later_btn, null)
                 .setNeutralButton(R.string.never_btn, null);
@@ -55,6 +52,11 @@ public class ReminderDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        if (getActivity() == null)
+            return;
+        getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_follow_btn));
+        getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_later_btn));
+        getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(ContextCompat.getColor(getActivity(), R.color.color_never_btn));
         getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v ->
         {
             dismiss();
