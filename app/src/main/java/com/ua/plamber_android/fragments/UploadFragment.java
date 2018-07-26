@@ -1,13 +1,9 @@
 package com.ua.plamber_android.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.RecyclerView;
 
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.activitys.LibraryActivity;
 import com.ua.plamber_android.utils.PreferenceUtils;
 
 public class UploadFragment extends BaseViewBookFragment {

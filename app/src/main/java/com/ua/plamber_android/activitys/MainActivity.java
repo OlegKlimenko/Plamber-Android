@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -37,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LibraryActivity extends BaseDrawerActivity {
+public class MainActivity extends BaseDrawerActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -52,7 +50,7 @@ public class LibraryActivity extends BaseDrawerActivity {
 
     Tracker mTracker;
 
-    public static final String TAG = "LibraryActivity";
+    public static final String TAG = "MainActivity";
     public static final String ERROR_MESSAGE = "ERROR_MESSAGE";
     private Utils utils;
     private PreferenceUtils preferenceUtils;
@@ -101,7 +99,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     protected void onResume() {
         super.onResume();
         if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !preferenceUtils.readLogic(PreferenceUtils.DISABLE_SHOW_REMINDER))
-            Reminder.init(this, getSupportFragmentManager(), 2);
+            Reminder.init(this, getSupportFragmentManager(), 150);
         initOfflineModeSwitch();
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory(getString(R.string.view_activity))
@@ -235,7 +233,7 @@ public class LibraryActivity extends BaseDrawerActivity {
     }
 
     public static Intent startLibraryActivity(Context context) {
-        return new Intent(context, LibraryActivity.class);
+        return new Intent(context, MainActivity.class);
     }
 
     private void initOfflineModeSwitch() {

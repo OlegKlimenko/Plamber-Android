@@ -13,13 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
-import com.ua.plamber_android.activitys.LibraryActivity;
+import com.ua.plamber_android.activitys.MainActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.CategoryDBUtils;
@@ -33,7 +32,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class LibraryFragment extends Fragment {
 
@@ -192,7 +190,7 @@ public class LibraryFragment extends Fragment {
         return categoriesList;
     }
 
-    public LibraryActivity getLibraryActivity() {
-        return ((LibraryActivity) getActivity());
+    public MainActivity getLibraryActivity() {
+        return ((MainActivity) getActivity());
     }
 }

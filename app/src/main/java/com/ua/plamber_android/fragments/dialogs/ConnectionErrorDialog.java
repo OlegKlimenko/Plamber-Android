@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ua.plamber_android.R;
-import com.ua.plamber_android.activitys.LibraryActivity;
+import com.ua.plamber_android.activitys.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +29,7 @@ public class ConnectionErrorDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        errorMessage = getArguments().getString(LibraryActivity.ERROR_MESSAGE);
+        errorMessage = getArguments().getString(MainActivity.ERROR_MESSAGE);
     }
 
     @NonNull
@@ -56,7 +56,7 @@ public class ConnectionErrorDialog extends DialogFragment {
         return builder.create();
     }
 
-    private LibraryActivity getLibraryActivity() {
-        return ((LibraryActivity) getActivity());
+    private MainActivity getLibraryActivity() {
+        return ((MainActivity) getActivity());
     }
 }

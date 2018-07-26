@@ -14,12 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BookReaderActivity;
 import com.ua.plamber_android.activitys.DetailBookActivity;
-import com.ua.plamber_android.activitys.LibraryActivity;
+import com.ua.plamber_android.activitys.MainActivity;
 import com.ua.plamber_android.adapters.RecyclerBookAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
@@ -249,7 +248,7 @@ public abstract class BaseViewBookFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && fab.isShown()) {
                     fab.hide();
-                } else if (LibraryActivity.currentPosition == 4 || LibraryActivity.currentPosition == 1) {
+                } else if (MainActivity.currentPosition == 4 || MainActivity.currentPosition == 1) {
                     fab.show();
                 }
             }
@@ -260,7 +259,7 @@ public abstract class BaseViewBookFragment extends Fragment {
         return preferenceUtils;
     }
 
-    public LibraryActivity getLibraryActivity() {
-        return ((LibraryActivity) getActivity());
+    public MainActivity getLibraryActivity() {
+        return ((MainActivity) getActivity());
     }
 }

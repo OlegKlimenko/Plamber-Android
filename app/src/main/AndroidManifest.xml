@@ -18,7 +18,7 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.SignUpActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-        <activity android:name=".activitys.LibraryActivity" />
+        <activity android:name=".activitys.MainActivity" />
         <activity android:name=".activitys.RestoreAccountActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.DetailBookActivity" />

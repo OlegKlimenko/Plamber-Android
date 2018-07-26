@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
@@ -188,7 +187,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     preferenceUtils.removePreference();
                     preferenceUtils.writePreference(PreferenceUtils.TOKEN, response.body().getData().getToken());
-                    Intent intent = LibraryActivity.startLibraryActivity(getApplicationContext());
+                    Intent intent = MainActivity.startLibraryActivity(getApplicationContext());
                     startActivity(intent);
                     finish();
                 }
