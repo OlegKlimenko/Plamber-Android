@@ -64,8 +64,9 @@ public interface PlamberAPI {
     @POST("api/v1/categories/")
     Call<Library.LibraryRespond> getAllCategory(@Body Library.LibraryRequest libraryRequest);
 
-    @Streaming
+
     @GET
+    @Streaming
     Call<ResponseBody> downloadBigFile(@Url String fileUrl);
 
     @Headers("Content-Type: application/json")

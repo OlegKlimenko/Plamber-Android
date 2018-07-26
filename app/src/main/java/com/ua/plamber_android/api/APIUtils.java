@@ -30,7 +30,7 @@ public class APIUtils {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
-                .addInterceptor(getLogger())
+                //.addInterceptor(getLogger())
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
