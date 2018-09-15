@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'plamber'
             keyPassword 'andrey1993_28!qce689kh'
-            storeFile file('D:/plamber_key.jks')
+            storeFile file('/home/andrey/Projects/jks/plamber_key.jks')
             storePassword 'andrey1993_28!qce689kh'
         }
     }
@@ -16,8 +16,8 @@ android {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 11
-        versionName "0.4.3a"
+        versionCode 12
+        versionName "0.4.3b"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

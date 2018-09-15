@@ -68,6 +68,8 @@ public class SplashFragment extends Fragment {
         }
 
         startActivity(LoginActivity.startLoginActivity(getActivity()));
+        if (getActivity() != null)
+            getActivity().finish();
 
         return view;
     }

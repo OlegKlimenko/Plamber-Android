@@ -168,20 +168,15 @@ public abstract class BaseViewBookFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 if (BaseViewBookFragment.this instanceof UserBookFragment && bookUtilsDB.isBookSaveDB(books.get(position).getIdServerBook())) {
-                    Intent intent = BookReaderActivity.startReaderActivity(getActivity());
-                    String id = bookUtilsDB.getBookPrimaryKey(books.get(position).getIdServerBook());
-                    intent.putExtra(DetailBookActivity.BOOK_ID, id);
-                    intent.putExtra(DetailBookActivity.BOOK_PHOTO, books.get(position).getPhoto());
-                    intent.putExtra(DetailBookActivity.BOOK_AUTHOR, books.get(position).getIdAuthor());
-                    startActivity(intent);
+                    openReaderBook(books.get(position));
                     return;
                 }
-                    openDetailBook(books, view, position);
+                    openDetailBook(books.get(position), view);
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                openDetailBook(books, view, position);
+                openDetailBook(books.get(position), view);
             }
         };
         if (recyclerView.getAdapter() == null) {
@@ -192,12 +187,20 @@ public abstract class BaseViewBookFragment extends Fragment {
         }
     }
 
-    private void openDetailBook(List<Book.BookData> books, View view, int position) {
+    private void openReaderBook(Book.BookData book) {
+        Intent intent = BookReaderActivity.startReaderActivity(getActivity());
+        intent.putExtra(DetailBookActivity.BOOK_ID, book.getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_PHOTO, book.getPhoto());
+        intent.putExtra(DetailBookActivity.BOOK_AUTHOR, book.getIdAuthor());
+        startActivity(intent);
+    }
+
+    private void openDetailBook(Book.BookData book, View view) {
         Intent intent = DetailBookActivity.startDetailActivity(view.getContext());
-        intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, books.get(position).getIdServerBook());
-        intent.putExtra(DetailBookActivity.BOOK_ID, books.get(position).getIdBook());
-        intent.putExtra(DetailBookActivity.BOOK_NAME, books.get(position).getBookName());
-        intent.putExtra(DetailBookActivity.IS_OFFLINE_BOOK, books.get(position).isOfflineBook());
+        intent.putExtra(DetailBookActivity.BOOK_SERVER_ID, book.getIdServerBook());
+        intent.putExtra(DetailBookActivity.BOOK_ID, book.getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_NAME, book.getBookName());
+        intent.putExtra(DetailBookActivity.IS_OFFLINE_BOOK, book.isOfflineBook());
         startActivity(intent);
     }
 

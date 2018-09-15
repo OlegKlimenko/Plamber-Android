@@ -1,6 +1,7 @@
 package com.ua.plamber_android.database.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ua.plamber_android.model.Book;
 import com.ua.plamber_android.database.model.BookDB;
@@ -162,7 +163,11 @@ public class BookUtilsDB {
         realm.beginTransaction();
         List<BookDB> offlineBooks = new ArrayList<>(realm.where(BookDB.class).findAll());
         realm.commitTransaction();
-        Collections.sort(offlineBooks, (o1, o2) -> o2.getLastReadDate().compareTo(o1.getLastReadDate()));
+        try {
+            Collections.sort(offlineBooks, (o1, o2) -> o2.getLastReadDate().compareTo(o1.getLastReadDate()));
+        } catch (Exception e) {
+            Log.i(TAG, e.getLocalizedMessage());
+        }
         return convertBookListForDB(offlineBooks);
     }
 
