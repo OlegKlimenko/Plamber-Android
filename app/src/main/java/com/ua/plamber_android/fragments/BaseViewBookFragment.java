@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,8 +189,9 @@ public abstract class BaseViewBookFragment extends Fragment {
     }
 
     private void openReaderBook(Book.BookData book) {
+        String id = book.isOfflineBook() ? book.getIdBook() : bookUtilsDB.getBookPrimaryKey(book.getIdServerBook());
         Intent intent = BookReaderActivity.startReaderActivity(getActivity());
-        intent.putExtra(DetailBookActivity.BOOK_ID, book.getIdBook());
+        intent.putExtra(DetailBookActivity.BOOK_ID, id);
         intent.putExtra(DetailBookActivity.BOOK_PHOTO, book.getPhoto());
         intent.putExtra(DetailBookActivity.BOOK_AUTHOR, book.getIdAuthor());
         startActivity(intent);

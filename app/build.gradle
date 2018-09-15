@@ -16,8 +16,8 @@ android {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 12
-        versionName "0.4.3b"
+        versionCode 14
+        versionName "0.4.3с"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
