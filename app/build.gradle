@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 
 android {
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     signingConfigs {
         config {
             keyAlias 'plamber'
@@ -10,12 +15,12 @@ android {
             storePassword 'andrey1993_28!qce689kh'
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 27
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 14
         versionName "0.4.3с"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

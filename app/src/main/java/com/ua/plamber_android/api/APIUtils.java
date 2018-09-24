@@ -25,6 +25,9 @@ public class APIUtils {
         this.context = context;
     }
 
+    public APIUtils() {
+    }
+
     public PlamberAPI initializePlamberAPI() {
         final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(30, TimeUnit.SECONDS)

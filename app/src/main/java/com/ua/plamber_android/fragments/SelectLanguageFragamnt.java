@@ -57,7 +57,7 @@ public class SelectLanguageFragamnt extends Fragment {
         if (getActivity() == null)
             return;
         workAPI = new WorkAPI(getActivity());
-        languages = new ArrayList();
+        languages = new ArrayList<>();
         languageDBUtils = new LanguageDBUtils(getActivity());
     }
 

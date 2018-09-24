@@ -30,6 +30,7 @@ import com.ua.plamber_android.activitys.BookReaderActivity;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
+import com.ua.plamber_android.api.DownloadFileService;
 import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
@@ -327,15 +328,20 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void runDownloadDialog() {
-        if (bookDataDetail != null && apiUtils.isOnline(mParentLayout)) {
-            Bundle args = new Bundle();
-            args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
-            DownloadDialogFragmant dialogFragment = new DownloadDialogFragmant();
-            dialogFragment.setArguments(args);
-            dialogFragment.setCancelable(false);
-            if (getFragmentManager() != null)
-                dialogFragment.show(getFragmentManager(), "DownloadDialog");
-        }
+//        if (bookDataDetail != null && apiUtils.isOnline(mParentLayout)) {
+//            Bundle args = new Bundle();
+//            args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
+//            DownloadDialogFragmant dialogFragment = new DownloadDialogFragmant();
+//            dialogFragment.setArguments(args);
+//            dialogFragment.setCancelable(false);
+//            if (getFragmentManager() != null)
+//                dialogFragment.show(getFragmentManager(), "DownloadDialog");
+//        }
+        if(getActivity() == null)
+            return;
+        Intent intent = new Intent(getActivity(), DownloadFileService.class);
+        intent.putExtra(DownloadFileService.BOOK_DATA, new Gson().toJson(bookDataDetail));
+        getActivity().startService(intent);
     }
 
     private void addBookToLibrary(long id) {
