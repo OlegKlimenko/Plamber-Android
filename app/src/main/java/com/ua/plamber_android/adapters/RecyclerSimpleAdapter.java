@@ -62,4 +62,8 @@ public class RecyclerSimpleAdapter extends RecyclerView.Adapter<RecyclerSimpleAd
     public int getItemCount() {
         return itemsList.size();
     }
+
+    public List<String> getItemsList() {
+        return itemsList;
+    }
 }

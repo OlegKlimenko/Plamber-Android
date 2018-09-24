@@ -16,8 +16,8 @@ public class CategoryUploadFragment extends LibraryFragment {
             @Override
             public void onClick(View view, int position) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra(UploadFileFragment.CATEGORY_NAME, getCategoriesList().get(position).getCategoryName());
-                getActivity().setResult(Activity.RESULT_OK,returnIntent);
+                returnIntent.putExtra(UploadFileFragment.CATEGORY_NAME, getFilteredList().get(position));
+                getActivity().setResult(Activity.RESULT_OK, returnIntent);
                 getActivity().finish();
             }
 

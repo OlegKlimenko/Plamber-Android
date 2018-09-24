@@ -9,27 +9,36 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.ua.plamber_android.R;
+import com.ua.plamber_android.activitys.SelectLanguageActivity;
 import com.ua.plamber_android.activitys.UploadActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.LanguageDBUtils;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
 import com.ua.plamber_android.interfaces.callbacks.StringListCallback;
+import com.ua.plamber_android.model.Language;
 import com.ua.plamber_android.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SelectLanguageFragamnt extends Fragment {
+
+    public static final String SEARCH_KEY = "SEARCH_KEY";
 
     @BindView(R.id.language_recycler_view)
     RecyclerView mRecycler;
@@ -40,7 +49,6 @@ public class SelectLanguageFragamnt extends Fragment {
     private RecyclerSimpleAdapter mLanguageAdapter;
 
     private WorkAPI workAPI;
-    private PreferenceUtils preferenceUtils;
     private LanguageDBUtils languageDBUtils;
 
     @Override
@@ -49,8 +57,7 @@ public class SelectLanguageFragamnt extends Fragment {
         if (getActivity() == null)
             return;
         workAPI = new WorkAPI(getActivity());
-        preferenceUtils = new PreferenceUtils(getActivity());
-        languages = new ArrayList<>();
+        languages = new ArrayList();
         languageDBUtils = new LanguageDBUtils(getActivity());
     }
 
@@ -93,9 +100,21 @@ public class SelectLanguageFragamnt extends Fragment {
     }
 
     private void setAdapter(RecyclerViewClickListener listener) {
-        if (mLanguageAdapter == null) {
-            mLanguageAdapter = new RecyclerSimpleAdapter(languages, listener);
+        if (getArguments() == null)
+            return;
+
+        String search = getArguments().getString(SEARCH_KEY);
+        if (search != null && search.length() > 0) {
+            Set<String> filterLanguages = new HashSet<>();
+            for (String language : languages) {
+                if (language.toLowerCase().contains(search.toLowerCase())) {
+                    filterLanguages.add(language);
+                }
+            }
+            languages.clear();
+            languages.addAll(filterLanguages);
         }
+        mLanguageAdapter = new RecyclerSimpleAdapter(languages, listener);
         mRecycler.setAdapter(mLanguageAdapter);
         visibleProgress(mProgress, false);
         visibleProgress(mRecycler, true);

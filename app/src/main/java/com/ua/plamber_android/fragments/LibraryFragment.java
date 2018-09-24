@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.CategoryActivity;
 import com.ua.plamber_android.activitys.MainActivity;
+import com.ua.plamber_android.activitys.SelectCategoryActivity;
 import com.ua.plamber_android.adapters.RecyclerSimpleAdapter;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.database.utils.CategoryDBUtils;
@@ -28,7 +29,9 @@ import com.ua.plamber_android.model.Library;
 import com.ua.plamber_android.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -163,15 +166,29 @@ public class LibraryFragment extends Fragment {
     }
 
     public void setAdapter(RecyclerViewClickListener listener) {
+        String search = null;
+        if (getArguments() != null)
+           search = getArguments().getString(SelectCategoryActivity.SEARCH_KEY);
 
         List<String> items = new ArrayList<>();
         for (Library.LibraryData libraryData : categoriesList) {
             items.add(libraryData.getCategoryName());
         }
-        if (mRecyclerView.getAdapter() == null) {
-            mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
-            mRecyclerView.setAdapter(mLibraryAdapter);
+
+        if (search != null && search.length() > 0) {
+            Set<String> filterLanguages = new HashSet<>();
+            for (String language : items) {
+                if (language.toLowerCase().contains(search.toLowerCase())) {
+                    filterLanguages.add(language);
+                }
+            }
+            items.clear();
+            items.addAll(filterLanguages);
         }
+
+        mLibraryAdapter = new RecyclerSimpleAdapter(items, listener);
+        mRecyclerView.setAdapter(mLibraryAdapter);
+
         viewElement(mProgressLibrary, false);
         viewElement(mMessageAgain, false);
         viewElement(mRecyclerView, true);
@@ -190,7 +207,13 @@ public class LibraryFragment extends Fragment {
         return categoriesList;
     }
 
+    public List<String> getFilteredList() {
+        return mLibraryAdapter.getItemsList();
+    }
+
     public MainActivity getLibraryActivity() {
         return ((MainActivity) getActivity());
     }
+
+
 }
