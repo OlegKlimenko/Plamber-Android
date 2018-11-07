@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".api.DownloadFileService" />
+        <service android:name=".api.download.DownloadService" />
     </application>
 
 </manifest>

@@ -30,13 +30,12 @@ import com.ua.plamber_android.activitys.BookReaderActivity;
 import com.ua.plamber_android.activitys.DetailBookActivity;
 import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
-import com.ua.plamber_android.api.DownloadFileService;
-import com.ua.plamber_android.api.PlamberAPI;
 import com.ua.plamber_android.api.WorkAPI;
+import com.ua.plamber_android.api.download.DownloadService;
+import com.ua.plamber_android.api.download.FastFileData;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.dialogs.AddCommentDialog;
 import com.ua.plamber_android.fragments.dialogs.AddRatedDialog;
-import com.ua.plamber_android.fragments.dialogs.DownloadDialogFragmant;
 import com.ua.plamber_android.interfaces.callbacks.BookDetailCallback;
 import com.ua.plamber_android.interfaces.callbacks.ManageBookCallback;
 import com.ua.plamber_android.model.Book;
@@ -328,19 +327,17 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void runDownloadDialog() {
-//        if (bookDataDetail != null && apiUtils.isOnline(mParentLayout)) {
-//            Bundle args = new Bundle();
-//            args.putString(DownloadDialogFragmant.DOWNLOADBOOK, new Gson().toJson(bookDataDetail.getBookData()));
-//            DownloadDialogFragmant dialogFragment = new DownloadDialogFragmant();
-//            dialogFragment.setArguments(args);
-//            dialogFragment.setCancelable(false);
-//            if (getFragmentManager() != null)
-//                dialogFragment.show(getFragmentManager(), "DownloadDialog");
-//        }
         if(getActivity() == null)
             return;
-        Intent intent = new Intent(getActivity(), DownloadFileService.class);
-        intent.putExtra(DownloadFileService.BOOK_DATA, new Gson().toJson(bookDataDetail));
+        Intent intent = new Intent(getActivity(), DownloadService.class);
+
+        String id = Utils.generateId();
+        File path = new File(new Utils(getActivity()).getPdfFileWithPath(id));
+        String uri = BuildConfig.END_POINT + bookDataDetail.getBookData().getBookFile();
+        FastFileData fastFileData = new FastFileData(path, uri, bookDataDetail.getBookData().getBookName());
+        fastFileData.setBookData(bookDataDetail);
+        fastFileData.setId(id);
+        intent.putExtra(DownloadService.FILE_DATA, new Gson().toJson(fastFileData));
         getActivity().startService(intent);
     }
 
