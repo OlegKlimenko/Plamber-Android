@@ -1,22 +1,33 @@
 package com.ua.plamber_android.api.download;
 
-import android.net.Uri;
-
 import com.ua.plamber_android.model.Book;
 
 import java.io.File;
 
-public class FastFileData {
+public class FileCreateHelper {
     private File file;
     private String fileURL;
     private String fileName;
-    private Book.BookDetailData bookData;
-    private String id;
+    private Book.BookDetailData bookDetailData;
 
-    public FastFileData(File file, String fileURL, String fileName) {
+    public FileCreateHelper(File file, String fileURL, String fileName) {
         this.file = file;
         this.fileURL = fileURL;
         this.fileName = fileName;
+    }
+
+    public FileCreateHelper(File file, String fileURL, String fileName, Book.BookDetailData userFile) {
+        this.file = file;
+        this.fileURL = fileURL;
+        this.fileName = fileName;
+        this.bookDetailData = userFile;
+    }
+
+    public FileCreateHelper(FileCreateHelper file) {
+        this.file = file.getFile();
+        this.fileURL = file.getFileURL();
+        this.fileName = file.getFileName();
+        this.bookDetailData = file.bookDetailData;
     }
 
     public File getFile() {
@@ -43,19 +54,8 @@ public class FastFileData {
         this.fileName = fileName;
     }
 
-    public Book.BookDetailData getBookData() {
-        return bookData;
-    }
 
-    public void setBookData(Book.BookDetailData bookData) {
-        this.bookData = bookData;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Book.BookDetailData getDetailData() {
+        return bookDetailData;
     }
 }

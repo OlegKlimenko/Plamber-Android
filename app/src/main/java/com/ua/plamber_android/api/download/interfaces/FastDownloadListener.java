@@ -1,14 +1,14 @@
 package com.ua.plamber_android.api.download.interfaces;
 
-import com.ua.plamber_android.api.download.FastFileData;
+import com.ua.plamber_android.api.download.FastDownloadedFile;
+import com.ua.plamber_android.api.download.FileCreateHelper;
 
-import java.io.File;
 import java.util.List;
 
 public interface FastDownloadListener {
     void startDownload();
 
-    void progressUpdate(List<FastFileData> filesInQueue, int totalSize, int percent, float currentSize, FastFileData currentFile);
+    void progressUpdate(List<FileCreateHelper> filesInQueue, FastDownloadedFile file);
 
-    void finishDownload(FastFileData file, int filesInQueue);
+    void finishDownload(FileCreateHelper file, int filesInQueue);
 }

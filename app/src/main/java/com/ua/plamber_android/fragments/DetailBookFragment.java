@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +33,8 @@ import com.ua.plamber_android.adapters.RecyclerCommentAdapter;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.api.WorkAPI;
 import com.ua.plamber_android.api.download.DownloadService;
-import com.ua.plamber_android.api.download.FastFileData;
+import com.ua.plamber_android.api.download.FastDownloadFile;
+import com.ua.plamber_android.api.download.FileCreateHelper;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.fragments.dialogs.AddCommentDialog;
 import com.ua.plamber_android.fragments.dialogs.AddRatedDialog;
@@ -108,6 +110,8 @@ public class DetailBookFragment extends Fragment {
     LinearLayout mMainDetailLayout;
     @BindView(R.id.file_download_indicator_btn)
     ImageButton mFileIndicator;
+    @BindView(R.id.progress_book_download)
+    ProgressBar mProgressBook;
 
     private Book.BookDetailData bookDataDetail;
     private BookUtilsDB bookUtilsDB;
@@ -166,6 +170,7 @@ public class DetailBookFragment extends Fragment {
                 initDetailAdditionally(bookDataDetail);
                 checkBook();
                 initCommentsPreview();
+                checkDownload();
             }
 
             @Override
@@ -173,6 +178,30 @@ public class DetailBookFragment extends Fragment {
                 viewProgress(false);
             }
         }, getArguments().getLong(DetailBookActivity.BOOK_SERVER_ID));
+    }
+
+    private void showProgress() {
+        mDetailButton.setVisibility(View.GONE);
+        mProgressBook.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        mDetailButton.setVisibility(View.VISIBLE);
+        mProgressBook.setVisibility(View.GONE);
+    }
+
+    private void checkDownload() {
+        if (FastDownloadFile.getPoolFiles().isEmpty()) {
+            hideProgress();
+            return;
+        }
+        for (FileCreateHelper file : FastDownloadFile.getPoolFiles()) {
+            if (file.getDetailData().getBookData().getIdServerBook() == bookDataDetail.getBookData().getIdServerBook()) {
+                showProgress();
+                return;
+            }
+        }
+        hideProgress();
     }
 
     private void setDownloadIndicator(boolean view) {
@@ -287,6 +316,7 @@ public class DetailBookFragment extends Fragment {
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
        actionBook();
+       showProgress();
     }
 
     @OnClick(R.id.iv_detail_book_image)
@@ -334,9 +364,8 @@ public class DetailBookFragment extends Fragment {
         String id = Utils.generateId();
         File path = new File(new Utils(getActivity()).getPdfFileWithPath(id));
         String uri = BuildConfig.END_POINT + bookDataDetail.getBookData().getBookFile();
-        FastFileData fastFileData = new FastFileData(path, uri, bookDataDetail.getBookData().getBookName());
-        fastFileData.setBookData(bookDataDetail);
-        fastFileData.setId(id);
+        bookDataDetail.getBookData().setIdBook(id);
+        FileCreateHelper fastFileData = new FileCreateHelper(path, uri, bookDataDetail.getBookData().getBookName(), bookDataDetail);
         intent.putExtra(DownloadService.FILE_DATA, new Gson().toJson(fastFileData));
         getActivity().startService(intent);
     }

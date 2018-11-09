@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ua.plamber_android.api.download.interfaces.FastDownloadListener;
+import com.ua.plamber_android.model.Book;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -13,11 +14,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-public class FastDownloadFile extends AsyncTask<FastFileData, Void, FastFileData> {
+public class FastDownloadFile extends AsyncTask<FileCreateHelper, Void, FileCreateHelper> {
     private static final String TAG = FastDownloadFile.class.getSimpleName();
     private FastDownloadListener listener;
-    private static List<FastFileData> poolFiles = new ArrayList<>();
+    private static List<FileCreateHelper> poolFiles = new ArrayList<>();
 
     public FastDownloadFile(FastDownloadListener listener) {
         this.listener = listener;
@@ -30,24 +32,26 @@ public class FastDownloadFile extends AsyncTask<FastFileData, Void, FastFileData
     }
 
     @Override
-    protected FastFileData doInBackground(FastFileData... fastFileData) {
+    protected FileCreateHelper doInBackground(FileCreateHelper... fastFileData) {
         return saveFile(fastFileData[0]);
     }
 
     @Override
-    protected void onPostExecute(FastFileData file) {
+    protected void onPostExecute(FileCreateHelper file) {
         super.onPostExecute(file);
         poolFiles.remove(file);
         listener.finishDownload(file, poolFiles.size());
     }
 
-    private FastFileData saveFile(FastFileData file) {
+    private FileCreateHelper saveFile(FileCreateHelper file) {
         poolFiles.add(file);
+        FastDownloadedFile downloadedFile = new FastDownloadedFile();
         try (FileOutputStream stream = new FileOutputStream(file.getFile())) {
             URL url = new URL(file.getFileURL());
             URLConnection connection = url.openConnection();
             int fileSize = connection.getContentLength();
             try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream())) {
+                long startTime = System.nanoTime();
                 byte[] data = new byte[8192];
                 float total = 0;
                 int readBytes;
@@ -56,7 +60,8 @@ public class FastDownloadFile extends AsyncTask<FastFileData, Void, FastFileData
                     int download = (int) ((total / fileSize) * 100);
                     if (progress + 1 <= download) {
                         progress = download;
-                        listener.progressUpdate(poolFiles, fileSize, download, total, file);
+                        downloadedFile.updateData(fileSize, download, total, file, startTime);
+                        listener.progressUpdate(poolFiles, downloadedFile);
                     }
                     total += readBytes;
                     stream.write(data, 0, readBytes);
@@ -68,5 +73,9 @@ public class FastDownloadFile extends AsyncTask<FastFileData, Void, FastFileData
             Log.i(TAG, e.getMessage());
         }
         return file;
+    }
+
+    public static List<FileCreateHelper> getPoolFiles() {
+        return poolFiles;
     }
 }

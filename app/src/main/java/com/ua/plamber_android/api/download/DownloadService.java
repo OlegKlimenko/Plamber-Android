@@ -5,13 +5,13 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.download.interfaces.FastDownloadListener;
+import com.ua.plamber_android.api.download.type.FastCalculateHelper;
+import com.ua.plamber_android.api.download.type.FastTimeLeft;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
-import com.ua.plamber_android.model.Book;
 
 import java.util.List;
 
@@ -33,39 +33,45 @@ public class DownloadService extends IntentService {
                 .setContentText("Downloading File")
                 .setAutoCancel(false)
                 .setOngoing(true);
-
-        FastDownload fast = new FastDownload();
-        fast.setFastListener(new FastDownloadListener() {
+        FileCreateHelper file = new Gson().fromJson(intent.getStringExtra(FILE_DATA), FileCreateHelper.class);
+        new FastDownload().addFileToDownload(file, new FastDownloadListener() {
             @Override
             public void startDownload() {
-
+                sendIndeterminateNotification(file.getFileName());
             }
 
             @Override
-            public void progressUpdate(List<FastFileData> filesInQueue, int totalSize, int percent, float currentSize, FastFileData currentFile) {
-                if (filesInQueue.get(0).equals(currentFile))
-                    sendNotification(percent, filesInQueue.size(), currentFile);
+            public void progressUpdate(List filesInQueue, FastDownloadedFile file) {
+                if (filesInQueue.get(0).equals(file.getFile())) {
+                    sendNotification(file.getPersent(), filesInQueue.size(), file);
+                }
             }
 
             @Override
-            public void finishDownload(FastFileData file, int count) {
-                BookUtilsDB db = new BookUtilsDB(getApplicationContext());
-                db.writeBookToDataBase(file.getId(), file.getBookData().getBookData());
-                if (count == 0)
+            public void finishDownload(FileCreateHelper file, int filesInQueue) {
+                BookUtilsDB utilsDB = new BookUtilsDB(getApplicationContext());
+                utilsDB.writeBookToDataBase(file.getDetailData().getBookData().getIdBook(), file.getDetailData().getBookData());
+                if (filesInQueue == 0)
                     notificationManager.cancelAll();
             }
         });
-        Log.i(TAG, (new Gson().fromJson(intent.getStringExtra(FILE_DATA), FastFileData.class).getBookData().getBookData().getBookFile()));
-        fast.addFileForDownload(new Gson().fromJson(intent.getStringExtra(FILE_DATA), FastFileData.class));
     }
 
-    public void sendNotification(int progress, int fileCount, FastFileData data) {
+    public void sendNotification(int progress, int fileCount, FastDownloadedFile data) {
         notificationBuilder.setProgress(100, progress, false);
-        notificationBuilder.setContentText("Downloading file " + progress + " %");
+        FastTimeLeft helper = FastCalculateHelper.getLeftTime(data.getFileSize(), data.getCurrentSize(), data.getStartTime());
+        notificationBuilder.setContentText("Time left " + helper.getLeftTime() + " " + helper.getType());
+        notificationBuilder.setContentInfo(progress + " %");
         if (fileCount > 1)
             notificationBuilder.setContentTitle(fileCount + " is now downloading");
         else
-            notificationBuilder.setContentTitle(data.getFileName());
+            notificationBuilder.setContentTitle(data.getFile().getFileName());
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    public void sendIndeterminateNotification(String name) {
+        notificationBuilder.setProgress(100,0, true);
+        notificationBuilder.setContentTitle(name);
         notificationManager.notify(0, notificationBuilder.build());
     }
 }

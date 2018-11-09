@@ -101,7 +101,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
@@ -109,17 +109,31 @@
                     android:id="@+id/btn_detail_download_book"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="170dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingBottom="@dimen/button_padding"
                     android:paddingTop="@dimen/button_padding"
                     android:text="@string/download_book"
                     android:textAllCaps="false"
+
                     android:theme="@style/AppTheme.GreenButton" />
+
+                <ProgressBar
+                    android:id="@+id/progress_book_download"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:scaleY="4"
+                    android:paddingBottom="@dimen/button_padding"
+                    android:paddingTop="@dimen/button_padding"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:indeterminateOnly="true"
+                    android:visibility="gone"
+                    style="?android:attr/progressBarStyleHorizontal"/>
 
                 <LinearLayout
                     android:id="@+id/option_detail_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_checkbox"
                     android:gravity="right|center_vertical">
 
