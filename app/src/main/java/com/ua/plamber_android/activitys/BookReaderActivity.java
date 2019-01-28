@@ -263,7 +263,6 @@ public class BookReaderActivity extends AppCompatActivity {
                 if (bookUtilsDB.readLastDate(bookDB.getIdBook()) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookDB.getIdBook())).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime()) {
                     viewFromDB();
                 } else {
-                    //bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), page.getLastReadData());
                     bookUtilsDB.updatePage(bookDB.getIdBook(), page.getLastPage());
                     viewFromDB();
                 }
@@ -277,7 +276,6 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void viewFromDB() {
-        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
         viewPdf(bookUtilsDB.readLastPage(bookDB.getIdBook()) - 1);
     }
 
@@ -287,16 +285,12 @@ public class BookReaderActivity extends AppCompatActivity {
         saveCurrentPage();
     }
 
-    private void savePageInDB() {
-        bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
-        //bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
-    }
-
     private void saveCurrentPage() {
         //savePageInDB();
         if (!isLoadPdf)
             return;
         bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
+        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
         isLoadPdf = false;
         if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
             workAPI.setLastPage(new StatusCallback() {

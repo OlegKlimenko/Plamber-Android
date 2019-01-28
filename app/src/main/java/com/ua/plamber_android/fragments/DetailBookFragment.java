@@ -1,6 +1,9 @@
 package com.ua.plamber_android.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -118,6 +121,9 @@ public class DetailBookFragment extends Fragment {
     private APIUtils apiUtils;
     private Utils utils;
     private WorkAPI workAPI;
+    public static final String STOP_DOWNLOAD = "com.ua.plamber_android.fragments.stop.download";
+    public static final String SERVER_BOOK_ID = "SERVER_BOOK_ID";
+    private BroadcastReceiver broadcastReceiver;
 
     Tracker mTracker;
 
@@ -132,6 +138,23 @@ public class DetailBookFragment extends Fragment {
         initGoogleAnalytics();
     }
 
+    private void initBroadcast() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null)
+                    return;
+                if (bookDataDetail != null &&
+                        bookDataDetail.getBookData().getIdServerBook() == intent.getLongExtra(SERVER_BOOK_ID, -1)) {
+                    hideProgress();
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(STOP_DOWNLOAD);
+        if (getActivity() != null)
+            getActivity().registerReceiver(broadcastReceiver, intentFilter);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -139,6 +162,13 @@ public class DetailBookFragment extends Fragment {
         ButterKnife.bind(this, view);
         viewDetailBook();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (getActivity() != null)
+            getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -171,6 +201,7 @@ public class DetailBookFragment extends Fragment {
                 checkBook();
                 initCommentsPreview();
                 checkDownload();
+                initBroadcast();
             }
 
             @Override
@@ -316,7 +347,6 @@ public class DetailBookFragment extends Fragment {
     @OnClick(R.id.btn_detail_download_book)
     public void downloadBookButton() {
        actionBook();
-       showProgress();
     }
 
     @OnClick(R.id.iv_detail_book_image)
@@ -328,10 +358,12 @@ public class DetailBookFragment extends Fragment {
         if (bookDataDetail != null && mDetailButton.getTag() == "Added") {
             addBookToLibrary(bookDataDetail.getBookData().getIdServerBook());
         } else if (mDetailButton.getTag() == "Read") {
-            if (getBookFile().exists())
+            if (getBookFile().exists()) {
                 startReadBook();
-            else
+            } else {
+                showProgress();
                 runDownloadDialog();
+            }
         }
     }
 

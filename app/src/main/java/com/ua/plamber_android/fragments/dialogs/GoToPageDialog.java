@@ -46,12 +46,7 @@ public class GoToPageDialog extends DialogFragment {
         ButterKnife.bind(this, v);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
-                .setPositiveButton(R.string.go_to, null).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dismiss();
-            }
-        });
+                .setPositiveButton(R.string.go_to, null).setNegativeButton(R.string.cancel, (dialogInterface, i) -> dismiss());
         return builder.create();
     }
 

@@ -159,7 +159,7 @@
     <string name="no_find_pdf_files_in_your_device">Не удалось найти pdf файлы</string>
     <string name="local_file_title">Файлы на устройстве</string>
     <string name="enter_page_number">Введите номер страницы</string>
-    <string name="number_of_page_in_this_book">Количество страниц в этой книге\ </string>
+    <string name="number_of_page_in_this_book">Количество страниц в этой книге \u0020</string>
     <string name="go_to">Перейти</string>
     <string name="go_to_page_menu">Перейти к странице</string>
     <string name="close_reader_menu">Вернуться</string>
@@ -187,5 +187,9 @@
     <string name="rate_app_dialog">Оцените наше приложение в PlayMarket!</string>
     <string name="follow_title_dialog">Подписаться</string>
     <string name="rate_title_dialog">Оценить</string>
-
+    <string name="time_left">Осталось</string>
+    <string name="seconds">сек.\ </string>
+    <string name="minutes">мин.\ </string>
+    <string name="hours">ч.\ </string>
+    <string name="now_downloading">\u0020 загружается сейчас</string>
 </resources>

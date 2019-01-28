@@ -165,7 +165,7 @@
     <string name="no_find_pdf_files_in_your_device">No find pdf files in your device</string>
     <string name="local_file_title">Local files</string>
     <string name="enter_page_number">Enter page number</string>
-    <string name="number_of_page_in_this_book">Number of pages in this book\ </string>
+    <string name="number_of_page_in_this_book">Number of pages in this book\u0020</string>
     <string name="go_to">Go to</string>
     <string name="go_to_page_menu">Go to page</string>
     <string name="close_reader_menu">Close reader</string>
@@ -193,6 +193,11 @@
     <string name="rate_app_dialog">Rate our app at PlayMarket!</string>
     <string name="follow_title_dialog">Follow</string>
     <string name="rate_title_dialog">Rate plamber</string>
+    <string name="time_left">Time left</string>
+    <string name="seconds">sec</string>
+    <string name="minutes">min</string>
+    <string name="hours">hours</string>
+    <string name="now_downloading">\u0020 is now downloading</string>
 
 
 </resources>

@@ -82,15 +82,12 @@ public class DownloadDialogFragmant extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
                 .setTitle(R.string.download_book_title)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (asyncDownload != null) {
-                            asyncDownload.cancel(true);
-                        }
-                        bookFile.delete();
-                        Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_was_interrupted));
+                .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
+                    if (asyncDownload != null) {
+                        asyncDownload.cancel(true);
                     }
+                    bookFile.delete();
+                    Utils.messageSnack(getDetailBookFragment().getView(), getString(R.string.download_was_interrupted));
                 });
         return builder.create();
     }

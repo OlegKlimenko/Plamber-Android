@@ -23,7 +23,7 @@ public class DetailBookActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     public static final String BOOK_SERVER_ID = "BOOK_SERVER_ID";
-    public static final String BOOK_ID = "BOOK_ID";
+    public static final String BOOK_ID = "SERVER_BOOK_ID";
     public static final String BOOK_PHOTO = "BOOK_PHOTO";
     public static final String BOOK_AUTHOR = "BOOK_AUTHOR";
     public static final String BOOK_NAME = "BOOK_NAME";
