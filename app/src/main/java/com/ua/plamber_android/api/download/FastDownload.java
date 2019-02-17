@@ -11,9 +11,17 @@ import java.util.List;
 public class FastDownload {
     private static final String TAG = FastDownload.class.getSimpleName();
 
+    private FastDownloadFile request;
+
     public void addFileToDownload(FileCreateHelper fileData, FastDownloadListener listener) {
-        FastDownloadFile request = new FastDownloadFile(listener);
+        if (request == null)
+            request = new FastDownloadFile(listener);
         FileCreateHelper file = new FileCreateHelper(fileData);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, file);
+    }
+
+    public void stopDownload() {
+        FastDownloadFile.getPoolFiles().clear();
+        request.cancel(true);
     }
 }

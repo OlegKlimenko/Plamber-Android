@@ -1,10 +1,17 @@
 package com.ua.plamber_android.api.download;
 
 import android.app.IntentService;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
@@ -20,8 +27,14 @@ import java.util.List;
 public class DownloadService extends IntentService {
     public static final String TAG = DownloadService.class.getSimpleName();
     public static final String FILE_DATA = "FILE_DATA";
+    private static final String CHANNEL_ID = "12";
     private NotificationCompat.Builder notificationBuilder;
     private NotificationManager notificationManager;
+
+    public static final String CANCEL_DOWNLOAD = "com.ua.plamber_android.api.download.cancel.download";
+    public static final String CANCEL_DOWNLOAD_STATUS = "CANCEL_DOWNLOAD_STATUS";
+
+    private FastDownload fastDownload;
 
     public DownloadService() {
         super(TAG);
@@ -30,13 +43,20 @@ public class DownloadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), "Download")
+        initNotificationChannel();
+        iniBroadcast();
+        Intent i = new Intent(CANCEL_DOWNLOAD);
+        i.putExtra(CANCEL_DOWNLOAD_STATUS, 0);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText("Downloading File")
+                .addAction(R.drawable.baseline_close_24, getString(R.string.cancel), pi)
                 .setAutoCancel(false)
                 .setOngoing(true);
         FileCreateHelper file = new Gson().fromJson(intent.getStringExtra(FILE_DATA), FileCreateHelper.class);
-        new FastDownload().addFileToDownload(file, new FastDownloadListener() {
+        fastDownload = new FastDownload();
+        fastDownload.addFileToDownload(file, new FastDownloadListener() {
             @Override
             public void startDownload() {
                 sendIndeterminateNotification(file.getFileName());
@@ -60,6 +80,33 @@ public class DownloadService extends IntentService {
                     notificationManager.cancelAll();
             }
         });
+    }
+
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Download",
+                    NotificationManager.IMPORTANCE_LOW);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
+    private void iniBroadcast() {
+        BroadcastReceiver stopBroadcast = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null)
+                    return;
+                if (intent.getIntExtra(CANCEL_DOWNLOAD_STATUS, 1) == 0) {
+                    fastDownload.stopDownload();
+                    notificationManager.cancelAll();
+                    Intent i = new Intent(CANCEL_DOWNLOAD);
+                    sendBroadcast(i);
+                }
+
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(CANCEL_DOWNLOAD);
+        getApplicationContext().registerReceiver(stopBroadcast, intentFilter);
     }
 
     public void sendNotification(int progress, int fileCount, FastDownloadedFile data) {

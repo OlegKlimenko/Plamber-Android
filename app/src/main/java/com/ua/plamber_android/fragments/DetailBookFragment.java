@@ -124,6 +124,7 @@ public class DetailBookFragment extends Fragment {
     public static final String STOP_DOWNLOAD = "com.ua.plamber_android.fragments.stop.download";
     public static final String SERVER_BOOK_ID = "SERVER_BOOK_ID";
     private BroadcastReceiver broadcastReceiver;
+    private BroadcastReceiver stopBroadcast;
 
     Tracker mTracker;
 
@@ -138,6 +139,18 @@ public class DetailBookFragment extends Fragment {
         initGoogleAnalytics();
     }
 
+    private void initStopBroadcast() {
+        stopBroadcast = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                hideProgress();
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(DownloadService.CANCEL_DOWNLOAD);
+        if (getActivity() != null)
+            getActivity().registerReceiver(stopBroadcast, intentFilter);
+    }
+
     private void initBroadcast() {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -147,6 +160,7 @@ public class DetailBookFragment extends Fragment {
                 if (bookDataDetail != null &&
                         bookDataDetail.getBookData().getIdServerBook() == intent.getLongExtra(SERVER_BOOK_ID, -1)) {
                     hideProgress();
+                    checkBook();
                 }
             }
         };
@@ -202,6 +216,7 @@ public class DetailBookFragment extends Fragment {
                 initCommentsPreview();
                 checkDownload();
                 initBroadcast();
+                initStopBroadcast();
             }
 
             @Override
