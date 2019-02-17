@@ -10,8 +10,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ua.plamber_android.R;
@@ -79,6 +82,13 @@ public class DownloadService extends IntentService {
                 if (filesInQueue == 0)
                     notificationManager.cancelAll();
             }
+
+            @Override
+            public void errorDownloading() {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(() -> Toast.makeText(getApplicationContext(), getString(R.string.connetion_error_title), Toast.LENGTH_SHORT).show());
+                cancelDownload();
+            }
         });
     }
 
@@ -96,17 +106,20 @@ public class DownloadService extends IntentService {
             public void onReceive(Context context, Intent intent) {
                 if (intent == null)
                     return;
-                if (intent.getIntExtra(CANCEL_DOWNLOAD_STATUS, 1) == 0) {
-                    fastDownload.stopDownload();
-                    notificationManager.cancelAll();
-                    Intent i = new Intent(CANCEL_DOWNLOAD);
-                    sendBroadcast(i);
-                }
+                if (intent.getIntExtra(CANCEL_DOWNLOAD_STATUS, 1) == 0)
+                    cancelDownload();
 
             }
         };
         IntentFilter intentFilter = new IntentFilter(CANCEL_DOWNLOAD);
         getApplicationContext().registerReceiver(stopBroadcast, intentFilter);
+    }
+
+    private void cancelDownload() {
+        fastDownload.stopDownload();
+        notificationManager.cancelAll();
+        Intent i = new Intent(CANCEL_DOWNLOAD);
+        sendBroadcast(i);
     }
 
     public void sendNotification(int progress, int fileCount, FastDownloadedFile data) {

@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ua.plamber_android.api.download.interfaces.FastDownloadListener;
-import com.ua.plamber_android.model.Book;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -14,7 +13,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class FastDownloadFile extends AsyncTask<FileCreateHelper, Void, FileCreateHelper> {
     private static final String TAG = FastDownloadFile.class.getSimpleName();
@@ -34,13 +32,6 @@ public class FastDownloadFile extends AsyncTask<FileCreateHelper, Void, FileCrea
     @Override
     protected FileCreateHelper doInBackground(FileCreateHelper... fastFileData) {
         return saveFile(fastFileData[0]);
-    }
-
-    @Override
-    protected void onPostExecute(FileCreateHelper file) {
-        super.onPostExecute(file);
-        poolFiles.remove(file);
-        listener.finishDownload(file, poolFiles.size());
     }
 
     private FileCreateHelper saveFile(FileCreateHelper file) {
@@ -66,10 +57,14 @@ public class FastDownloadFile extends AsyncTask<FileCreateHelper, Void, FileCrea
                     total += readBytes;
                     stream.write(data, 0, readBytes);
                 }
+                poolFiles.remove(file);
+                listener.finishDownload(file, poolFiles.size());
             }
         } catch (MalformedURLException e) {
+            listener.errorDownloading();
             Log.i(TAG, e.getMessage());
         } catch (IOException e) {
+            listener.errorDownloading();
             Log.i(TAG, e.getMessage());
         }
         return file;

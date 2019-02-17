@@ -466,7 +466,6 @@ public class DetailBookFragment extends Fragment {
         File bookCover = new File(utils.getPngFileWithPath(bookId));
         bookFile.delete();
         bookCover.delete();
-        bookCover.delete();
         checkBook();
         if (viewMessage)
             Utils.messageSnack(mParentLayout, getString(R.string.book_remove_from_device));

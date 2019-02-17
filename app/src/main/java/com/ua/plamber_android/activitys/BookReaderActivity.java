@@ -22,11 +22,13 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnErrorListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -317,7 +319,16 @@ public class BookReaderActivity extends AppCompatActivity {
                     mPdfView.jumpTo(currentPage);
                     setPages(getCurrentPage(), getCountPage());
                     isLoadPdf = true;
-                }).enableAntialiasing(true).spacing(10).load();
+                }).enableAntialiasing(true).spacing(10)
+                .onError(t -> {
+                    File bookFile = new File(utils.getPdfFileWithPath(bookDB.getIdBook()));
+                    File bookCover = new File(utils.getPngFileWithPath(bookDB.getIdBook()));
+                    bookFile.delete();
+                    bookCover.delete();
+                    bookUtilsDB.removeBookFromDatabase(bookUtilsDB.getBookPrimaryKey(bookDB.getIdServerBook()));
+                    Toast.makeText(getApplicationContext(), getString(R.string.this_file_is_damaged), Toast.LENGTH_SHORT).show();
+                    finish();
+                }).load();
 
     }
 

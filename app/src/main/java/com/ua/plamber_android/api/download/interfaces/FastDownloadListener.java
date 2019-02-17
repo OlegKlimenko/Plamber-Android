@@ -11,4 +11,6 @@ public interface FastDownloadListener {
     void progressUpdate(List<FileCreateHelper> filesInQueue, FastDownloadedFile file);
 
     void finishDownload(FileCreateHelper file, int filesInQueue);
+
+    void errorDownloading();
 }

@@ -198,6 +198,7 @@
     <string name="minutes">min</string>
     <string name="hours">hours</string>
     <string name="now_downloading">\u0020 is now downloading</string>
+    <string name="this_file_is_damaged">The file is damaged</string>
 
 
 </resources>
