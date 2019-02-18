@@ -46,8 +46,6 @@ public class DownloadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        initNotificationChannel();
-        iniBroadcast();
         Intent i = new Intent(CANCEL_DOWNLOAD);
         i.putExtra(CANCEL_DOWNLOAD_STATUS, 0);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
@@ -56,7 +54,10 @@ public class DownloadService extends IntentService {
                 .setContentText("Downloading File")
                 .addAction(R.drawable.baseline_close_24, getString(R.string.cancel), pi)
                 .setAutoCancel(false)
-                .setOngoing(true);
+                .setOngoing(true)
+                .setProgress(0, 0, true);
+        initNotificationChannel();
+        iniBroadcast();
         FileCreateHelper file = new Gson().fromJson(intent.getStringExtra(FILE_DATA), FileCreateHelper.class);
         fastDownload = new FastDownload();
         fastDownload.addFileToDownload(file, new FastDownloadListener() {
@@ -94,8 +95,7 @@ public class DownloadService extends IntentService {
 
     private void initNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Download",
-                    NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Download", NotificationManager.IMPORTANCE_LOW);
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }

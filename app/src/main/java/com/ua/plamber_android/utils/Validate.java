@@ -136,7 +136,7 @@ public class Validate {
     public boolean userNameValidate(EditText editText, final TextInputLayout inputLayout) {
         boolean isValid = true;
         inputLayout.setErrorEnabled(true);
-        String regex = "[A-Za-z0-9_]{2,30}";
+        String regex = "^[a-zA-Z0-9_]{2,30}|^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
         String user = editText.getText().toString();
 
         if (!user.matches(regex)) {

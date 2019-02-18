@@ -181,8 +181,14 @@ public class DetailBookFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (getActivity() != null)
-            getActivity().unregisterReceiver(broadcastReceiver);
+        try {
+            if (getActivity() != null) {
+                getActivity().unregisterReceiver(broadcastReceiver);
+                getActivity().unregisterReceiver(stopBroadcast);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
