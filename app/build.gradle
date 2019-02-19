@@ -21,7 +21,7 @@ android {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 15
+        versionCode 17
         versionName "0.4.4"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
