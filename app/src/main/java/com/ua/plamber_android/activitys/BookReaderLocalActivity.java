@@ -89,7 +89,7 @@ public class BookReaderLocalActivity extends AppCompatActivity {
                 mBookPath = getIntent().getStringExtra(LOCAL_BOOK_FILE);
                 return;
             }
-            File file = new File(FileHelper.getRealPathFromURI(getBaseContext(), getIntent().getData()));
+            File file = new File(FileHelper.getPathFromURIFiles(getBaseContext(), getIntent().getData()));
             mBookName = file.getName();
             mBookPath = file.getAbsolutePath();
 

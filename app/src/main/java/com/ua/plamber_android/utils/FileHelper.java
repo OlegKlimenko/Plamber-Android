@@ -65,11 +65,11 @@ public class FileHelper {
         return name;
     }
 
-    public static String getRealPathFromURI(Context context, Uri contentURI) {
+    public static String getPathFromURIFiles(Context context, Uri uri) {
         String result;
-        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
         if (cursor == null) {
-            result = contentURI.getPath();
+            result = uri.getPath();
         } else {
             cursor.moveToFirst();
             int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE);
