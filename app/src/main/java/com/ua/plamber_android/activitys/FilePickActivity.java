@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.adapters.RecyclerFileAdapter;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.FileHelper;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
@@ -170,7 +170,7 @@ public class FilePickActivity extends AppCompatActivity {
     }
 
     private List<File> searchFileInDirectory(String path) {
-        return FileUtils.getFileInDirectory(path, isHidden, searchFileType());
+        return FileHelper.getFileInDirectory(path, isHidden, searchFileType());
     }
 
     public String[] searchFileType() {

@@ -76,6 +76,8 @@ public class SplashFragment extends Fragment {
 
     private void startApp() {
         startActivity(MainActivity.startLibraryActivity(getActivity()));
+        if (getActivity() != null)
+            getActivity().finish();
     }
 
     private void getAllLanguage() {

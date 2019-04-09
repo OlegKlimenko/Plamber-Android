@@ -12,7 +12,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.activitys.ImagePickActivity;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.FileHelper;
 
 import java.io.File;
 import java.util.Collections;
@@ -71,16 +71,16 @@ public class RecyclerFileAdapter extends RecyclerView.Adapter<RecyclerFileAdapte
         File file = mFiles.get(position);
         holder.fileName.setText(file.getName());
         if (file.isFile()) {
-            holder.fileType.setText(FileUtils.getFileSize(file));
+            holder.fileType.setText(FileHelper.getFileSize(file));
             holder.fileSizeType.setText(R.string.file_size);
         } else {
             holder.fileType.setText(R.string.file_folder);
             holder.fileSizeType.setText(null);
         }
 
-        if (FileUtils.isCorrectType(file, FilePickActivity.BOOK_FORMAT)) {
+        if (FileHelper.isCorrectType(file, FilePickActivity.BOOK_FORMAT)) {
             Glide.with(holder.view).load(R.drawable.pdf).into(holder.fileImage);
-        } else if (FileUtils.isCorrectType(file, ImagePickActivity.IMAGE_FORMAT)) {
+        } else if (FileHelper.isCorrectType(file, ImagePickActivity.IMAGE_FORMAT)) {
             Glide.with(holder.view).load(file.getPath()).into(holder.fileImage);
         } else {
             Glide.with(holder.view).load(R.drawable.folder).into(holder.fileImage);

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,11 +27,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.database.model.LocalBookDB;
-import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.database.utils.LocalBookUtils;
 import com.ua.plamber_android.fragments.dialogs.GoToPageDialog;
+import com.ua.plamber_android.utils.FileHelper;
 import com.ua.plamber_android.utils.PreferenceUtils;
-import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
 
@@ -67,8 +65,7 @@ public class BookReaderLocalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_reader);
         ButterKnife.bind(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-        mBookName = getIntent().getStringExtra(LOCAL_BOOK_NAME);
-        mBookPath = getIntent().getStringExtra(LOCAL_BOOK_FILE);
+        initBook();
         mBookUtils = new LocalBookUtils(this);
         preferenceUtils = new PreferenceUtils(this);
         initToolbar();
@@ -83,6 +80,22 @@ public class BookReaderLocalActivity extends AppCompatActivity {
         //maybe work better??????????
         mBookUtils.updateDate(mBookPath, System.currentTimeMillis());
         viewPdf(mBookUtils.getLastLocalBookPage(mBookId));
+    }
+
+    private void initBook() {
+        try {
+            if (getIntent().getData() == null) {
+                mBookName = getIntent().getStringExtra(LOCAL_BOOK_NAME);
+                mBookPath = getIntent().getStringExtra(LOCAL_BOOK_FILE);
+                return;
+            }
+            File file = new File(FileHelper.getRealPathFromURI(getBaseContext(), getIntent().getData()));
+            mBookName = file.getName();
+            mBookPath = file.getAbsolutePath();
+
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
     }
 
     private LocalBookDB createBook() {

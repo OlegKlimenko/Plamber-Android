@@ -3,10 +3,8 @@ package com.ua.plamber_android.fragments.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -19,20 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.shockwave.pdfium.PdfDocument;
-import com.shockwave.pdfium.PdfiumCore;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.fragments.UploadFileFragment;
 import com.ua.plamber_android.model.Upload;
 import com.ua.plamber_android.utils.FileUploadProgress;
-import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.FileHelper;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,7 +161,7 @@ public class UploadBookDialog extends DialogFragment {
 
             }
         });
-        return MultipartBody.Part.createFormData("book_file", Utils.getTimeMillis() + FileUtils.getFileType(file), requestFile);
+        return MultipartBody.Part.createFormData("book_file", Utils.getTimeMillis() + FileHelper.getFileType(file), requestFile);
     }
 
 

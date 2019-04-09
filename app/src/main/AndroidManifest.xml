@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.ua.plamber_android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,13 +9,14 @@
 
     <application
         android:name=".utils.PlamberAnalytics"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activitys.LoginActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.SignUpActivity"
@@ -35,7 +37,16 @@
         <activity android:name=".activitys.SupportActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activitys.ImagePickActivity"/>
-        <activity android:name=".activitys.BookReaderLocalActivity" />
+
+        <activity android:name=".activitys.BookReaderLocalActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file"/>
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
+
+        </activity>
 
         <activity android:name=".activitys.SplashActivity"
             android:screenOrientation="portrait"
@@ -47,6 +58,7 @@
         </activity>
 
         <service android:name=".api.download.DownloadService" />
+
     </application>
 
 </manifest>

@@ -3,21 +3,14 @@ package com.ua.plamber_android.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.ua.plamber_android.activitys.FilePickActivity;
 import com.ua.plamber_android.database.utils.BookUtilsDB;
 import com.ua.plamber_android.interfaces.callbacks.BooksCallback;
 import com.ua.plamber_android.model.Book;
-import com.ua.plamber_android.utils.FileUtils;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class UserBookFragment extends BaseViewBookFragment {
 

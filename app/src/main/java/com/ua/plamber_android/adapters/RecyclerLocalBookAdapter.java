@@ -1,10 +1,7 @@
 package com.ua.plamber_android.adapters;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +12,12 @@ import com.bumptech.glide.Glide;
 import com.ua.plamber_android.R;
 import com.ua.plamber_android.database.model.LocalBookDB;
 import com.ua.plamber_android.interfaces.RecyclerViewClickListener;
-import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.FileHelper;
 import com.ua.plamber_android.utils.JumpToChangeItem;
 import com.ua.plamber_android.utils.LocalFilesSortUpdate;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -76,7 +72,7 @@ public class RecyclerLocalBookAdapter extends RecyclerView.Adapter<RecyclerLocal
     public void onBindViewHolder(LocalBookHolder holder, int position) {
         LocalBookDB book = mLocalBooks.get(position);
         holder.bookName.setText(book.getBookName());
-        holder.bookSize.setText(FileUtils.getFileSize(new File(book.getBookPath())));
+        holder.bookSize.setText(FileHelper.getFileSize(new File(book.getBookPath())));
         Glide.with(holder.view).load(R.drawable.pdf_book).into(holder.img);
     }
 

@@ -1,6 +1,11 @@
 package com.ua.plamber_android.utils;
 
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class FileUtils {
+public class FileHelper {
 
     public static List<File> getFileInDirectory(String path, boolean showHidden, String... types) {
         List<File> listFile = new ArrayList<>();
@@ -58,5 +63,19 @@ public class FileUtils {
         if (i > 0)
             name = fileName.substring(0, i);
         return name;
+    }
+
+    public static String getRealPathFromURI(Context context, Uri contentURI) {
+        String result;
+        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 }

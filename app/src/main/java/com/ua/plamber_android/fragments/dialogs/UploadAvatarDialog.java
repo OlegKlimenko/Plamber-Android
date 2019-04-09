@@ -17,7 +17,7 @@ import com.ua.plamber_android.R;
 import com.ua.plamber_android.activitys.BaseDrawerActivity;
 import com.ua.plamber_android.api.APIUtils;
 import com.ua.plamber_android.model.Upload;
-import com.ua.plamber_android.utils.FileUtils;
+import com.ua.plamber_android.utils.FileHelper;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
@@ -74,7 +74,7 @@ public class UploadAvatarDialog extends DialogFragment {
     private void uploadAvatar(File file) {
         RequestBody requestToken = createRequest(preferenceUtils.readPreference(PreferenceUtils.TOKEN));
         RequestBody requestAvatar = RequestBody.create(MultipartBody.FORM, file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", Utils.getTimeMillis() + FileUtils.getFileType(file), requestAvatar);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", Utils.getTimeMillis() + FileHelper.getFileType(file), requestAvatar);
         Call<Upload.UploadAvatarRespond> request = apiUtils.initializePlamberAPI().uploadAvatar(createRequest(getString(R.string.app_key)), requestToken, body);
         request.enqueue(new Callback<Upload.UploadAvatarRespond>() {
             @Override
