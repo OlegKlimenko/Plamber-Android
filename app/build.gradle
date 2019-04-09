@@ -11,7 +11,7 @@ android {
         config {
             keyAlias 'plamber'
             keyPassword 'andrey1993_28!qce689kh'
-            storeFile file('D:\\Projects\\_jks\\plamber_key.jks')
+            storeFile file('/home/andrey/Projects/_jks/plamber_key.jks')
             storePassword 'andrey1993_28!qce689kh'
         }
     }
@@ -77,7 +77,7 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'me.zhanghai.android.materialratingbar:library:1.2.0'
-    implementation 'com.google.android.gms:play-services-analytics:16.0.6'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.8'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
