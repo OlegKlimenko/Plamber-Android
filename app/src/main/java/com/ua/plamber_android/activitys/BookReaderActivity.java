@@ -260,9 +260,9 @@ public class BookReaderActivity extends AppCompatActivity {
         workAPI.getLastPageFromCloud(new PageCallback() {
             @Override
             public void onSuccess(@NonNull Page.PageData page) {
-                Log.i(TAG, "Server " + page.getLastReadData());
-                Log.i(TAG, "Local " + bookUtilsDB.readLastDate(bookDB.getIdBook()));
-                if (bookUtilsDB.readLastDate(bookDB.getIdBook()) != null && bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookDB.getIdBook())).getTime() > bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime()) {
+                if (bookUtilsDB.readLastDate(bookDB.getIdBook()) != null &&
+                        bookUtilsDB.convertStringToDate(bookUtilsDB.readLastDate(bookDB.getIdBook())).getTime() >
+                                bookUtilsDB.convertStringToDate(page.getLastReadData()).getTime()) {
                     viewFromDB();
                 } else {
                     bookUtilsDB.updatePage(bookDB.getIdBook(), page.getLastPage());
@@ -272,7 +272,7 @@ public class BookReaderActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull Throwable t) {
-
+                viewFromDB();
             }
         }, bookDB.getIdServerBook());
     }
