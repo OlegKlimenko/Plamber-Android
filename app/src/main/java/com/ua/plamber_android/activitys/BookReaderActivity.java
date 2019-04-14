@@ -319,7 +319,7 @@ public class BookReaderActivity extends AppCompatActivity {
                     mPdfView.jumpTo(currentPage);
                     setPages(getCurrentPage(), getCountPage());
                     isLoadPdf = true;
-                }).enableAntialiasing(true).spacing(10)
+                }).enableAntialiasing(false).spacing(10)
                 .onError(t -> {
                     File bookFile = new File(utils.getPdfFileWithPath(bookDB.getIdBook()));
                     File bookCover = new File(utils.getPngFileWithPath(bookDB.getIdBook()));
