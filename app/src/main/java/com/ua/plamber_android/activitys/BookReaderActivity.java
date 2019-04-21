@@ -29,6 +29,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnErrorListener;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.github.barteksc.pdfviewer.listener.OnPageScrollListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -47,6 +49,7 @@ import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Utils;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +73,6 @@ public class BookReaderActivity extends AppCompatActivity {
     private BookUtilsDB bookUtilsDB;
     private Utils utils;
     private BookDB bookDB;
-    private boolean isLoadPdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,6 @@ public class BookReaderActivity extends AppCompatActivity {
         initToolbar();
         initNavigationView();
         initGoogleAnalytics();
-
         if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook()) {
             viewFromCloud();
         } else {
@@ -116,7 +117,6 @@ public class BookReaderActivity extends AppCompatActivity {
         bookDB.setIdAuthor(intent.getStringExtra(DetailBookActivity.BOOK_AUTHOR));
         bookDB.setIdServerBook(bookUtilsDB.readBookFromDB(bookDB.getIdBook()).getIdServerBook());
         bookDB.setOfflineBook(bookUtilsDB.readBookFromDB(bookDB.getIdBook()).isOfflineBook());
-        isLoadPdf = false;
     }
 
     private void initToolbar() {
@@ -288,12 +288,6 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void saveCurrentPage() {
-        //savePageInDB();
-        if (!isLoadPdf)
-            return;
-        bookUtilsDB.updatePage(bookDB.getIdBook(), getCurrentPage());
-        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
-        isLoadPdf = false;
         if (!preferenceUtils.readLogic(PreferenceUtils.OFFLINE_MODE) && !bookDB.isOfflineBook())
             workAPI.setLastPage(new StatusCallback() {
                 @Override
@@ -318,7 +312,6 @@ public class BookReaderActivity extends AppCompatActivity {
                     mPdfView.zoomTo((mPdfView.getWidth() - 1) / mPdfView.getOptimalPageWidth());
                     mPdfView.jumpTo(currentPage);
                     setPages(getCurrentPage(), getCountPage());
-                    isLoadPdf = true;
                 }).enableAntialiasing(false).spacing(10)
                 .onError(t -> {
                     File bookFile = new File(utils.getPdfFileWithPath(bookDB.getIdBook()));
@@ -328,8 +321,17 @@ public class BookReaderActivity extends AppCompatActivity {
                     bookUtilsDB.removeBookFromDatabase(bookUtilsDB.getBookPrimaryKey(bookDB.getIdServerBook()));
                     Toast.makeText(getApplicationContext(), getString(R.string.this_file_is_damaged), Toast.LENGTH_SHORT).show();
                     finish();
+                })
+               // .defaultPage(bookUtilsDB.readLastPage(bookDB.getIdBook()) - 1)
+                .onPageChange(new OnPageChangeListener() {
+                    @Override
+                    public void onPageChanged(int page, int pageCount) {
+                        int currentPage = page + 1;
+                        Log.i(TAG, "accept: " + currentPage);
+                        bookUtilsDB.updatePage(bookDB.getIdBook(), currentPage);
+                        bookUtilsDB.updateLastReadDate(bookDB.getIdBook(), bookUtilsDB.getCurrentTime());
+                    }
                 }).load();
-
     }
 
     public static Intent startReaderActivity(Context context) {
@@ -361,13 +363,12 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     private void postFitWidth() {
-        if (isLoadPdf)
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    fitWidth();
-                }
-            });
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                fitWidth();
+            }
+        });
     }
 
     private void setBookInformation() {
