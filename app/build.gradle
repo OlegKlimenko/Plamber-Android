@@ -22,7 +22,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 19
-        versionName "0.4.5"
+        versionName "0.4.6"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -36,7 +36,7 @@ android {
 
         }
         debug {
-            buildConfigField 'String', 'END_POINT', '"http://ec2-54-91-3-47.compute-1.amazonaws.com"'
+            buildConfigField 'String', 'END_POINT', '"http://ec2-54-235-16-119.compute-1.amazonaws.com"'
             resValue 'string', 'app_key', '@string/app_key_debug'
         }
     }

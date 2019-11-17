@@ -159,6 +159,9 @@ public class Book {
         @SerializedName("url")
         private String bookUrl;
 
+        @SerializedName("blocked_book")
+        private boolean isBlockedBook;
+
         @Expose
         private boolean isOfflineBook;
 
@@ -272,6 +275,14 @@ public class Book {
 
         public void setOfflineBook(boolean offlineBook) {
             isOfflineBook = offlineBook;
+        }
+
+        public boolean isBlockedBook() {
+            return isBlockedBook;
+        }
+
+        public void setBlockedBook(boolean blockedBook) {
+            isBlockedBook = blockedBook;
         }
 
         @Override

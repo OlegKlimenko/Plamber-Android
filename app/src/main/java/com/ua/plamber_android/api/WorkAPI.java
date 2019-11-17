@@ -119,9 +119,9 @@ public class WorkAPI {
                 @Override
                 public void onResponse(Call<Book.BookDetailRespond> call, Response<Book.BookDetailRespond> response) {
                     if (response.isSuccessful()) {
-                        callback.onSuccess(true);
+                        callback.onSuccess(true, response.code());
                     } else {
-                        callback.onSuccess(false);
+                        callback.onSuccess(false, response.code());
                     }
                 }
 

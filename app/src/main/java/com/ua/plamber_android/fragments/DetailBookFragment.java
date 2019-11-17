@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -125,6 +127,9 @@ public class DetailBookFragment extends Fragment {
     public static final String SERVER_BOOK_ID = "SERVER_BOOK_ID";
     private BroadcastReceiver broadcastReceiver;
     private BroadcastReceiver stopBroadcast;
+
+    private static final String BOOK_ADDED_STATUS = "Added";
+    private static final String BOOK_READ_STATUS = "Read";
 
     Tracker mTracker;
 
@@ -376,9 +381,14 @@ public class DetailBookFragment extends Fragment {
     }
 
     private void actionBook() {
-        if (bookDataDetail != null && mDetailButton.getTag() == "Added") {
+        if (isBlockBook()) {
+            Utils.messageSnack(mParentLayout, getString(R.string.book_is_block_message));
+            return;
+        }
+
+        if (bookDataDetail != null && mDetailButton.getTag() == BOOK_ADDED_STATUS) {
             addBookToLibrary(bookDataDetail.getBookData().getIdServerBook());
-        } else if (mDetailButton.getTag() == "Read") {
+        } else if (mDetailButton.getTag() == BOOK_READ_STATUS) {
             if (getBookFile().exists()) {
                 startReadBook();
             } else {
@@ -398,15 +408,25 @@ public class DetailBookFragment extends Fragment {
         }
     }
 
+    public void blockBook() {
+        if (getActivity() != null && isBlockBook()) {
+            mDetailButton.setText(R.string.book_is_block);
+            mDetailButton.getBackground().setColorFilter(ContextCompat.getColor(getActivity(),
+                    R.color.color_block_btn),
+                    PorterDuff.Mode.MULTIPLY);
+        }
+    }
+
     public void checkBook() {
         setDownloadIndicator(getBookFile().exists());
         if (bookDataDetail != null && bookDataDetail.isAddedBook()) {
             mDetailButton.setText(R.string.read_book_detail_btn);
-            mDetailButton.setTag("Read");
+            mDetailButton.setTag(BOOK_READ_STATUS);
         } else {
             mDetailButton.setText(R.string.added_book_detail_btn);
-            mDetailButton.setTag("Added");
+            mDetailButton.setTag(BOOK_ADDED_STATUS);
         }
+        blockBook();
     }
 
     private void runDownloadDialog() {
@@ -426,7 +446,7 @@ public class DetailBookFragment extends Fragment {
     private void addBookToLibrary(long id) {
         workAPI.manageBookInLibrary(new ManageBookCallback() {
             @Override
-            public void onSuccess(@NonNull boolean result) {
+            public void onSuccess(@NonNull boolean result, int status) {
                 if (result) {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_book_added));
                     bookDataDetail.setAddedBook(true);
@@ -434,9 +454,12 @@ public class DetailBookFragment extends Fragment {
                     mTracker.send(new HitBuilders.EventBuilder()
                             .setCategory(getString(R.string.start_read_action))
                             .setAction(bookDataDetail.getBookData().getBookName()).build());
-                } else {
+                } else if (status == 400){
+                    setBlockStatus();
+                    Utils.messageSnack(mParentLayout, getString(R.string.book_is_block_message));
+                } else
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_error_added));
-                }
+
             }
 
             @Override
@@ -449,7 +472,7 @@ public class DetailBookFragment extends Fragment {
     private void removeBookFromLibrary(long id) {
         workAPI.manageBookInLibrary(new ManageBookCallback() {
             @Override
-            public void onSuccess(@NonNull boolean result) {
+            public void onSuccess(@NonNull boolean result, int status) {
                 if (result) {
                     Utils.messageSnack(mParentLayout, getString(R.string.detail_book_removed));
                     bookDataDetail.setAddedBook(false);
@@ -538,15 +561,34 @@ public class DetailBookFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (mDetailButton.getTag() == "Added" || bookDataDetail == null) {
+        if (mDetailButton.getTag() == BOOK_ADDED_STATUS || bookDataDetail == null) {
             menu.findItem(R.id.item_remove_library).setEnabled(false);
             menu.findItem(R.id.item_remove_device).setEnabled(false);
-        } else if (mDetailButton.getTag() == "Read" && getBookFile().exists()) {
+        } else if (mDetailButton.getTag() == BOOK_READ_STATUS && getBookFile().exists()) {
             menu.findItem(R.id.item_remove_device).setEnabled(true);
             menu.findItem(R.id.item_remove_library).setEnabled(true);
         } else {
             menu.findItem(R.id.item_remove_device).setEnabled(false);
             menu.findItem(R.id.item_remove_library).setEnabled(true);
         }
+    }
+
+    private void setBlockStatus() {
+        try {
+            bookDataDetail.getBookData().setBlockedBook(true);
+            checkBook();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isBlockBook() {
+        boolean isBlock = false;
+        try {
+            isBlock = mDetailButton.getTag() != BOOK_READ_STATUS && bookDataDetail.getBookData().isBlockedBook();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isBlock;
     }
 }
