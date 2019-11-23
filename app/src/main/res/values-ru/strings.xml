@@ -193,4 +193,6 @@
     <string name="hours">ч.\ </string>
     <string name="now_downloading">\u0020 загружается сейчас</string>
     <string name="this_file_is_damaged">Файл поврежден</string>
+    <string name="book_is_block">Заблокировано</string>
+    <string name="book_is_block_message">Книга заблокирована</string>
 </resources>

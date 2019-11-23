@@ -12,4 +12,5 @@
     <color name="color_follow_btn">#ff8f0c</color>
     <color name="color_later_btn">#31a445</color>
     <color name="color_never_btn">#9aa6ad</color>
+    <color name="color_block_btn">#ff3333</color>
 </resources>
