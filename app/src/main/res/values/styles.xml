@@ -19,11 +19,6 @@
         <item name="android:textSize">19sp</item>
     </style>
 
-    <style name="searchStyle" parent="Widget.AppCompat.SearchView.ActionBar">
-        <item name="queryHint">@string/search_menu</item>
-        <item name="searchIcon">@null</item>
-    </style>
-
     <style name="fullScreenDialogThem" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
@@ -33,11 +28,6 @@
     <style name="windowBackgroundSplash" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/main_background</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="fullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="Progress.SplashScreen" parent="Theme.AppCompat.Light.NoActionBar" >
