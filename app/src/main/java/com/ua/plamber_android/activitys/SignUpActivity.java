@@ -214,9 +214,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void messageError(String message) {
         if (message == null || message.isEmpty())
-            Utils.messageSnack(mParentLayout, message);
-        else
             Utils.messageSnack(mParentLayout, getString(R.string.an_error_has_occurred));
+        else
+            Utils.messageSnack(mParentLayout, message);
         visibleProgressBar(false);
     }
 
