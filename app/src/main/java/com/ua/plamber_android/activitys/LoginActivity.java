@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loginButton() {
         if (checkPermission()) {
             Validate valid = new Validate(getApplicationContext());
-            if (apiUtils.isOnline(mParentLayout) && valid.userNameValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
+            if (apiUtils.isOnline(mParentLayout) && valid.userNameOrEmailValidate(mUsername, mTilUsername) & valid.passwordValidate(mPasswordLoginEdit, mTilPasswordLoginEdit)) {
                 userLoginInSystem();
             }
         } else

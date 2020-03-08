@@ -108,8 +108,8 @@ public class SignUpActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(@NonNull Throwable t) {
-                            messageError();
+                        public void onError(@NonNull String t) {
+                            messageError(t);
                         }
                     });
                 } else {
@@ -119,8 +119,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(@NonNull Throwable t) {
-                messageError();
+            public void onError(@NonNull String t) {
+                messageError(t);
             }
         });
     }
@@ -142,12 +142,13 @@ public class SignUpActivity extends AppCompatActivity {
                 public void onResponse(Call<Account.LoginRespond> call, Response<Account.LoginRespond> response) {
                     if (response.isSuccessful()) {
                         callback.onSuccess(response.body().getData().isLoginStatus());
-                    }
+                    } else
+                        callback.onError(response.message());
                 }
 
                 @Override
                 public void onFailure(Call<Account.LoginRespond> call, Throwable t) {
-                    callback.onError(t);
+                    callback.onError(t.getMessage());
                 }
             });
         }
@@ -163,12 +164,13 @@ public class SignUpActivity extends AppCompatActivity {
                 public void onResponse(Call<Account.EmailRespond> call, Response<Account.EmailRespond> response) {
                     if (response.isSuccessful()) {
                         callback.onSuccess(response.body().getData().isEmailStatus());
-                    }
+                    } else
+                        callback.onError(response.message());
                 }
 
                 @Override
                 public void onFailure(Call<Account.EmailRespond> call, Throwable t) {
-                    callback.onError(t);
+                    callback.onError(t.getMessage());
                 }
             });
         }
@@ -195,7 +197,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User.UserRespond> call, Throwable t) {
-                messageError();
+                messageError(t.getMessage());
             }
         });
     }
@@ -210,8 +212,11 @@ public class SignUpActivity extends AppCompatActivity {
         Utils.hideKeyboard(mParentLayout);
     }
 
-    private void messageError() {
-        Utils.messageSnack(mParentLayout, getString(R.string.an_error_has_occurred));
+    private void messageError(String message) {
+        if (message == null || message.isEmpty())
+            Utils.messageSnack(mParentLayout, getString(R.string.an_error_has_occurred));
+        else
+            Utils.messageSnack(mParentLayout, message);
         visibleProgressBar(false);
     }
 

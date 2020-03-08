@@ -9,11 +9,14 @@
     <string name="sign_up">Регистрация</string>
     <string name="connected">Присоединиться</string>
     <string name="user_name">Имя пользователя или E-mail</string>
+    <string name="user_name_singUp">Имя пользователя</string>
     <string name="password_agian">Повторите пароль</string>
     <string name="already_a_member_login">Уже зарегистрированы? Войти</string>
     <string name="validate_email">Пожалуйста введите действительный email</string>
-    <string name="validate_username">Имя пользователя должно быть от 2 до 30 символов, содержать
+    <string name="validate_username_and_email">Имя пользователя должно быть от 2 до 30 символов, содержать
             только латинские символы, цифры или знак подчеркивания, @ или точку</string>
+    <string name="validate_username">Имя пользователя должно быть от 2 до 30 символов, содержать
+            только латинские символы, цифры или знак подчеркивания</string>
     <string name="validate_password">Пароль от 6 до 16 символов</string>
     <string name="validate_password_same">Пароли должны быть одинаковыми</string>
     <string name="press_once_to_exit">Нажмите дважды для выхода</string>
@@ -25,15 +28,11 @@
 
     <string name="drawer_open">Открыть</string>
     <string name="drawer_close">Закрыть</string>
-    <string name="restore_title">Восстановить аккаунт</string>
-    <string name="restore_send">Отправить</string>
     <string name="cancel">Отмена</string>
     <string name="ok_btn">OK</string>
     <string name="error_recycler">Потяните, чтобы обновить</string>
-    <string name="tap_to_change">Нажмите, что бы сменить аватар</string>
     <string name="validate_password_clone">Старый и новый пароль не должны совпадать</string>
     <string name="search_menu">Поиск</string>
-    <string name="clear_search">Очистить поиск</string>
     <string name="remove_book_from_library">Удалить книгу из библиотеки</string>
     <string name="remove_book_from_device">Удалить книгу c устройства</string>
     <string name="nothing_found">По вашему запросу ничего не найдено</string>
@@ -58,7 +57,6 @@
     <string name="show_hidden_file">Показать скрытые файлы</string>
     <string name="no_show_hidden_file">Не показывать скрытые файлы</string>
     <string name="select_category_upload">Выберите категорию</string>
-    <string name="select_language_upload">Выберите язык</string>
     <string name="valid_book_name">Пожалуйста, введите название книги</string>
     <string name="valid_book_author">Пожалуйста, введите имя автора</string>
     <string name="valid_book_category">Пожалуйста, выберите категорию</string>
@@ -70,17 +68,14 @@
     <string name="file_is_being_prepared">Файл подготавливается </string>
     <string name="upload_book_btn">Загрузить книгу</string>
     <string name="make_book_is_private">Сделать книгу приватной</string>
-    <string name="information_about_book">Информация о книге</string>
     <string name="rating_book">Рейтинг:\ </string>
     <string name="now_reading">Сейчас читают:\ </string>
     <string name="language">Язык:\ </string>
     <string name="genre">Жанр:\ </string>
     <string name="who_added">Кто добавил:\ </string>
     <string name="date_added">Дата добавления:\ </string>
-    <string name="description_book">Описание книги</string>
     <string name="download_book">Загрузить</string>
     <string name="view_all_comments">Все отзывы</string>
-    <string name="this_book_has_no_comments">Пока что у этой книги нет отзывов</string>
     <string name="reviews">Отзывы\ </string>
     <string name="add_comment">Добавить отзыв</string>
     <string name="add_rated">Оценить книгу</string>
@@ -94,7 +89,6 @@
     <string name="about_book_detail">О книге</string>
     <string name="description_book_detail">Описание книги</string>
     <string name="read_book_detail_btn">Читать книгу</string>
-    <string name="download_book_detail_btn">Скачать книгу</string>
     <string name="added_book_detail_btn">Добавить книгу</string>
     <string name="no_connection_error">Не удалось подключиться к серверу. Включить оффлайн режим?</string>
     <string name="connetion_error_title">Ошибка подключения</string>
@@ -121,7 +115,6 @@
     <string name="search_not_access_in_offline">Поиск недоступен в оффлайн режиме</string>
     <string name="all_comments_title">Отзывы</string>
     <string name="download_book_title">Скачивание книги</string>
-    <string name="download_complete_message">Файл успешно загружен</string>
     <string name="download_error_message">При загрузке произошла ошибка</string>
     <string name="upload_avatar_title">Загрузка аватара</string>
     <string name="avatar_uploaded_message">Авар успешно обновлен</string>
@@ -185,8 +178,6 @@
     <string name="follow_fb_page">Поставьте Like нашей странице на Facebook</string>
     <string name="follow_fb_group">В нашей группе на Facebook много интересного!</string>
     <string name="rate_app_dialog">Оцените наше приложение в PlayMarket!</string>
-    <string name="follow_title_dialog">Подписаться</string>
-    <string name="rate_title_dialog">Оценить</string>
     <string name="time_left">Осталось</string>
     <string name="seconds">сек.\ </string>
     <string name="minutes">мин.\ </string>

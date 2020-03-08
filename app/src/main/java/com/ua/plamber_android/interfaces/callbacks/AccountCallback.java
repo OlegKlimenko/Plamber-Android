@@ -5,5 +5,5 @@ import android.support.annotation.NonNull;
 public interface AccountCallback {
     void onSuccess(@NonNull boolean isCreate);
 
-    void onError(@NonNull Throwable t);
+    void onError(@NonNull String message);
 }

@@ -11,7 +11,7 @@ android {
         config {
             keyAlias 'plamber'
             keyPassword 'andrey1993_28!qce689kh'
-            storeFile file('/home/andrey/Projects/_jks/plamber_key.jks')
+            storeFile file('../.signature/plamber_key.jks')
             storePassword 'andrey1993_28!qce689kh'
         }
     }
@@ -21,8 +21,8 @@ android {
         applicationId "com.ua.plamber_android"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 20
-        versionName "0.4.6"
+        versionCode 22
+        versionName "0.4.6a"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
