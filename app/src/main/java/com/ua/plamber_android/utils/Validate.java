@@ -136,12 +136,47 @@ public class Validate {
     public boolean userNameValidate(EditText editText, final TextInputLayout inputLayout) {
         boolean isValid = true;
         inputLayout.setErrorEnabled(true);
-        String regex = "^[a-zA-Z0-9_]{2,30}|^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+        String regex = "^[a-zA-Z0-9_]{2,30}";
         String user = editText.getText().toString();
 
         if (!user.matches(regex)) {
             isValid = false;
             inputLayout.setError(context.getString(R.string.validate_username));
+        }
+        else if (user.equals("admin")) {
+            isValid = false;
+            inputLayout.setError(context.getString(R.string.not_allowed_user_name));
+        }
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                inputLayout.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        return isValid;
+    }
+
+    public boolean userNameOrEmailValidate(EditText editText, final TextInputLayout inputLayout) {
+        boolean isValid = true;
+        inputLayout.setErrorEnabled(true);
+        String regex = "^[a-zA-Z0-9_]{2,30}|^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+        String user = editText.getText().toString();
+
+        if (!user.matches(regex)) {
+            isValid = false;
+            inputLayout.setError(context.getString(R.string.validate_username_and_email));
         }
         else if (user.equals("admin")) {
             isValid = false;
