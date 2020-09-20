@@ -191,6 +191,8 @@
     <string name="this_file_is_damaged">The file is damaged</string>
     <string name="book_is_block">Book block</string>
     <string name="book_is_block_message">Book is block</string>
+    <string name="warning">Warning</string>
+    <string name="warning_message">Friends! We remind you that on October 1, our project ends its work. Please do not forget to find a new application and / or finish reading the books that you have completed. Thanks for being with us! Best regards, administration plamber.com.ua</string>
 
 
 </resources>

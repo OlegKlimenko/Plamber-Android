@@ -186,4 +186,8 @@
     <string name="this_file_is_damaged">Файл поврежден</string>
     <string name="book_is_block">Заблокировано</string>
     <string name="book_is_block_message">Книга заблокирована</string>
+    <string name="warning">Внимание</string>
+    <string name="warning_message">Друзья! Напоминаем вам, что 1 октября наш проект завершает свою работу. Просьба не забыть найти новое приложение и/или дочитать книги которые вы еще на зевершили. Спасибо, что были с нами! С уважением, администрация plamber.com.ua</string>
+
+
 </resources>

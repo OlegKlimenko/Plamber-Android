@@ -26,6 +26,7 @@ import com.ua.plamber_android.fragments.LibraryFragment;
 import com.ua.plamber_android.fragments.RecommendedFragment;
 import com.ua.plamber_android.fragments.UploadFragment;
 import com.ua.plamber_android.fragments.UserBookFragment;
+import com.ua.plamber_android.fragments.dialogs.WarningDialog;
 import com.ua.plamber_android.utils.PlamberAnalytics;
 import com.ua.plamber_android.utils.PreferenceUtils;
 import com.ua.plamber_android.utils.Reminder;
@@ -129,6 +130,10 @@ public class MainActivity extends BaseDrawerActivity {
                     startActivityForResult(intent, LibraryFragment.MENU_REQUEST);
                 }
                 break;
+            case R.id.item_warning:
+                WarningDialog dialog = new WarningDialog();
+                dialog.show(getSupportFragmentManager(), WarningDialog.class.getName());
+                break;
         }
         return true;
     }
@@ -189,7 +194,7 @@ public class MainActivity extends BaseDrawerActivity {
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        if (utils.getWidthDeviceDP() > 400) {
+        if (utils.getWidthDeviceDP() > 500) {
             mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         } else {
             mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
