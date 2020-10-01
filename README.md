@@ -1,4 +1,4 @@
-# Plamber-Android
+# Plamber-Android (THE PROJECT IS NO MORE UNDER SUPPORT!)
 The Android application for Plamber project.
 
 Plamber is the multiplatform web-oriented system for reading and storing books online.
